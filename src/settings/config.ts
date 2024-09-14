@@ -8,7 +8,7 @@ class AppSettings {
     private readonly PORT: string = process.env.PORT ?? '3002',
     private readonly MONGO_URL: string = process.env.MONGO_URL ?? '',
     private readonly COLLECTION_NAME = {
-      USER: process.env.USER_COLLECTION_NAME,
+      USERS: process.env.USERS_COLLECTION_NAME ?? '',
     },
     private readonly PATH = {
       USERS: '/users',
