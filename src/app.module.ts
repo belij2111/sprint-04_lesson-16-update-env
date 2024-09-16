@@ -3,14 +3,13 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { appSettings } from './settings/config';
-import { UserSchema } from './features/users/domain/user.entity';
+import { UsersModule } from './features/users/users.module';
 
 @Module({
   imports: [
+    UsersModule,
     MongooseModule.forRoot(appSettings.getMongoUrl()),
-    MongooseModule.forFeature([
-      { name: appSettings.getCollectionNames().USERS, schema: UserSchema },
-    ]),
+    // MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
   ],
   controllers: [AppController],
   providers: [AppService],
