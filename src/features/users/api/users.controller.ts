@@ -1,71 +1,52 @@
 import {
   Controller,
   Delete,
+  Get,
   HttpCode,
   HttpStatus,
   NotFoundException,
   Param,
+  Query,
+  Res,
 } from '@nestjs/common';
 import { appSettings } from '../../../settings/config';
 import { UsersService } from '../application/users.service';
-
-//
-// @injectable()
-// export class UsersController {
-//   constructor(
-//     @inject(UsersService) private usersService: UsersService,
-//     @inject(UsersMongoQueryRepository) private usersMongoQueryRepository: UsersMongoQueryRepository
-//   ) {
-//   }
-//
-//   async create(req: Request, res: Response) {
-//     try {
-//       const createdInfo = await this.usersService.createUser(req.body)
-//       if (createdInfo.status === ResultStatus.BadRequest) {
-//         res
-//           .status(400)
-//           .json({errorsMessages: createdInfo.extensions || []})
-//         return
-//       }
-//       if (createdInfo.data && createdInfo.status === ResultStatus.Success) {
-//         const newUser = await this.usersMongoQueryRepository.getUserById(createdInfo.data.id)
-//         res
-//           .status(201)
-//           .json(newUser)
-//         return
-//       }
-//     } catch (error) {
-//       res
-//         .status(500)
-//         .json({message: 'usersController.create'})
-//     }
-//   }
-//
-//   async get(req: Request<SortQueryFieldsType & SearchLoginTermFieldsType & SearchEmailTermFieldsType>, res: Response<Paginator<OutputUserType[]> | ErrorResponse>) {
-//     try {
-//       const inputQuery = {
-//         ...sortQueryFieldsUtil(req.query),
-//         ...searchLoginTermUtil(req.query),
-//         ...searchEmailTermUtil(req.query)
-//       }
-//       const allUsers = await this.usersMongoQueryRepository.getUsers(inputQuery)
-//       res
-//         .status(200)
-//         .json(allUsers)
-//     } catch (error) {
-//       res
-//         .status(500)
-//         .json({message: 'usersController.get'})
-//     }
-//   }
-// }
+import { UsersQueryRepository } from '../infrastructure/users.query-repository';
+import {
+  Paginator,
+  SearchEmailTermFieldsType,
+  searchEmailTermUtil,
+  SearchLoginTermFieldsType,
+  searchLoginTermUtil,
+  SortQueryFieldsType,
+  sortQueryFieldsUtil,
+} from '../../../base/pagination.base.model';
+import { UserOutputModel } from './models/output/user.output.model';
 
 @Controller(appSettings.getPath().USERS)
 export class UsersController {
   constructor(
-    // private readonly usersQueryRepository: UsersQueryRepository,
+    private readonly usersQueryRepository: UsersQueryRepository,
     private readonly usersService: UsersService,
   ) {}
+
+  @Get()
+  @HttpCode(HttpStatus.OK)
+  async get(
+    @Query()
+    query: SortQueryFieldsType &
+      SearchLoginTermFieldsType &
+      SearchEmailTermFieldsType,
+  ): Promise<Paginator<UserOutputModel[]>> {
+    const inputQuery = {
+      ...sortQueryFieldsUtil(query),
+      ...searchLoginTermUtil(query),
+      ...searchEmailTermUtil(query),
+    };
+
+    return await this.usersQueryRepository.getUsers(inputQuery);
+  }
+
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   async delete(@Param('id') id: string) {
