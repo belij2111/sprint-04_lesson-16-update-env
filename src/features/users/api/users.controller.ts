@@ -1,4 +1,5 @@
 import {
+  Body,
   Controller,
   Delete,
   Get,
@@ -6,6 +7,7 @@ import {
   HttpStatus,
   NotFoundException,
   Param,
+  Post,
   Query,
 } from '@nestjs/common';
 import { appSettings } from '../../../settings/config';
@@ -21,6 +23,7 @@ import {
   sortQueryFieldsUtil,
 } from '../../../base/pagination.base.model';
 import { UserOutputModel } from './models/output/user.output.model';
+import { UserCreateModel } from './models/input/create-user.input.model';
 
 @Controller(appSettings.getPath().USERS)
 export class UsersController {
@@ -28,6 +31,13 @@ export class UsersController {
     private readonly usersQueryRepository: UsersQueryRepository,
     private readonly usersService: UsersService,
   ) {}
+
+  @Post()
+  @HttpCode(HttpStatus.CREATED)
+  async create(@Body() userCreateModel: UserCreateModel) {
+    const createdUserId = await this.usersService.create(userCreateModel);
+    return await this.usersQueryRepository.getById(createdUserId.id);
+  }
 
   @Get()
   @HttpCode(HttpStatus.OK)

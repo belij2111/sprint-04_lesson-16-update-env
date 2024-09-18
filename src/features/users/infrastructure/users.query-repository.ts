@@ -48,6 +48,11 @@ export class UsersQueryRepository {
     };
   }
 
+  async getById(id: string): Promise<UserOutputModel> {
+    const foundUser = await this.UserModel.findById(id);
+    return this.userMapToOutput(foundUser);
+  }
+
   private userMapToOutput(user: any): UserOutputModel {
     return {
       id: user._id.toString(),
