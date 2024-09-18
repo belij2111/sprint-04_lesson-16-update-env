@@ -7,7 +7,6 @@ import {
   NotFoundException,
   Param,
   Query,
-  Res,
 } from '@nestjs/common';
 import { appSettings } from '../../../settings/config';
 import { UsersService } from '../application/users.service';
