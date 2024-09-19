@@ -9,9 +9,11 @@ class AppSettings {
     private readonly MONGO_URL: string = process.env.MONGO_URL ?? '',
     private readonly COLLECTION_NAME = {
       USERS: process.env.USERS_COLLECTION_NAME ?? '',
+      BLOGS: process.env.BLOGS_COLLECTION_NAME ?? '',
     },
     private readonly PATH = {
       USERS: '/users',
+      BLOGS: '/blogs',
     },
   ) {}
 
