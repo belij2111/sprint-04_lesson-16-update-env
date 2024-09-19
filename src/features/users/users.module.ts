@@ -14,6 +14,5 @@ import { CryptoModule } from '../../base/crypto.module';
   ],
   controllers: [UsersController],
   providers: [UsersService, UsersRepository, UsersQueryRepository],
-  exports: [UsersService],
 })
 export class UsersModule {}
