@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { User, UserModelType } from '../domain/user.entity';
+import { User, UserDocument, UserModelType } from '../domain/user.entity';
 import {
   QueryUserFilterType,
   UserOutputModel,
@@ -48,17 +48,18 @@ export class UsersQueryRepository {
     };
   }
 
-  async getById(id: string): Promise<UserOutputModel> {
+  async getById(id: string): Promise<UserOutputModel | null> {
     const foundUser = await this.UserModel.findById(id);
+    if (!foundUser) return null;
     return this.userMapToOutput(foundUser);
   }
 
-  private userMapToOutput(user: any): UserOutputModel {
+  private userMapToOutput(user: UserDocument): UserOutputModel {
     return {
       id: user._id.toString(),
       login: user.login,
       email: user.email,
-      createdAt: user.createdAt,
+      createdAt: user.createdAt.toISOString(),
     };
   }
 }
