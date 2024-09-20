@@ -20,7 +20,21 @@ export class BlogsService {
     return await this.blogsRepository.create(newBlogDto);
   }
 
+  async update(
+    id: string,
+    blogUpdateModel: BlogCreateModel,
+  ): Promise<boolean | null> {
+    const foundBlog = await this.blogsRepository.findByIdOrNotFoundFail(id);
+    const updatedBlogDto: BlogCreateModel = {
+      name: blogUpdateModel.name,
+      description: blogUpdateModel.description,
+      websiteUrl: blogUpdateModel.websiteUrl,
+    };
+    return await this.blogsRepository.update(foundBlog, updatedBlogDto);
+  }
+
   async delete(id: string): Promise<boolean> {
-    return this.blogsRepository.delete(id);
+    const foundBlog = await this.blogsRepository.findByIdOrNotFoundFail(id);
+    return this.blogsRepository.delete(foundBlog.id);
   }
 }

@@ -8,6 +8,7 @@ import {
   NotFoundException,
   Param,
   Post,
+  Put,
   Query,
 } from '@nestjs/common';
 
@@ -58,12 +59,18 @@ export class BlogsController {
     return foundBlog;
   }
 
+  @Put(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async update(
+    @Param('id') id: string,
+    @Body() blogUpdateModel: BlogCreateModel,
+  ) {
+    await this.blogsService.update(id, blogUpdateModel);
+  }
+
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   async delete(@Param('id') id: string) {
-    const deletionResult: boolean = await this.blogsService.delete(id);
-    if (!deletionResult) {
-      throw new NotFoundException(`Blog with id ${id} not found`);
-    }
+    await this.blogsService.delete(id);
   }
 }
