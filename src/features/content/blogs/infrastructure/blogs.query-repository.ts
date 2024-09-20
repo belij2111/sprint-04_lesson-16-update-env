@@ -44,7 +44,7 @@ export class BlogsQueryRepository {
     return this.blogMapToOutput(foundBlog);
   }
 
-  private blogMapToOutput(blog: BlogDocument): BlogOutputModel {
+  private blogMapToOutput(blog: Blog): BlogOutputModel {
     return {
       id: blog._id.toString(),
       name: blog.name,

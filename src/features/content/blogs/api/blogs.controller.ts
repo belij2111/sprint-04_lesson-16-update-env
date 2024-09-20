@@ -1,4 +1,5 @@
 import {
+  Body,
   Controller,
   Delete,
   Get,
@@ -6,6 +7,7 @@ import {
   HttpStatus,
   NotFoundException,
   Param,
+  Post,
   Query,
 } from '@nestjs/common';
 
@@ -20,6 +22,7 @@ import {
   sortQueryFieldsUtil,
 } from '../../../../base/pagination.base.model';
 import { BlogsQueryRepository } from '../infrastructure/blogs.query-repository';
+import { BlogCreateModel } from './models/input/create-blog.input.model';
 
 @Controller(appSettings.getPath().BLOGS)
 export class BlogsController {
@@ -27,6 +30,12 @@ export class BlogsController {
     private readonly blogsService: BlogsService,
     private readonly blogsQueryRepository: BlogsQueryRepository,
   ) {}
+
+  @Post()
+  async create(@Body() blogCreateModel: BlogCreateModel) {
+    const createdBlogId = await this.blogsService.create(blogCreateModel);
+    return await this.blogsQueryRepository.getById(createdBlogId.id);
+  }
 
   @Get()
   async getAll(
