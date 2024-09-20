@@ -14,6 +14,7 @@ class AppSettings {
     private readonly PATH = {
       USERS: '/users',
       BLOGS: '/blogs',
+      TESTING: '/testing/all-data',
     },
   ) {}
 
