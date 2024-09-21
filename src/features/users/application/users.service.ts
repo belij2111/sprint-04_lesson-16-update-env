@@ -3,7 +3,6 @@ import { UsersRepository } from '../infrastructure/users.repository';
 import { UserCreateModel } from '../api/models/input/create-user.input.model';
 import { BcryptService } from '../../../base/bcrypt.service';
 import { User } from '../domain/user.entity';
-import { Types } from 'mongoose';
 
 @Injectable()
 export class UsersService {
@@ -17,7 +16,6 @@ export class UsersService {
       userCreateModel.password,
     );
     const newUser: User = {
-      _id: new Types.ObjectId(),
       login: userCreateModel.login,
       password: passHash,
       email: userCreateModel.email,
