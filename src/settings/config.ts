@@ -10,10 +10,12 @@ class AppSettings {
     private readonly COLLECTION_NAME = {
       USERS: process.env.USERS_COLLECTION_NAME ?? '',
       BLOGS: process.env.BLOGS_COLLECTION_NAME ?? '',
+      POSTS: process.env.POSTS_COLLECTION_NAME ?? '',
     },
     private readonly PATH = {
       USERS: '/users',
       BLOGS: '/blogs',
+      POSTS: '/posts',
       TESTING: '/testing/all-data',
     },
   ) {}
