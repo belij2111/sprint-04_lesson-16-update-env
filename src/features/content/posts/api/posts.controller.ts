@@ -1,4 +1,5 @@
 import {
+  Body,
   Controller,
   Delete,
   Get,
@@ -6,6 +7,7 @@ import {
   HttpStatus,
   NotFoundException,
   Param,
+  Post,
   Query,
 } from '@nestjs/common';
 import { appSettings } from '../../../../settings/config';
@@ -17,6 +19,7 @@ import {
 } from '../../../../base/pagination.base.model';
 import { PostOutputModel } from './models/output/post.output.model';
 import { PostsQueryRepository } from '../infrastructure/posts.query-repository';
+import { PostCreateModel } from './models/input/create-post.input.model';
 
 @Controller(appSettings.getCollectionNames().POSTS)
 export class PostsController {
@@ -24,6 +27,12 @@ export class PostsController {
     private readonly postsService: PostsService,
     private readonly postsQueryRepository: PostsQueryRepository,
   ) {}
+
+  @Post()
+  async create(@Body() postCreateModel: PostCreateModel) {
+    const createdPostId = await this.postsService.create(postCreateModel);
+    return await this.postsQueryRepository.getById(createdPostId.id);
+  }
 
   @Get()
   async getAll(

@@ -1,12 +1,23 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Post, PostDocument, PostModelType } from '../domain/post.entity';
+import {
+  Blog,
+  BlogDocument,
+  BlogModelType,
+} from '../../blogs/domain/blog.entity';
 
 @Injectable()
 export class PostsRepository {
   constructor(
     @InjectModel(Post.name) private readonly PostModel: PostModelType,
+    @InjectModel(Blog.name) private readonly BlogModel: BlogModelType,
   ) {}
+
+  async create(newPost: Post): Promise<{ id: string }> {
+    const result = await this.PostModel.create(newPost);
+    return { id: result._id.toString() };
+  }
 
   async delete(id: string): Promise<boolean> {
     const deletionResult = await this.PostModel.deleteOne({ _id: id });
