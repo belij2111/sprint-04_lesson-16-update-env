@@ -36,4 +36,18 @@ export class PostsService {
     const foundPost = await this.postRepository.findByIdOrNotFoundFail(id);
     return this.postRepository.delete(foundPost.id);
   }
+
+  async update(
+    id: string,
+    postUpdateModel: PostCreateModel,
+  ): Promise<boolean | null> {
+    const foundPost = await this.postRepository.findByIdOrNotFoundFail(id);
+    const updatedPostDto: PostCreateModel = {
+      title: postUpdateModel.title,
+      shortDescription: postUpdateModel.shortDescription,
+      content: postUpdateModel.content,
+      blogId: postUpdateModel.blogId,
+    };
+    return await this.postRepository.update(foundPost, updatedPostDto);
+  }
 }

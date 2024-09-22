@@ -6,6 +6,7 @@ import {
   BlogDocument,
   BlogModelType,
 } from '../../blogs/domain/blog.entity';
+import { PostCreateModel } from '../api/models/input/create-post.input.model';
 
 @Injectable()
 export class PostsRepository {
@@ -34,5 +35,16 @@ export class PostsRepository {
       throw new NotFoundException(`Post with id ${id} not found`);
     }
     return foundPost;
+  }
+
+  async update(
+    foundPost: PostDocument,
+    postUpdateModel: PostCreateModel,
+  ): Promise<boolean | null> {
+    const result = await this.PostModel.updateOne(
+      { _id: foundPost.id },
+      { $set: postUpdateModel },
+    );
+    return result.modifiedCount === 1;
   }
 }

@@ -8,6 +8,7 @@ import {
   NotFoundException,
   Param,
   Post,
+  Put,
   Query,
 } from '@nestjs/common';
 import { appSettings } from '../../../../settings/config';
@@ -51,6 +52,15 @@ export class PostsController {
       throw new NotFoundException(`Post with id ${id} not found`);
     }
     return foundPost;
+  }
+
+  @Put(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async update(
+    @Param('id') id: string,
+    @Body() postCreateModel: PostCreateModel,
+  ) {
+    await this.postsService.update(id, postCreateModel);
   }
 
   @Delete(':id')
