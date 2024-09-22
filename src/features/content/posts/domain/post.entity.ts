@@ -4,7 +4,7 @@ import { appSettings } from '../../../../settings/config';
 
 @Schema()
 class NewestLikes {
-  @Prop({ type: Date, required: true })
+  @Prop({ type: Date, required: true, default: new Date() })
   addedAt: Date;
   @Prop({ type: String, required: true })
   userId: string;
