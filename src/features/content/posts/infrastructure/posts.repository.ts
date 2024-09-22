@@ -4,7 +4,9 @@ import { Post, PostDocument, PostModelType } from '../domain/post.entity';
 
 @Injectable()
 export class PostsRepository {
-  constructor(@InjectModel(Post.name) private PostModel: PostModelType) {}
+  constructor(
+    @InjectModel(Post.name) private readonly PostModel: PostModelType,
+  ) {}
 
   async delete(id: string): Promise<boolean> {
     const deletionResult = await this.PostModel.deleteOne({ _id: id });
