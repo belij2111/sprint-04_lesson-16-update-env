@@ -33,10 +33,10 @@ export class BlogsRepository {
   }
 
   async findByIdOrNotFoundFail(id: string): Promise<BlogDocument> {
-    const foundUser = await this.findById(id);
-    if (!foundUser) {
+    const foundBlog = await this.findById(id);
+    if (!foundBlog) {
       throw new NotFoundException(`Blog with id ${id} not found`);
     }
-    return foundUser;
+    return foundBlog;
   }
 }
