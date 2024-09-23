@@ -50,4 +50,26 @@ export class PostsService {
     };
     return await this.postRepository.update(foundPost, updatedPostDto);
   }
+
+  async createPostByBlogId(
+    blogId: string,
+    postCreateModel: PostCreateModel,
+  ): Promise<{ id: string }> {
+    const foundBlog = await this.blogsRepository.findByIdOrNotFoundFail(blogId);
+    const newPostDto: Post = {
+      title: postCreateModel.title,
+      shortDescription: postCreateModel.shortDescription,
+      content: postCreateModel.content,
+      blogId: postCreateModel.blogId,
+      blogName: foundBlog.name,
+      createdAt: new Date(),
+      extendedLikesInfo: {
+        likesCount: 0,
+        dislikesCount: 0,
+        myStatus: 'None',
+        newestLikes: [],
+      },
+    };
+    return await this.postRepository.create(newPostDto);
+  }
 }

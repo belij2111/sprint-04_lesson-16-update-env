@@ -24,12 +24,18 @@ import {
 } from '../../../../base/pagination.base.model';
 import { BlogsQueryRepository } from '../infrastructure/blogs.query-repository';
 import { BlogCreateModel } from './models/input/create-blog.input.model';
+import { PostCreateModel } from '../../posts/api/models/input/create-post.input.model';
+import { PostOutputModel } from '../../posts/api/models/output/post.output.model';
+import { PostsService } from '../../posts/application/posts.service';
+import { PostsQueryRepository } from '../../posts/infrastructure/posts.query-repository';
 
 @Controller(appSettings.getPath().BLOGS)
 export class BlogsController {
   constructor(
     private readonly blogsService: BlogsService,
     private readonly blogsQueryRepository: BlogsQueryRepository,
+    private readonly postsService: PostsService,
+    private readonly postsQueryRepository: PostsQueryRepository,
   ) {}
 
   @Post()
@@ -72,5 +78,18 @@ export class BlogsController {
   @HttpCode(HttpStatus.NO_CONTENT)
   async delete(@Param('id') id: string) {
     await this.blogsService.delete(id);
+  }
+
+  @Post(':blogId/posts')
+  @HttpCode(HttpStatus.CREATED)
+  async createPostByBlogId(
+    @Param('blogId') blogId: string,
+    @Body() postCreateModel: PostCreateModel,
+  ): Promise<PostOutputModel | null> {
+    const createdPostId = await this.postsService.createPostByBlogId(
+      blogId,
+      postCreateModel,
+    );
+    return await this.postsQueryRepository.getById(createdPostId.id);
   }
 }
