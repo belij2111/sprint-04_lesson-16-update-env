@@ -1,18 +1,12 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Post, PostDocument, PostModelType } from '../domain/post.entity';
-import {
-  Blog,
-  BlogDocument,
-  BlogModelType,
-} from '../../blogs/domain/blog.entity';
 import { PostCreateModel } from '../api/models/input/create-post.input.model';
 
 @Injectable()
 export class PostsRepository {
   constructor(
     @InjectModel(Post.name) private readonly PostModel: PostModelType,
-    @InjectModel(Blog.name) private readonly BlogModel: BlogModelType,
   ) {}
 
   async create(newPost: Post): Promise<{ id: string }> {
