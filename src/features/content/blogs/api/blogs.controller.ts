@@ -92,4 +92,15 @@ export class BlogsController {
     );
     return await this.postsQueryRepository.getById(createdPostId.id);
   }
+
+  @Get(':blogId/posts')
+  async getPostsByBlogId(
+    @Param('blogId') blogId: string,
+    @Query() query: SortQueryFieldsType,
+  ): Promise<Paginator<PostOutputModel[]>> {
+    const inputQuery = {
+      ...sortQueryFieldsUtil(query),
+    };
+    return await this.postsQueryRepository.getPostsByBlogId(blogId, inputQuery);
+  }
 }
