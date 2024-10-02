@@ -1,8 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Model } from 'mongoose';
-import { appSettings } from '../../../../settings/config';
 
-@Schema({ collection: appSettings.getCollectionNames().BLOGS })
+@Schema()
 export class Blog {
   @Prop({ type: String, required: true })
   name: string;

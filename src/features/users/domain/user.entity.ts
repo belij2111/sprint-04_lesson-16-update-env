@@ -1,8 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Model } from 'mongoose';
-import { appSettings } from '../../../settings/config';
 
-@Schema({ collection: appSettings.getCollectionNames().USERS })
+@Schema()
 export class User {
   @Prop({ type: String, required: true })
   login: string;

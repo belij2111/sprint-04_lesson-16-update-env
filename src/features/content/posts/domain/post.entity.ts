@@ -1,6 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Model } from 'mongoose';
-import { appSettings } from '../../../../settings/config';
 
 @Schema()
 class NewestLikes {
@@ -28,7 +27,7 @@ class ExtendedLikesInfo {
 
 const ExtendedLikesInfoSchema = SchemaFactory.createForClass(ExtendedLikesInfo);
 
-@Schema({ collection: appSettings.getCollectionNames().POSTS })
+@Schema()
 export class Post {
   @Prop({ type: String, required: true })
   title: string;
