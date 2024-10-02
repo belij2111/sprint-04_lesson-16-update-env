@@ -4,7 +4,7 @@ import { ContentModule } from './features/content/content.module';
 import { TestingModule } from './features/testing/testing.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import configuration, { ConfigurationType } from './settings/env/configuration';
-import { validate } from 'class-validator';
+import { validate } from './settings/env/configuration';
 import process from 'process';
 import { Environments } from './settings/env/env-settings';
 import { MongooseModule } from '@nestjs/mongoose';
