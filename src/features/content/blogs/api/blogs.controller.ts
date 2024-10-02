@@ -12,7 +12,6 @@ import {
   Query,
 } from '@nestjs/common';
 
-import { appSettings } from '../../../../settings/config';
 import { BlogsService } from '../application/blogs.service';
 import { BlogOutputModel } from './models/output/blog.output.model';
 import {
@@ -29,7 +28,7 @@ import { PostOutputModel } from '../../posts/api/models/output/post.output.model
 import { PostsService } from '../../posts/application/posts.service';
 import { PostsQueryRepository } from '../../posts/infrastructure/posts.query-repository';
 
-@Controller(appSettings.getPath().BLOGS)
+@Controller('/blogs')
 export class BlogsController {
   constructor(
     private readonly blogsService: BlogsService,

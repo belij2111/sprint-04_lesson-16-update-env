@@ -1,8 +1,7 @@
 import { Controller, Delete, HttpCode, HttpStatus } from '@nestjs/common';
 import { TestingService } from '../application/testing.service';
-import { appSettings } from '../../../settings/config';
 
-@Controller(appSettings.getPath().TESTING)
+@Controller('/testing/all-data')
 export class TestingController {
   constructor(private readonly testingService: TestingService) {}
   @Delete()

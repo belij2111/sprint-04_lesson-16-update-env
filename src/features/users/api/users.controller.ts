@@ -10,7 +10,6 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { appSettings } from '../../../settings/config';
 import { UsersService } from '../application/users.service';
 import { UsersQueryRepository } from '../infrastructure/users.query-repository';
 import {
@@ -25,7 +24,7 @@ import {
 import { UserOutputModel } from './models/output/user.output.model';
 import { UserCreateModel } from './models/input/create-user.input.model';
 
-@Controller(appSettings.getPath().USERS)
+@Controller('/users')
 export class UsersController {
   constructor(
     private readonly usersQueryRepository: UsersQueryRepository,

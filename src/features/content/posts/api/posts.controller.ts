@@ -11,7 +11,6 @@ import {
   Put,
   Query,
 } from '@nestjs/common';
-import { appSettings } from '../../../../settings/config';
 import { PostsService } from '../application/posts.service';
 import {
   Paginator,
@@ -22,7 +21,7 @@ import { PostOutputModel } from './models/output/post.output.model';
 import { PostsQueryRepository } from '../infrastructure/posts.query-repository';
 import { PostCreateModel } from './models/input/create-post.input.model';
 
-@Controller(appSettings.getCollectionNames().POSTS)
+@Controller('/posts')
 export class PostsController {
   constructor(
     private readonly postsService: PostsService,
