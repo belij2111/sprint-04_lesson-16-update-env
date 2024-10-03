@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { UsersModule } from './features/users/users.module';
-import { ContentModule } from './features/content/content.module';
 import { TestingModule } from './features/testing/testing.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import configuration, { ConfigurationType } from './settings/env/configuration';
@@ -8,12 +7,13 @@ import { validate } from './settings/env/configuration';
 import process from 'process';
 import { Environments } from './settings/env/env-settings';
 import { MongooseModule } from '@nestjs/mongoose';
+import { BlogsModule } from './features/bloggers-platform/blogs.module';
 
 @Module({
   imports: [
     TestingModule,
     UsersModule,
-    ContentModule,
+    BlogsModule,
     ConfigModule.forRoot({
       isGlobal: true,
       load: [configuration],

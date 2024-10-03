@@ -1,8 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserModelType } from '../../users/domain/user.entity';
-import { Blog, BlogModelType } from '../../content/blogs/domain/blog.entity';
-import { Post, PostModelType } from '../../content/posts/domain/post.entity';
+import {
+  Blog,
+  BlogModelType,
+} from '../../bloggers-platform/blogs/domain/blog.entity';
+import {
+  Post,
+  PostModelType,
+} from '../../bloggers-platform/posts/domain/post.entity';
 
 @Injectable()
 export class TestingRepository {
