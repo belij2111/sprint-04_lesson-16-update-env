@@ -3,7 +3,7 @@ import { IsEnum } from 'class-validator';
 
 export enum Environments {
   DEVELOPMENT = 'DEVELOPMENT',
-  TEST = 'TEST',
+  TESTING = 'TESTING',
   STAGING = 'STAGING',
   PRODUCTION = 'PRODUCTION',
 }
@@ -17,7 +17,7 @@ export class EnvironmentSettings {
     return this.environmentVariables.ENV === Environments.DEVELOPMENT;
   }
   get isTesting() {
-    return this.environmentVariables.ENV === Environments.TEST;
+    return this.environmentVariables.ENV === Environments.TESTING;
   }
   get isStaging() {
     return this.environmentVariables.ENV === Environments.STAGING;

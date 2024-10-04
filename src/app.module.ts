@@ -20,7 +20,7 @@ import { BlogsModule } from './features/bloggers-platform/blogs.module';
       validate: validate,
       ignoreEnvFile:
         process.env.ENV !== Environments.DEVELOPMENT &&
-        process.env.ENV !== Environments.TEST,
+        process.env.ENV !== Environments.TESTING,
       envFilePath: ['.env.development', '.env'],
     }),
 
