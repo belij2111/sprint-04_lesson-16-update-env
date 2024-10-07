@@ -21,7 +21,7 @@ import { BlogsModule } from './features/bloggers-platform/blogs.module';
       ignoreEnvFile:
         process.env.ENV !== Environments.DEVELOPMENT &&
         process.env.ENV !== Environments.TESTING,
-      envFilePath: ['.env.development', '.env'],
+      envFilePath: ['.env.test.local', '.env.development', '.env'],
     }),
 
     MongooseModule.forRootAsync({
