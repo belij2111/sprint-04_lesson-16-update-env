@@ -1,20 +1,16 @@
 import { Test, TestingModuleBuilder } from '@nestjs/testing';
 import { AppModule } from '../../src/app.module';
 import { applyAppSetting } from '../../src/settings/apply-app-setting';
-import { MongoMemoryServer } from 'mongodb-memory-server';
-import * as Mongoose from 'mongoose';
 import { Connection } from 'mongoose';
 import { getConnectionToken } from '@nestjs/mongoose';
+import configuration from '../../src/settings/env/configuration';
 
 export const initSettings = async (
   service?: any,
   serviceMock?: any,
   addSettingsToModuleBuilder?: (moduleBuilder: TestingModuleBuilder) => void,
 ) => {
-  const mongoServer = await MongoMemoryServer.create();
-  const mongoUri = mongoServer.getUri();
-  await Mongoose.connect(mongoUri);
-
+  console.log('in tests ENV: ', configuration().environmentSettings.currentEnv);
   const testingModuleBuilder: TestingModuleBuilder = Test.createTestingModule({
     imports: [AppModule],
   })
@@ -37,6 +33,5 @@ export const initSettings = async (
     app,
     databaseConnection,
     httpServer,
-    mongoServer,
   };
 };
