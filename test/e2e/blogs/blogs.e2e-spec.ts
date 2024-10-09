@@ -29,6 +29,20 @@ describe('Blogs Components', () => {
     await app.close();
   });
 
+  describe('GET/blogs', () => {
+    it(`should return blogs with paging : STATUS 200`, async () => {
+      const createBlogs = await blogsTestManager.createBlogs(2);
+      const createResponse = await blogsTestManager.getBlogsWithPaging(
+        HttpStatus.OK,
+      );
+      blogsTestManager.expectCorrectPagination(
+        createBlogs,
+        createResponse.body,
+      );
+      // console.log(createResponse.body);
+    });
+  });
+
   describe('POST/blogs', () => {
     it(`should create new blog : STATUS 201`, async () => {
       const validBlog: BlogCreateModel = createValidBlogModel();
