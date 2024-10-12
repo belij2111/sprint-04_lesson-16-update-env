@@ -8,10 +8,12 @@ import process from 'process';
 import { Environments } from './settings/env/env-settings';
 import { MongooseModule } from '@nestjs/mongoose';
 import { BlogsModule } from './features/bloggers-platform/blogs.module';
+import { AuthModule } from './features/auth/auth.module';
 
 @Module({
   imports: [
     TestingModule,
+    AuthModule,
     UsersModule,
     BlogsModule,
     ConfigModule.forRoot({
