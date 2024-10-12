@@ -9,7 +9,7 @@ export class BlogCreateModel {
   name: string;
 
   @TrimIsString()
-  @Length(3, 10, {
+  @Length(3, 500, {
     message: 'description length should be from 3 to 500 symbol',
   })
   description: string;
