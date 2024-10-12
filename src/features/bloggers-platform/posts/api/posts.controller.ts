@@ -10,6 +10,7 @@ import {
   Post,
   Put,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { PostsService } from '../application/posts.service';
 import {
@@ -20,6 +21,7 @@ import {
 import { PostOutputModel } from './models/output/post.output.model';
 import { PostsQueryRepository } from '../infrastructure/posts.query-repository';
 import { PostCreateModel } from './models/input/create-post.input.model';
+import { BasicAuthGuard } from '../../../../common/guards/basic-auth.guard';
 
 @Controller('/posts')
 export class PostsController {
@@ -29,6 +31,7 @@ export class PostsController {
   ) {}
 
   @Post()
+  @UseGuards(BasicAuthGuard)
   async create(@Body() postCreateModel: PostCreateModel) {
     const createdPostId = await this.postsService.create(postCreateModel);
     return await this.postsQueryRepository.getById(createdPostId.id);
@@ -54,6 +57,7 @@ export class PostsController {
   }
 
   @Put(':id')
+  @UseGuards(BasicAuthGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   async update(
     @Param('id') id: string,
@@ -63,6 +67,7 @@ export class PostsController {
   }
 
   @Delete(':id')
+  @UseGuards(BasicAuthGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   async delete(@Param('id') id: string) {
     await this.postsService.delete(id);
