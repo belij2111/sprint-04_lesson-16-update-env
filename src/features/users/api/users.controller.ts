@@ -9,6 +9,7 @@ import {
   Param,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { UsersService } from '../application/users.service';
 import { UsersQueryRepository } from '../infrastructure/users.query-repository';
@@ -23,8 +24,10 @@ import {
 } from '../../../base/pagination.base.model';
 import { UserOutputModel } from './models/output/user.output.model';
 import { UserCreateModel } from './models/input/create-user.input.model';
+import { BasicAuthGuard } from '../../../common/guards/basic-auth.guard';
 
 @Controller('/users')
+@UseGuards(BasicAuthGuard)
 export class UsersController {
   constructor(
     private readonly usersQueryRepository: UsersQueryRepository,
