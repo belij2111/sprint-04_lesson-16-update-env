@@ -29,6 +29,7 @@ import { PostOutputModel } from '../../posts/api/models/output/post.output.model
 import { PostsService } from '../../posts/application/posts.service';
 import { PostsQueryRepository } from '../../posts/infrastructure/posts.query-repository';
 import { BasicAuthGuard } from '../../../../common/guards/basic-auth.guard';
+import { ApiBasicAuth } from '@nestjs/swagger';
 
 @Controller('/blogs')
 export class BlogsController {
@@ -41,6 +42,7 @@ export class BlogsController {
 
   @Post()
   @UseGuards(BasicAuthGuard)
+  @ApiBasicAuth()
   async create(@Body() blogCreateModel: BlogCreateModel) {
     const createdBlogId = await this.blogsService.create(blogCreateModel);
     return await this.blogsQueryRepository.getById(createdBlogId.id);
@@ -69,6 +71,7 @@ export class BlogsController {
 
   @Put(':id')
   @UseGuards(BasicAuthGuard)
+  @ApiBasicAuth()
   @HttpCode(HttpStatus.NO_CONTENT)
   async update(
     @Param('id') id: string,
@@ -79,6 +82,7 @@ export class BlogsController {
 
   @Delete(':id')
   @UseGuards(BasicAuthGuard)
+  @ApiBasicAuth()
   @HttpCode(HttpStatus.NO_CONTENT)
   async delete(@Param('id') id: string) {
     await this.blogsService.delete(id);
@@ -86,6 +90,7 @@ export class BlogsController {
 
   @Post(':blogId/posts')
   @UseGuards(BasicAuthGuard)
+  @ApiBasicAuth()
   @HttpCode(HttpStatus.CREATED)
   async createPostByBlogId(
     @Param('blogId') blogId: string,

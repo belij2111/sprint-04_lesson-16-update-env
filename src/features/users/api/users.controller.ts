@@ -25,9 +25,11 @@ import {
 import { UserOutputModel } from './models/output/user.output.model';
 import { UserCreateModel } from './models/input/create-user.input.model';
 import { BasicAuthGuard } from '../../../common/guards/basic-auth.guard';
+import { ApiBasicAuth } from '@nestjs/swagger';
 
 @Controller('/users')
 @UseGuards(BasicAuthGuard)
+@ApiBasicAuth()
 export class UsersController {
   constructor(
     private readonly usersQueryRepository: UsersQueryRepository,
