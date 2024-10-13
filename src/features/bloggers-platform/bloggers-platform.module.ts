@@ -26,4 +26,4 @@ import { BlogsController } from './blogs/api/blogs.controller';
     PostsQueryRepository,
   ],
 })
-export class BlogsModule {}
+export class BloggersPlatformModule {}

@@ -7,7 +7,7 @@ import { validate } from './settings/env/configuration';
 import process from 'process';
 import { Environments } from './settings/env/env-settings';
 import { MongooseModule } from '@nestjs/mongoose';
-import { BlogsModule } from './features/bloggers-platform/blogs.module';
+import { BloggersPlatformModule } from './features/bloggers-platform/bloggers-platform.module';
 import { AuthModule } from './features/auth/auth.module';
 
 @Module({
@@ -15,7 +15,7 @@ import { AuthModule } from './features/auth/auth.module';
     TestingModule,
     AuthModule,
     UsersModule,
-    BlogsModule,
+    BloggersPlatformModule,
     ConfigModule.forRoot({
       isGlobal: true,
       load: [configuration],
