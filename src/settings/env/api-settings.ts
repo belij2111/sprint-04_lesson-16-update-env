@@ -12,7 +12,8 @@ export class ApiSettings {
   @IsString()
   JWT_SECRET: string = this.environmentVariables.JWT_SECRET;
   @IsString()
-  JWT_EXPIRATION: string = this.environmentVariables.JWT_EXPIRATION;
+  ACCESS_TOKEN_EXPIRATION: string =
+    this.environmentVariables.ACCESS_TOKEN_EXPIRATION;
   PATH = {
     USERS: this.environmentVariables.USERS_PATH,
     BLOGS: this.environmentVariables.BLOGS_PATH,
