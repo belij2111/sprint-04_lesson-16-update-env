@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { User, UserModelType } from '../domain/user.entity';
 import { InjectModel } from '@nestjs/mongoose';
+import { LoginInputModel } from '../../auth/api/models/input/login.input.model';
 
 @Injectable()
 export class UsersRepository {
@@ -14,5 +15,9 @@ export class UsersRepository {
   async delete(id: string): Promise<boolean> {
     const deletionResult = await this.UserModel.deleteOne({ _id: id });
     return deletionResult.deletedCount === 1;
+  }
+
+  async findOne(loginOrEmail: LoginInputModel) {
+    return this.UserModel.findOne({ login: loginOrEmail });
   }
 }

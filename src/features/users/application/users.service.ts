@@ -3,6 +3,7 @@ import { UsersRepository } from '../infrastructure/users.repository';
 import { UserCreateModel } from '../api/models/input/create-user.input.model';
 import { BcryptService } from '../../../base/bcrypt.service';
 import { User } from '../domain/user.entity';
+import { LoginInputModel } from '../../auth/api/models/input/login.input.model';
 
 @Injectable()
 export class UsersService {
@@ -26,5 +27,9 @@ export class UsersService {
 
   async delete(id: string): Promise<boolean> {
     return this.usersRepository.delete(id);
+  }
+
+  async findOne(loginOrEmail: LoginInputModel) {
+    return this.usersRepository.findOne(loginOrEmail);
   }
 }
