@@ -20,7 +20,7 @@ import { ConfigurationType } from '../../settings/env/configuration';
           infer: true,
         });
         return {
-          secret: apiSettings.JWT_SECRET,
+          secret: apiSettings.ACCESS_TOKEN_SECRET,
           signOptions: { expiresIn: apiSettings.ACCESS_TOKEN_EXPIRATION },
         };
       },

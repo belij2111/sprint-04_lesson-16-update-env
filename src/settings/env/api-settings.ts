@@ -10,7 +10,7 @@ export class ApiSettings {
   @IsString()
   ADMIN_PASSWORD: string = this.environmentVariables.ADMIN_PASSWORD;
   @IsString()
-  JWT_SECRET: string = this.environmentVariables.JWT_SECRET;
+  ACCESS_TOKEN_SECRET: string = this.environmentVariables.ACCESS_TOKEN_SECRET;
   @IsString()
   ACCESS_TOKEN_EXPIRATION: string =
     this.environmentVariables.ACCESS_TOKEN_EXPIRATION;
