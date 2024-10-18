@@ -14,6 +14,11 @@ export class ApiSettings {
   @IsString()
   ACCESS_TOKEN_EXPIRATION: string =
     this.environmentVariables.ACCESS_TOKEN_EXPIRATION;
+  REFRESH_TOKEN_SECRET: string = this.environmentVariables.REFRESH_TOKEN_SECRET;
+  @IsString()
+  REFRESH_TOKEN_EXPIRATION: string =
+    this.environmentVariables.REFRESH_TOKEN_EXPIRATION;
+
   PATH = {
     USERS: this.environmentVariables.USERS_PATH,
     BLOGS: this.environmentVariables.BLOGS_PATH,
