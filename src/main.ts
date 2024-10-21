@@ -4,10 +4,11 @@ import { applyAppSetting } from './settings/apply-app-setting';
 import { ConfigService } from '@nestjs/config';
 import { ConfigurationType } from './settings/env/configuration';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-
+  app.use(cookieParser());
   applyAppSetting(app);
 
   const configService = app.get(ConfigService<ConfigurationType, true>);
