@@ -3,6 +3,10 @@ import { UsersService } from '../../users/application/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { BcryptService } from '../../../base/bcrypt.service';
 import { LoginInputModel } from '../api/models/input/login.input.model';
+import { UserInfoInputModel } from '../api/models/input/user-info.input.model';
+import { ConfigService } from '@nestjs/config';
+import { ConfigurationType } from '../../../settings/env/configuration';
+import { LoginSuccessViewModel } from '../api/models/output/login-success.view.model';
 
 @Injectable()
 export class AuthService {
@@ -10,6 +14,7 @@ export class AuthService {
     private readonly usersService: UsersService,
     private readonly bcryptService: BcryptService,
     private readonly jwtService: JwtService,
+    private readonly configService: ConfigService<ConfigurationType, true>,
   ) {}
 
   async validateUser(
@@ -30,10 +35,19 @@ export class AuthService {
     return user._id.toString();
   }
 
-  async login(userId: any) {
+  async login(userId: UserInfoInputModel): Promise<LoginSuccessViewModel> {
     const payload = { userId: userId };
+    const accessToken = this.jwtService.sign(payload);
+    const apiSettings = this.configService.get('apiSettings', {
+      infer: true,
+    });
+    const refreshToken = this.jwtService.sign(payload, {
+      secret: apiSettings.REFRESH_TOKEN_SECRET,
+      expiresIn: apiSettings.REFRESH_TOKEN_EXPIRATION,
+    });
     return {
-      accessToken: this.jwtService.sign(payload),
+      accessToken,
+      refreshToken,
     };
   }
 }
