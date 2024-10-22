@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { UsersRepository } from '../infrastructure/users.repository';
 import { UserCreateModel } from '../api/models/input/create-user.input.model';
 import { BcryptService } from '../../../base/bcrypt.service';
@@ -13,6 +13,13 @@ export class UsersService {
   ) {}
 
   async create(userCreateModel: UserCreateModel): Promise<{ id: string }> {
+    const existingUser = await this.usersRepository.findByLoginOrEmail({
+      loginOrEmail: userCreateModel.login || userCreateModel.email,
+      password: userCreateModel.password,
+    });
+    if (existingUser) {
+      throw new BadRequestException('Login or email is not unique');
+    }
     const passHash = await this.bcryptService.generateHash(
       userCreateModel.password,
     );

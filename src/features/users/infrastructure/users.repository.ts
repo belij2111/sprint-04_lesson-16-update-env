@@ -20,4 +20,14 @@ export class UsersRepository {
   async findOne(loginOrEmail: LoginInputModel) {
     return this.UserModel.findOne({ login: loginOrEmail });
   }
+
+  async findByLoginOrEmail(loginOrEmail: LoginInputModel) {
+    const filter = {
+      $or: [
+        { login: loginOrEmail.loginOrEmail },
+        { email: loginOrEmail.loginOrEmail },
+      ],
+    };
+    return this.UserModel.findOne(filter);
+  }
 }
