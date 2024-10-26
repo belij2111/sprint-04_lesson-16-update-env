@@ -35,6 +35,7 @@
     "cross-env": "^7.0.3",
     "dotenv": "^16.4.5",
     "mongoose": "^8.6.2",
+    "nestjs-uuid": "^0.1.4",
     "passport": "^0.7.0",
     "passport-http": "^0.3.0",
     "passport-jwt": "^4.0.1",
