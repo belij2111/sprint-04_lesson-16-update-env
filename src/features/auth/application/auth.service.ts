@@ -1,5 +1,4 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { UsersService } from '../../users/application/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { BcryptService } from '../../../base/bcrypt.service';
 import { LoginInputModel } from '../api/models/input/login.input.model';
@@ -7,11 +6,12 @@ import { UserInfoInputModel } from '../api/models/input/user-info.input.model';
 import { ConfigService } from '@nestjs/config';
 import { ConfigurationType } from '../../../settings/env/configuration';
 import { LoginSuccessViewModel } from '../api/models/output/login-success.view.model';
+import { UsersRepository } from '../../users/infrastructure/users.repository';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly usersService: UsersService,
+    private readonly usersRepository: UsersRepository,
     private readonly bcryptService: BcryptService,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService<ConfigurationType, true>,
@@ -21,7 +21,7 @@ export class AuthService {
     loginOrEmail: LoginInputModel,
     password: string,
   ): Promise<string | null> {
-    const user = await this.usersService.findOne(loginOrEmail);
+    const user = await this.usersRepository.findOne(loginOrEmail);
     if (!user) {
       throw new UnauthorizedException('User not found');
     }

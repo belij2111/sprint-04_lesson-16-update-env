@@ -6,6 +6,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from './domain/user.entity';
 import { UsersQueryRepository } from './infrastructure/users.query-repository';
 import { CryptoModule } from '../../base/crypto.module';
+import { UuidProvider } from '../../base/helpers/uuid.provider';
 
 @Module({
   imports: [
@@ -13,7 +14,12 @@ import { CryptoModule } from '../../base/crypto.module';
     CryptoModule,
   ],
   controllers: [UsersController],
-  providers: [UsersService, UsersRepository, UsersQueryRepository],
-  exports: [UsersService, UsersQueryRepository],
+  providers: [
+    UsersService,
+    UsersRepository,
+    UsersQueryRepository,
+    UuidProvider,
+  ],
+  exports: [UsersRepository, UsersQueryRepository],
 })
 export class UsersModule {}
