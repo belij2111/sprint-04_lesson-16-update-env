@@ -9,15 +9,15 @@
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
-    "start:dev": "cross-env ENV=DEVELOPMENT&& nest start --watch",
+    "start:dev": "set ENV=DEVELOPMENT&& nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
-    "test": "cross-env ENV=TESTING&&jest ",
-    "test:watch": "cross-env ENV=TESTING&&jest --watch --config ./test/jest-e2e.json --detectOpenHandles --runInBand",
-    "test:cov": "cross-env ENV=TESTING&&jest --coverage --detectOpenHandles --config ./test/jest-e2e.json",
+    "test": "set ENV=TESTING&&jest ",
+    "test:watch": "set ENV=TESTING&&jest --watch --config ./test/jest-e2e.json --detectOpenHandles --runInBand",
+    "test:cov": "set ENV=TESTING&&jest --coverage --detectOpenHandles --config ./test/jest-e2e.json",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "cross-env ENV=TESTING&& jest --config ./test/jest-e2e.json --detectOpenHandles --forceExit --runInBand"
+    "test:e2e": "set ENV=TESTING&& jest --config ./test/jest-e2e.json --detectOpenHandles --forceExit --runInBand"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
