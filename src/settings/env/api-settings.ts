@@ -18,6 +18,10 @@ export class ApiSettings {
   @IsString()
   REFRESH_TOKEN_EXPIRATION: string =
     this.environmentVariables.REFRESH_TOKEN_EXPIRATION;
+  @IsNumber()
+  CONFIRMATION_CODE_EXPIRATION: number = Number(
+    this.environmentVariables.CONFIRMATION_CODE_EXPIRATION,
+  );
 
   PATH = {
     USERS: this.environmentVariables.USERS_PATH,
