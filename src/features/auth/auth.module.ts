@@ -6,16 +6,17 @@ import { AuthController } from './api/auth.controller';
 import { AuthService } from './application/auth.service';
 import { JwtModule } from '@nestjs/jwt';
 import { LocalStrategy } from '../../common/strategies/local.strategy';
-import { BcryptService } from '../../base/bcrypt.service';
 import { ConfigService } from '@nestjs/config';
 import { ConfigurationType } from '../../settings/env/configuration';
 import { JwtStrategy } from '../../common/strategies/jwt.strategy';
 import { UuidProvider } from '../../base/helpers/uuid.provider';
+import { CryptoModule } from '../../base/crypto.module';
 
 @Module({
   imports: [
     PassportModule,
     UsersModule,
+    CryptoModule,
     JwtModule.registerAsync({
       useFactory: (configService: ConfigService<ConfigurationType, true>) => {
         const apiSettings = configService.get('apiSettings', {
@@ -34,7 +35,6 @@ import { UuidProvider } from '../../base/helpers/uuid.provider';
     AuthService,
     BasicStrategy,
     LocalStrategy,
-    BcryptService,
     JwtStrategy,
     UuidProvider,
   ],
