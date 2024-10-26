@@ -1,4 +1,8 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { BcryptService } from '../../../base/bcrypt.service';
 import { LoginInputModel } from '../api/models/input/login.input.model';
@@ -7,6 +11,9 @@ import { ConfigService } from '@nestjs/config';
 import { ConfigurationType } from '../../../settings/env/configuration';
 import { LoginSuccessViewModel } from '../api/models/output/login-success.view.model';
 import { UsersRepository } from '../../users/infrastructure/users.repository';
+import { User } from '../../users/domain/user.entity';
+import { UserCreateModel } from '../../users/api/models/input/create-user.input.model';
+import { UuidProvider } from '../../../base/helpers/uuid.provider';
 
 @Injectable()
 export class AuthService {
@@ -15,6 +22,7 @@ export class AuthService {
     private readonly bcryptService: BcryptService,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService<ConfigurationType, true>,
+    private readonly uuidProvider: UuidProvider,
   ) {}
 
   async validateUser(
@@ -49,5 +57,43 @@ export class AuthService {
       accessToken,
       refreshToken,
     };
+  }
+
+  async registerUser(userCreateModel: UserCreateModel) {
+    const existingUserByLogin = await this.usersRepository.findByLoginOrEmail({
+      loginOrEmail: userCreateModel.login,
+      password: userCreateModel.password,
+    });
+    if (existingUserByLogin) {
+      throw new BadRequestException('Login is not unique');
+    }
+    const existingUserByEmail = await this.usersRepository.findByLoginOrEmail({
+      loginOrEmail: userCreateModel.email,
+      password: userCreateModel.password,
+    });
+    if (existingUserByEmail) {
+      throw new BadRequestException('Email is not unique');
+    }
+    const passHash = await this.bcryptService.generateHash(
+      userCreateModel.password,
+    );
+    const expirationTime = this.configService.get(
+      'apiSettings.CONFIRMATION_CODE_EXPIRATION',
+      {
+        infer: true,
+      },
+    );
+    const newUser: User = {
+      login: userCreateModel.login,
+      password: passHash,
+      email: userCreateModel.email,
+      createdAt: new Date(),
+      emailConfirmation: {
+        confirmationCode: this.uuidProvider.generate(),
+        expirationDate: new Date(new Date().getTime() + expirationTime),
+        isConfirmed: false,
+      },
+    };
+    return this.usersRepository.create(newUser);
   }
 }

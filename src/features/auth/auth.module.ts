@@ -10,6 +10,7 @@ import { BcryptService } from '../../base/bcrypt.service';
 import { ConfigService } from '@nestjs/config';
 import { ConfigurationType } from '../../settings/env/configuration';
 import { JwtStrategy } from '../../common/strategies/jwt.strategy';
+import { UuidProvider } from '../../base/helpers/uuid.provider';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { JwtStrategy } from '../../common/strategies/jwt.strategy';
     LocalStrategy,
     BcryptService,
     JwtStrategy,
+    UuidProvider,
   ],
 })
 export class AuthModule {}

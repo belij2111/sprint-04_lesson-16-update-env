@@ -1,4 +1,5 @@
 import {
+  Body,
   Controller,
   Get,
   HttpCode,
@@ -19,6 +20,7 @@ import { LoginSuccessViewModel } from './models/output/login-success.view.model'
 import { CurrentUserId } from '../../../common/decorators/identification/current-user-id.param.decorator';
 import { UsersQueryRepository } from '../../users/infrastructure/users.query-repository';
 import { JwtAuthGuard } from '../../../common/guards/jwt-auth.guard';
+import { UserCreateModel } from '../../users/api/models/input/create-user.input.model';
 
 @Controller('/auth')
 export class AuthController {
@@ -46,5 +48,11 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   async get(@CurrentUserId() currentUserId: string) {
     return this.usersQueryRepository.getAuthUserById(currentUserId);
+  }
+
+  @Post('/registration')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async registration(@Body() userCreateModel: UserCreateModel) {
+    await this.authService.registerUser(userCreateModel);
   }
 }
