@@ -22,7 +22,9 @@ export class UsersService {
       password: userCreateModel.password,
     });
     if (existingUser) {
-      throw new BadRequestException('Login or email is not unique');
+      throw new BadRequestException([
+        { field: 'loginOrEmail', message: 'Login or Email is not unique' },
+      ]);
     }
     const passHash = await this.bcryptService.generateHash(
       userCreateModel.password,
