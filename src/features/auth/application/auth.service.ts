@@ -14,6 +14,7 @@ import { UsersRepository } from '../../users/infrastructure/users.repository';
 import { User } from '../../users/domain/user.entity';
 import { UserCreateModel } from '../../users/api/models/input/create-user.input.model';
 import { UuidProvider } from '../../../base/helpers/uuid.provider';
+import { MailService } from '../../../base/mail/mail.service';
 
 @Injectable()
 export class AuthService {
@@ -23,6 +24,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService<ConfigurationType, true>,
     private readonly uuidProvider: UuidProvider,
+    private readonly mailService: MailService,
   ) {}
 
   async validateUser(
@@ -94,6 +96,10 @@ export class AuthService {
         isConfirmed: false,
       },
     };
-    return this.usersRepository.create(newUser);
+    await this.usersRepository.create(newUser);
+    await this.mailService.sendEmail(
+      newUser.email,
+      newUser.emailConfirmation.confirmationCode,
+    );
   }
 }
