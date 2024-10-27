@@ -22,6 +22,12 @@ export class ApiSettings {
   CONFIRMATION_CODE_EXPIRATION: number = Number(
     this.environmentVariables.CONFIRMATION_CODE_EXPIRATION,
   );
+  @IsString()
+  MAIL_SERVICE: string = this.environmentVariables.MAIL_SERVICE;
+  @IsString()
+  MAIL_USER: string = this.environmentVariables.MAIL_USER;
+  @IsString()
+  MAIL_PASS: string = this.environmentVariables.MAIL_PASS;
 
   PATH = {
     USERS: this.environmentVariables.USERS_PATH,
