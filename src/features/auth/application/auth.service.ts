@@ -67,14 +67,18 @@ export class AuthService {
       password: userCreateModel.password,
     });
     if (existingUserByLogin) {
-      throw new BadRequestException('Login is not unique');
+      throw new BadRequestException([
+        { field: 'login', message: 'Login is not unique' },
+      ]);
     }
     const existingUserByEmail = await this.usersRepository.findByLoginOrEmail({
       loginOrEmail: userCreateModel.email,
       password: userCreateModel.password,
     });
     if (existingUserByEmail) {
-      throw new BadRequestException('Email is not unique');
+      throw new BadRequestException([
+        { field: 'email', message: 'Email is not unique' },
+      ]);
     }
     const passHash = await this.bcryptService.generateHash(
       userCreateModel.password,
