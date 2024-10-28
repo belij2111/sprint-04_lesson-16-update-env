@@ -27,11 +27,9 @@ export class AuthService {
     private readonly mailService: MailService,
   ) {}
 
-  async validateUser(
-    loginOrEmail: LoginInputModel,
-    password: string,
-  ): Promise<string | null> {
-    const user = await this.usersRepository.findOne(loginOrEmail);
+  async validateUser(loginInput: LoginInputModel): Promise<string | null> {
+    const { loginOrEmail, password } = loginInput;
+    const user = await this.usersRepository.findByLoginOrEmail(loginOrEmail);
     if (!user) {
       throw new UnauthorizedException('User not found');
     }
@@ -62,19 +60,17 @@ export class AuthService {
   }
 
   async registerUser(userCreateModel: UserCreateModel) {
-    const existingUserByLogin = await this.usersRepository.findByLoginOrEmail({
-      loginOrEmail: userCreateModel.login,
-      password: userCreateModel.password,
-    });
+    const existingUserByLogin = await this.usersRepository.findByLoginOrEmail(
+      userCreateModel.login,
+    );
     if (existingUserByLogin) {
       throw new BadRequestException([
         { field: 'login', message: 'Login is not unique' },
       ]);
     }
-    const existingUserByEmail = await this.usersRepository.findByLoginOrEmail({
-      loginOrEmail: userCreateModel.email,
-      password: userCreateModel.password,
-    });
+    const existingUserByEmail = await this.usersRepository.findByLoginOrEmail(
+      userCreateModel.email,
+    );
     if (existingUserByEmail) {
       throw new BadRequestException([
         { field: 'email', message: 'Email is not unique' },

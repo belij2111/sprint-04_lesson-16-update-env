@@ -17,13 +17,20 @@ export class UsersService {
   ) {}
 
   async create(userCreateModel: UserCreateModel): Promise<{ id: string }> {
-    const existingUser = await this.usersRepository.findByLoginOrEmail({
-      loginOrEmail: userCreateModel.login || userCreateModel.email,
-      password: userCreateModel.password,
-    });
-    if (existingUser) {
+    const existingUserByLogin = await this.usersRepository.findByLoginOrEmail(
+      userCreateModel.login,
+    );
+    if (existingUserByLogin) {
       throw new BadRequestException([
-        { field: 'loginOrEmail', message: 'Login or Email is not unique' },
+        { field: 'login', message: 'Login is not unique' },
+      ]);
+    }
+    const existingUserByEmail = await this.usersRepository.findByLoginOrEmail(
+      userCreateModel.email,
+    );
+    if (existingUserByEmail) {
+      throw new BadRequestException([
+        { field: 'email', message: 'Email is not unique' },
       ]);
     }
     const passHash = await this.bcryptService.generateHash(

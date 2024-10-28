@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { User, UserModelType } from '../domain/user.entity';
 import { InjectModel } from '@nestjs/mongoose';
-import { LoginInputModel } from '../../auth/api/models/input/login.input.model';
 
 @Injectable()
 export class UsersRepository {
@@ -17,16 +16,9 @@ export class UsersRepository {
     return deletionResult.deletedCount === 1;
   }
 
-  async findOne(loginOrEmail: LoginInputModel) {
-    return this.UserModel.findOne({ login: loginOrEmail });
-  }
-
-  async findByLoginOrEmail(loginOrEmail: LoginInputModel) {
+  async findByLoginOrEmail(loginOrEmail: string) {
     const filter = {
-      $or: [
-        { login: loginOrEmail.loginOrEmail },
-        { email: loginOrEmail.loginOrEmail },
-      ],
+      $or: [{ login: loginOrEmail }, { email: loginOrEmail }],
     };
     return this.UserModel.findOne(filter);
   }
