@@ -15,6 +15,7 @@ import { User } from '../../users/domain/user.entity';
 import { UserCreateModel } from '../../users/api/models/input/create-user.input.model';
 import { UuidProvider } from '../../../base/helpers/uuid.provider';
 import { MailService } from '../../../base/mail/mail.service';
+import { RegistrationConfirmationCodeModel } from '../api/models/input/registration-confirmation-code.model';
 
 @Injectable()
 export class AuthService {
@@ -100,6 +101,23 @@ export class AuthService {
     await this.mailService.sendEmail(
       newUser.email,
       newUser.emailConfirmation.confirmationCode,
+    );
+  }
+
+  async confirmationRegistrationUser(
+    inputCode: RegistrationConfirmationCodeModel,
+  ) {
+    const confirmedUser =
+      await this.usersRepository.findByConfirmationCode(inputCode);
+    if (!confirmedUser) {
+      throw new BadRequestException([
+        { field: 'code', message: 'Confirmation code is incorrect' },
+      ]);
+    }
+    const isConfirmed = true;
+    await this.usersRepository.updateEmailConfirmation(
+      confirmedUser.id,
+      isConfirmed,
     );
   }
 }

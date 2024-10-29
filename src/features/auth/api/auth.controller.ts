@@ -21,6 +21,7 @@ import { CurrentUserId } from '../../../common/decorators/identification/current
 import { UsersQueryRepository } from '../../users/infrastructure/users.query-repository';
 import { JwtAuthGuard } from '../../../common/guards/jwt-auth.guard';
 import { UserCreateModel } from '../../users/api/models/input/create-user.input.model';
+import { RegistrationConfirmationCodeModel } from './models/input/registration-confirmation-code.model';
 
 @Controller('/auth')
 export class AuthController {
@@ -54,5 +55,16 @@ export class AuthController {
   @HttpCode(HttpStatus.NO_CONTENT)
   async registration(@Body() userCreateModel: UserCreateModel) {
     await this.authService.registerUser(userCreateModel);
+  }
+
+  @Post('/registration-confirmation')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async registrationConfirmation(
+    @Body()
+    registrationConfirmationCodeModel: RegistrationConfirmationCodeModel,
+  ) {
+    await this.authService.confirmationRegistrationUser(
+      registrationConfirmationCodeModel,
+    );
   }
 }
