@@ -10,7 +10,7 @@ import { ConfigService } from '@nestjs/config';
 import { ConfigurationType } from '../../settings/env/configuration';
 import { JwtStrategy } from '../../common/strategies/jwt.strategy';
 import { UuidProvider } from '../../base/helpers/uuid.provider';
-import { CryptoModule } from '../../base/crypto.module';
+import { CryptoModule } from '../../base/crypto/crypto.module';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { EmailTemplateService } from '../../base/mail/email-template.service';
 import { MailService } from '../../base/mail/mail.service';

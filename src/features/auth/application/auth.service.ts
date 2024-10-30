@@ -4,7 +4,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { BcryptService } from '../../../base/bcrypt.service';
+import { BcryptService } from '../../../base/crypto/bcrypt.service';
 import { LoginInputModel } from '../api/models/input/login.input.model';
 import { UserInfoInputModel } from '../api/models/input/user-info.input.model';
 import { ConfigService } from '@nestjs/config';

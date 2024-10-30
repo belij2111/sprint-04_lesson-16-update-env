@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { UsersRepository } from '../infrastructure/users.repository';
 import { UserCreateModel } from '../api/models/input/create-user.input.model';
-import { BcryptService } from '../../../base/bcrypt.service';
+import { BcryptService } from '../../../base/crypto/bcrypt.service';
 import { User } from '../domain/user.entity';
 import { UuidProvider } from '../../../base/helpers/uuid.provider';
 import { ConfigService } from '@nestjs/config';
