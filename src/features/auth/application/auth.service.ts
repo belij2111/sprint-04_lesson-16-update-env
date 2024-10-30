@@ -16,6 +16,7 @@ import { UserCreateModel } from '../../users/api/models/input/create-user.input.
 import { UuidProvider } from '../../../base/helpers/uuid.provider';
 import { MailService } from '../../../base/mail/mail.service';
 import { RegistrationConfirmationCodeModel } from '../api/models/input/registration-confirmation-code.model';
+import { RegistrationEmailResendingModel } from '../api/models/input/registration-email-resending.model';
 
 @Injectable()
 export class AuthService {
@@ -119,5 +120,41 @@ export class AuthService {
       confirmedUser.id,
       isConfirmed,
     );
+  }
+
+  async registrationEmailResending(
+    inputEmail: RegistrationEmailResendingModel,
+  ) {
+    const existingUserByEmail = await this.usersRepository.findByLoginOrEmail(
+      inputEmail.email,
+    );
+    if (!existingUserByEmail) {
+      throw new BadRequestException([
+        { field: 'email', message: 'User with this email does not exist' },
+      ]);
+    }
+    if (existingUserByEmail.emailConfirmation.isConfirmed) {
+      throw new BadRequestException([
+        {
+          field: 'email',
+          message: 'The account has already been confirmed',
+        },
+      ]);
+    }
+    const expirationTime = this.configService.get(
+      'apiSettings.CONFIRMATION_CODE_EXPIRATION',
+      {
+        infer: true,
+      },
+    );
+    const newConfirmationCode = this.uuidProvider.generate();
+    const newExpirationDate = new Date(new Date().getTime() + expirationTime);
+
+    await this.usersRepository.updateRegistrationConfirmation(
+      existingUserByEmail.id,
+      newConfirmationCode,
+      newExpirationDate,
+    );
+    await this.mailService.sendEmail(inputEmail.email, newConfirmationCode);
   }
 }

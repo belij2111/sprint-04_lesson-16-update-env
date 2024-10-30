@@ -22,6 +22,7 @@ import { UsersQueryRepository } from '../../users/infrastructure/users.query-rep
 import { JwtAuthGuard } from '../../../common/guards/jwt-auth.guard';
 import { UserCreateModel } from '../../users/api/models/input/create-user.input.model';
 import { RegistrationConfirmationCodeModel } from './models/input/registration-confirmation-code.model';
+import { RegistrationEmailResendingModel } from './models/input/registration-email-resending.model';
 
 @Controller('/auth')
 export class AuthController {
@@ -65,6 +66,16 @@ export class AuthController {
   ) {
     await this.authService.confirmationRegistrationUser(
       registrationConfirmationCodeModel,
+    );
+  }
+
+  @Post('/registration-email-resending')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async registrationEmailResending(
+    @Body() registrationEmailResendingModel: RegistrationEmailResendingModel,
+  ) {
+    await this.authService.registrationEmailResending(
+      registrationEmailResendingModel,
     );
   }
 }

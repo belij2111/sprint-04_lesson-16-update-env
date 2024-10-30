@@ -40,4 +40,21 @@ export class UsersRepository {
     );
     return result.modifiedCount !== 0;
   }
+
+  async updateRegistrationConfirmation(
+    id: string,
+    code: string,
+    expirationDate: Date,
+  ) {
+    const result = await this.UserModel.updateOne(
+      { _id: id },
+      {
+        $set: {
+          'emailConfirmation.confirmationCode': code,
+          'emailConfirmation.expirationDate': expirationDate,
+        },
+      },
+    );
+    return result.modifiedCount !== 0;
+  }
 }
