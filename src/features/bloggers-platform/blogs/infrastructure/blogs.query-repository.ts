@@ -26,7 +26,6 @@ export class BlogsQueryRepository {
       .sort({ [inputQuery.sortBy]: inputQuery.sortDirection })
       .skip((inputQuery.pageNumber - 1) * inputQuery.pageSize)
       .limit(inputQuery.pageSize)
-      .lean()
       .exec();
     const totalCount = await this.BlogModel.countDocuments(filter);
     return {

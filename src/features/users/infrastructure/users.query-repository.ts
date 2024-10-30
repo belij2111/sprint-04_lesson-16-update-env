@@ -37,7 +37,6 @@ export class UsersQueryRepository {
       .sort({ [inputQuery.sortBy]: inputQuery.sortDirection })
       .skip((inputQuery.pageNumber - 1) * inputQuery.pageSize)
       .limit(inputQuery.pageSize)
-      .lean()
       .exec();
     const totalCount = await this.UserModel.countDocuments(filter);
     return {

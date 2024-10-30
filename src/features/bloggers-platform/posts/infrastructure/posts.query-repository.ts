@@ -28,7 +28,6 @@ export class PostsQueryRepository {
       .sort({ [inputQuery.sortBy]: inputQuery.sortDirection })
       .skip((inputQuery.pageNumber - 1) * inputQuery.pageSize)
       .limit(inputQuery.pageSize)
-      .lean()
       .exec();
     const totalCount = await this.PostModel.countDocuments(filter);
     return {
@@ -58,7 +57,6 @@ export class PostsQueryRepository {
       .sort({ [inputQuery.sortBy]: inputQuery.sortDirection })
       .skip((inputQuery.pageNumber - 1) * inputQuery.pageSize)
       .limit(inputQuery.pageSize)
-      .lean()
       .exec();
     const totalCount = await this.PostModel.countDocuments(filter);
     return {
