@@ -23,6 +23,7 @@ import { JwtAuthGuard } from '../../../common/guards/jwt-auth.guard';
 import { UserCreateModel } from '../../users/api/models/input/create-user.input.model';
 import { RegistrationConfirmationCodeModel } from './models/input/registration-confirmation-code.model';
 import { RegistrationEmailResendingModel } from './models/input/registration-email-resending.model';
+import { PasswordRecoveryInputModel } from './models/input/password-recovery-input.model';
 
 @Controller('/auth')
 export class AuthController {
@@ -77,5 +78,13 @@ export class AuthController {
     await this.authService.registrationEmailResending(
       registrationEmailResendingModel,
     );
+  }
+
+  @Post('/password-recovery')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async passwordRecovery(
+    @Body() passwordRecoveryInputModel: PasswordRecoveryInputModel,
+  ) {
+    await this.authService.passwordRecovery(passwordRecoveryInputModel);
   }
 }

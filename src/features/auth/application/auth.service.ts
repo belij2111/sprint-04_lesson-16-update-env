@@ -17,6 +17,7 @@ import { UuidProvider } from '../../../base/helpers/uuid.provider';
 import { MailService } from '../../../base/mail/mail.service';
 import { RegistrationConfirmationCodeModel } from '../api/models/input/registration-confirmation-code.model';
 import { RegistrationEmailResendingModel } from '../api/models/input/registration-email-resending.model';
+import { PasswordRecoveryInputModel } from '../api/models/input/password-recovery-input.model';
 
 @Injectable()
 export class AuthService {
@@ -102,6 +103,7 @@ export class AuthService {
     await this.mailService.sendEmail(
       newUser.email,
       newUser.emailConfirmation.confirmationCode,
+      'registration',
     );
   }
 
@@ -155,6 +157,35 @@ export class AuthService {
       newConfirmationCode,
       newExpirationDate,
     );
-    await this.mailService.sendEmail(inputEmail.email, newConfirmationCode);
+    await this.mailService.sendEmail(
+      inputEmail.email,
+      newConfirmationCode,
+      'registration',
+    );
+  }
+
+  async passwordRecovery(inputEmail: PasswordRecoveryInputModel) {
+    const existingUserByEmail = await this.usersRepository.findByLoginOrEmail(
+      inputEmail.email,
+    );
+    if (!existingUserByEmail) return;
+    const expirationTime = this.configService.get(
+      'apiSettings.CONFIRMATION_CODE_EXPIRATION',
+      {
+        infer: true,
+      },
+    );
+    const recoveryCode = this.uuidProvider.generate();
+    const newExpirationDate = new Date(new Date().getTime() + expirationTime);
+    await this.usersRepository.updateRegistrationConfirmation(
+      existingUserByEmail.id,
+      recoveryCode,
+      newExpirationDate,
+    );
+    await this.mailService.sendEmail(
+      inputEmail.email,
+      recoveryCode,
+      'passwordRecovery',
+    );
   }
 }

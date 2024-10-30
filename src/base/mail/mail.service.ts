@@ -8,8 +8,18 @@ export class MailService {
     private readonly mailerService: MailerService,
     private readonly emailTemplateService: EmailTemplateService,
   ) {}
-  async sendEmail(email: string, code: string) {
-    const htmlContent = this.emailTemplateService.registrationEmail(code);
+  async sendEmail(
+    email: string,
+    code: string,
+    templateType: 'registration' | 'passwordRecovery',
+  ) {
+    let htmlContent;
+    if (templateType === 'registration') {
+      htmlContent = this.emailTemplateService.registrationEmail(code);
+    }
+    if (templateType === 'passwordRecovery') {
+      htmlContent = this.emailTemplateService.passwordRecoveryEmail(code);
+    }
     await this.mailerService.sendMail({
       to: email,
       subject: 'Your code is here',
