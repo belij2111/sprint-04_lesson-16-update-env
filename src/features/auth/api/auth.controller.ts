@@ -24,6 +24,7 @@ import { UserCreateModel } from '../../users/api/models/input/create-user.input.
 import { RegistrationConfirmationCodeModel } from './models/input/registration-confirmation-code.model';
 import { RegistrationEmailResendingModel } from './models/input/registration-email-resending.model';
 import { PasswordRecoveryInputModel } from './models/input/password-recovery-input.model';
+import { NewPasswordRecoveryInputModel } from './models/input/new-password-recovery-input.model';
 
 @Controller('/auth')
 export class AuthController {
@@ -86,5 +87,13 @@ export class AuthController {
     @Body() passwordRecoveryInputModel: PasswordRecoveryInputModel,
   ) {
     await this.authService.passwordRecovery(passwordRecoveryInputModel);
+  }
+
+  @Post('/new-password')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async newPassword(
+    @Body() newPasswordRecoveryInputModel: NewPasswordRecoveryInputModel,
+  ) {
+    await this.authService.newPassword(newPasswordRecoveryInputModel);
   }
 }

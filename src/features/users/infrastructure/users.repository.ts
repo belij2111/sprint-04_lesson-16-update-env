@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { User, UserModelType } from '../domain/user.entity';
 import { InjectModel } from '@nestjs/mongoose';
-import { RegistrationConfirmationCodeModel } from '../../auth/api/models/input/registration-confirmation-code.model';
 
 @Injectable()
 export class UsersRepository {
@@ -24,9 +23,9 @@ export class UsersRepository {
     return this.UserModel.findOne(filter);
   }
 
-  async findByConfirmationCode(inputCode: RegistrationConfirmationCodeModel) {
+  async findByConfirmationCode(inputCode: string) {
     const filter = {
-      'emailConfirmation.confirmationCode': inputCode.code,
+      'emailConfirmation.confirmationCode': inputCode,
       'emailConfirmation.expirationDate': { $gt: new Date() },
       'emailConfirmation.isConfirmed': false,
     };
@@ -54,6 +53,14 @@ export class UsersRepository {
           'emailConfirmation.expirationDate': expirationDate,
         },
       },
+    );
+    return result.modifiedCount !== 0;
+  }
+
+  async updatePassword(id: string, newPasswordHash: string) {
+    const result = await this.UserModel.updateOne(
+      { _id: id },
+      { $set: { password: newPasswordHash } },
     );
     return result.modifiedCount !== 0;
   }

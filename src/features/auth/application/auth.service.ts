@@ -18,6 +18,7 @@ import { MailService } from '../../../base/mail/mail.service';
 import { RegistrationConfirmationCodeModel } from '../api/models/input/registration-confirmation-code.model';
 import { RegistrationEmailResendingModel } from '../api/models/input/registration-email-resending.model';
 import { PasswordRecoveryInputModel } from '../api/models/input/password-recovery-input.model';
+import { NewPasswordRecoveryInputModel } from '../api/models/input/new-password-recovery-input.model';
 
 @Injectable()
 export class AuthService {
@@ -110,8 +111,9 @@ export class AuthService {
   async confirmationRegistrationUser(
     inputCode: RegistrationConfirmationCodeModel,
   ) {
-    const confirmedUser =
-      await this.usersRepository.findByConfirmationCode(inputCode);
+    const confirmedUser = await this.usersRepository.findByConfirmationCode(
+      inputCode.code,
+    );
     if (!confirmedUser) {
       throw new BadRequestException([
         { field: 'code', message: 'Confirmation code is incorrect' },
@@ -186,6 +188,22 @@ export class AuthService {
       inputEmail.email,
       recoveryCode,
       'passwordRecovery',
+    );
+  }
+
+  async newPassword(inputData: NewPasswordRecoveryInputModel) {
+    const { newPassword, recoveryCode } = inputData;
+    const existingUserByRecoveryCode =
+      await this.usersRepository.findByConfirmationCode(recoveryCode);
+    if (!existingUserByRecoveryCode) {
+      throw new BadRequestException([
+        { field: 'code', message: 'Confirmation code is incorrect' },
+      ]);
+    }
+    const newPasswordHash = await this.bcryptService.generateHash(newPassword);
+    await this.usersRepository.updatePassword(
+      existingUserByRecoveryCode.id,
+      newPasswordHash,
     );
   }
 }
