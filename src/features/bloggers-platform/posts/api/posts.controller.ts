@@ -18,7 +18,7 @@ import {
   SortQueryFieldsType,
   sortQueryFieldsUtil,
 } from '../../../../base/pagination.base.model';
-import { PostOutputModel } from './models/output/post.output.model';
+import { PostViewModel } from './models/view/post.view.model';
 import { PostsQueryRepository } from '../infrastructure/posts.query-repository';
 import { PostCreateModel } from './models/input/create-post.input.model';
 import { BasicAuthGuard } from '../../../../common/guards/basic-auth.guard';
@@ -42,7 +42,7 @@ export class PostsController {
   @Get()
   async getAll(
     @Query() query: SortQueryFieldsType,
-  ): Promise<Paginator<PostOutputModel[]>> {
+  ): Promise<Paginator<PostViewModel[]>> {
     const inputQuery = {
       ...sortQueryFieldsUtil(query),
     };
@@ -50,7 +50,7 @@ export class PostsController {
   }
 
   @Get(':id')
-  async getById(@Param('id') id: string): Promise<PostOutputModel> {
+  async getById(@Param('id') id: string): Promise<PostViewModel> {
     const foundPost = await this.postsQueryRepository.getById(id);
     if (!foundPost) {
       throw new NotFoundException(`Post with id ${id} not found`);

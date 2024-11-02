@@ -3,10 +3,10 @@ import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument, UserModelType } from '../domain/user.entity';
 import {
   QueryUserFilterType,
-  UserOutputModel,
-} from '../api/models/output/user.output.model';
+  UserViewModel,
+} from '../api/models/view/user.view.model';
 import { Paginator } from '../../../base/pagination.base.model';
-import { MeViewModel } from '../../auth/api/models/output/me.view.model';
+import { MeViewModel } from '../../auth/api/models/view/me.view.model';
 
 @Injectable()
 export class UsersQueryRepository {
@@ -16,7 +16,7 @@ export class UsersQueryRepository {
 
   async getUsers(
     inputQuery: QueryUserFilterType,
-  ): Promise<Paginator<UserOutputModel[]>> {
+  ): Promise<Paginator<UserViewModel[]>> {
     const filter = {
       $or: [
         {
@@ -48,7 +48,7 @@ export class UsersQueryRepository {
     };
   }
 
-  async getById(id: string): Promise<UserOutputModel | null> {
+  async getById(id: string): Promise<UserViewModel | null> {
     const foundUser = await this.UserModel.findById(id);
     if (!foundUser) return null;
     return this.userMapToOutput(foundUser);
@@ -60,7 +60,7 @@ export class UsersQueryRepository {
     return this.authUserMapToOutput(foundUser);
   }
 
-  private userMapToOutput(user: UserDocument): UserOutputModel {
+  private userMapToOutput(user: UserDocument): UserViewModel {
     return {
       id: user._id.toString(),
       login: user.login,

@@ -1,7 +1,7 @@
 import { SortQueryFilterType } from '../../../../../../base/pagination.base.model';
 import { SearchNameTermFilterType } from '../../../../../../base/pagination.base.model';
 
-export class BlogOutputModel {
+export class BlogViewModel {
   id: string;
   name: string;
   description: string;

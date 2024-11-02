@@ -16,7 +16,7 @@ import {
   Response as ExpressResponse,
 } from 'express';
 import { UserInfoInputModel } from './models/input/user-info.input.model';
-import { LoginSuccessViewModel } from './models/output/login-success.view.model';
+import { LoginSuccessViewModel } from './models/view/login-success.view.model';
 import { CurrentUserId } from '../../../common/decorators/identification/current-user-id.param.decorator';
 import { UsersQueryRepository } from '../../users/infrastructure/users.query-repository';
 import { JwtAuthGuard } from '../../../common/guards/jwt-auth.guard';

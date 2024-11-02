@@ -9,7 +9,7 @@ import { LoginInputModel } from '../api/models/input/login.input.model';
 import { UserInfoInputModel } from '../api/models/input/user-info.input.model';
 import { ConfigService } from '@nestjs/config';
 import { ConfigurationType } from '../../../settings/env/configuration';
-import { LoginSuccessViewModel } from '../api/models/output/login-success.view.model';
+import { LoginSuccessViewModel } from '../api/models/view/login-success.view.model';
 import { UsersRepository } from '../../users/infrastructure/users.repository';
 import { User } from '../../users/domain/user.entity';
 import { UserCreateModel } from '../../users/api/models/input/create-user.input.model';

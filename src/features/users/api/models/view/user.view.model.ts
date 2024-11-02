@@ -2,7 +2,7 @@ import { SortQueryFilterType } from '../../../../../base/pagination.base.model';
 import { SearchLoginTermFilterType } from '../../../../../base/pagination.base.model';
 import { SearchEmailTermFilterType } from '../../../../../base/pagination.base.model';
 
-export class UserOutputModel {
+export class UserViewModel {
   id: string;
   login: string;
   email: string;

@@ -1,4 +1,4 @@
-export class PostOutputModel {
+export class PostViewModel {
   id: string;
   title: string;
   shortDescription: string;

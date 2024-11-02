@@ -22,7 +22,7 @@ import {
   SortQueryFieldsType,
   sortQueryFieldsUtil,
 } from '../../../base/pagination.base.model';
-import { UserOutputModel } from './models/output/user.output.model';
+import { UserViewModel } from './models/view/user.view.model';
 import { UserCreateModel } from './models/input/create-user.input.model';
 import { BasicAuthGuard } from '../../../common/guards/basic-auth.guard';
 import { ApiBasicAuth } from '@nestjs/swagger';
@@ -50,7 +50,7 @@ export class UsersController {
     query: SortQueryFieldsType &
       SearchLoginTermFieldsType &
       SearchEmailTermFieldsType,
-  ): Promise<Paginator<UserOutputModel[]>> {
+  ): Promise<Paginator<UserViewModel[]>> {
     const inputQuery = {
       ...sortQueryFieldsUtil(query),
       ...searchLoginTermUtil(query),

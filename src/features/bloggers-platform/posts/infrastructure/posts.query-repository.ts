@@ -5,7 +5,7 @@ import {
   SortQueryFilterType,
 } from '../../../../base/pagination.base.model';
 import { Post, PostDocument, PostModelType } from '../domain/post.entity';
-import { PostOutputModel } from '../api/models/output/post.output.model';
+import { PostViewModel } from '../api/models/view/post.view.model';
 import {
   Blog,
   BlogDocument,
@@ -22,7 +22,7 @@ export class PostsQueryRepository {
 
   async getAll(
     inputQuery: SortQueryFilterType,
-  ): Promise<Paginator<PostOutputModel[]>> {
+  ): Promise<Paginator<PostViewModel[]>> {
     const filter = {};
     const items = await this.PostModel.find(filter)
       .sort({ [inputQuery.sortBy]: inputQuery.sortDirection })
@@ -39,7 +39,7 @@ export class PostsQueryRepository {
     };
   }
 
-  async getById(id: string): Promise<PostOutputModel | null> {
+  async getById(id: string): Promise<PostViewModel | null> {
     const foundPost = await this.PostModel.findById(id);
     if (!foundPost) return null;
     return this.postMapToOutput(foundPost);
@@ -48,7 +48,7 @@ export class PostsQueryRepository {
   async getPostsByBlogId(
     blogId: string,
     inputQuery: SortQueryFilterType,
-  ): Promise<Paginator<PostOutputModel[]>> {
+  ): Promise<Paginator<PostViewModel[]>> {
     await this.findByIdOrNotFoundFail(blogId);
     const filter = {
       blogId: new ObjectId(blogId),
@@ -80,7 +80,7 @@ export class PostsQueryRepository {
     return foundBlog;
   }
 
-  private postMapToOutput(post: PostDocument): PostOutputModel {
+  private postMapToOutput(post: PostDocument): PostViewModel {
     const newestLikes = post.extendedLikesInfo.newestLikes.map((el) => ({
       addedAt: el.addedAt,
       userId: el.userId,

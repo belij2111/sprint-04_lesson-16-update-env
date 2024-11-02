@@ -14,7 +14,7 @@ import {
 } from '@nestjs/common';
 
 import { BlogsService } from '../application/blogs.service';
-import { BlogOutputModel } from './models/output/blog.output.model';
+import { BlogViewModel } from './models/view/blog.view.model';
 import {
   Paginator,
   SearchNameTermFieldsType,
@@ -25,7 +25,7 @@ import {
 import { BlogsQueryRepository } from '../infrastructure/blogs.query-repository';
 import { BlogCreateModel } from './models/input/create-blog.input.model';
 import { PostCreateModel } from '../../posts/api/models/input/create-post.input.model';
-import { PostOutputModel } from '../../posts/api/models/output/post.output.model';
+import { PostViewModel } from '../../posts/api/models/view/post.view.model';
 import { PostsService } from '../../posts/application/posts.service';
 import { PostsQueryRepository } from '../../posts/infrastructure/posts.query-repository';
 import { BasicAuthGuard } from '../../../../common/guards/basic-auth.guard';
@@ -52,7 +52,7 @@ export class BlogsController {
   async getAll(
     @Query()
     query: SortQueryFieldsType & SearchNameTermFieldsType,
-  ): Promise<Paginator<BlogOutputModel[]>> {
+  ): Promise<Paginator<BlogViewModel[]>> {
     const inputQuery = {
       ...sortQueryFieldsUtil(query),
       ...searchNameTermUtil(query),
@@ -61,7 +61,7 @@ export class BlogsController {
   }
 
   @Get(':id')
-  async getById(@Param('id') id: string): Promise<BlogOutputModel> {
+  async getById(@Param('id') id: string): Promise<BlogViewModel> {
     const foundBlog = await this.blogsQueryRepository.getById(id);
     if (!foundBlog) {
       throw new NotFoundException(`Blog with id ${id} not found`);
@@ -95,7 +95,7 @@ export class BlogsController {
   async createPostByBlogId(
     @Param('blogId') blogId: string,
     @Body() postCreateModel: PostCreateModel,
-  ): Promise<PostOutputModel | null> {
+  ): Promise<PostViewModel | null> {
     const createdPostId = await this.postsService.createPostByBlogId(
       blogId,
       postCreateModel,
@@ -107,7 +107,7 @@ export class BlogsController {
   async getPostsByBlogId(
     @Param('blogId') blogId: string,
     @Query() query: SortQueryFieldsType,
-  ): Promise<Paginator<PostOutputModel[]>> {
+  ): Promise<Paginator<PostViewModel[]>> {
     const inputQuery = {
       ...sortQueryFieldsUtil(query),
     };

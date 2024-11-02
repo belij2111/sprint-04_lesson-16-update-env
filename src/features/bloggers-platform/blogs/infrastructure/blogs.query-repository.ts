@@ -2,9 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Blog, BlogDocument, BlogModelType } from '../domain/blog.entity';
 import {
-  BlogOutputModel,
+  BlogViewModel,
   QueryBlogFilterType,
-} from '../api/models/output/blog.output.model';
+} from '../api/models/view/blog.view.model';
 import { Paginator } from '../../../../base/pagination.base.model';
 
 @Injectable()
@@ -15,7 +15,7 @@ export class BlogsQueryRepository {
 
   async getAll(
     inputQuery: QueryBlogFilterType,
-  ): Promise<Paginator<BlogOutputModel[]>> {
+  ): Promise<Paginator<BlogViewModel[]>> {
     const search = inputQuery.searchNameTerm
       ? { name: { $regex: inputQuery.searchNameTerm, $options: 'i' } }
       : {};
@@ -37,13 +37,13 @@ export class BlogsQueryRepository {
     };
   }
 
-  async getById(id: string): Promise<BlogOutputModel | null> {
+  async getById(id: string): Promise<BlogViewModel | null> {
     const foundBlog = await this.BlogModel.findById(id);
     if (!foundBlog) return null;
     return this.blogMapToOutput(foundBlog);
   }
 
-  private blogMapToOutput(blog: BlogDocument): BlogOutputModel {
+  private blogMapToOutput(blog: BlogDocument): BlogViewModel {
     return {
       id: blog._id.toString(),
       name: blog.name,
