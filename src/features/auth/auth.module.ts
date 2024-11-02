@@ -1,19 +1,19 @@
 import { Module } from '@nestjs/common';
 import { PassportModule } from '@nestjs/passport';
-import { BasicStrategy } from '../../common/strategies/basic.strategy';
+import { BasicStrategy } from '../../core/strategies/basic.strategy';
 import { UsersModule } from '../users/users.module';
 import { AuthController } from './api/auth.controller';
 import { AuthService } from './application/auth.service';
 import { JwtModule } from '@nestjs/jwt';
-import { LocalStrategy } from '../../common/strategies/local.strategy';
+import { LocalStrategy } from '../../core/strategies/local.strategy';
 import { ConfigService } from '@nestjs/config';
 import { ConfigurationType } from '../../settings/env/configuration';
-import { JwtStrategy } from '../../common/strategies/jwt.strategy';
-import { UuidProvider } from '../../base/helpers/uuid.provider';
-import { CryptoModule } from '../../base/crypto/crypto.module';
+import { JwtStrategy } from '../../core/strategies/jwt.strategy';
+import { UuidProvider } from '../../core/helpers/uuid.provider';
+import { CryptoModule } from '../../core/crypto/crypto.module';
 import { MailerModule } from '@nestjs-modules/mailer';
-import { EmailTemplateService } from '../../base/mail/email-template.service';
-import { MailService } from '../../base/mail/mail.service';
+import { EmailTemplateService } from '../../core/mail/email-template.service';
+import { MailService } from '../../core/mail/mail.service';
 
 @Module({
   imports: [

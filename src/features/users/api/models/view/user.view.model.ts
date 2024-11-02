@@ -1,6 +1,6 @@
-import { SortQueryFilterType } from '../../../../../base/pagination.base.model';
-import { SearchLoginTermFilterType } from '../../../../../base/pagination.base.model';
-import { SearchEmailTermFilterType } from '../../../../../base/pagination.base.model';
+import { SortQueryFilterType } from '../../../../../core/models/pagination.base.model';
+import { SearchLoginTermFilterType } from '../../../../../core/models/pagination.base.model';
+import { SearchEmailTermFilterType } from '../../../../../core/models/pagination.base.model';
 
 export class UserViewModel {
   id: string;

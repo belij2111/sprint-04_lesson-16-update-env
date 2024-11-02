@@ -17,11 +17,11 @@ import {
   Paginator,
   SortQueryFieldsType,
   sortQueryFieldsUtil,
-} from '../../../../base/pagination.base.model';
+} from '../../../../core/models/pagination.base.model';
 import { PostViewModel } from './models/view/post.view.model';
 import { PostsQueryRepository } from '../infrastructure/posts.query-repository';
 import { PostCreateModel } from './models/input/create-post.input.model';
-import { BasicAuthGuard } from '../../../../common/guards/basic-auth.guard';
+import { BasicAuthGuard } from '../../../../core/guards/basic-auth.guard';
 import { ApiBasicAuth } from '@nestjs/swagger';
 
 @Controller('/posts')

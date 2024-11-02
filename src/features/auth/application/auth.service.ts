@@ -4,7 +4,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { BcryptService } from '../../../base/crypto/bcrypt.service';
+import { BcryptService } from '../../../core/crypto/bcrypt.service';
 import { LoginInputModel } from '../api/models/input/login.input.model';
 import { UserInfoInputModel } from '../api/models/input/user-info.input.model';
 import { ConfigService } from '@nestjs/config';
@@ -13,8 +13,8 @@ import { LoginSuccessViewModel } from '../api/models/view/login-success.view.mod
 import { UsersRepository } from '../../users/infrastructure/users.repository';
 import { User } from '../../users/domain/user.entity';
 import { UserCreateModel } from '../../users/api/models/input/create-user.input.model';
-import { UuidProvider } from '../../../base/helpers/uuid.provider';
-import { MailService } from '../../../base/mail/mail.service';
+import { UuidProvider } from '../../../core/helpers/uuid.provider';
+import { MailService } from '../../../core/mail/mail.service';
 import { RegistrationConfirmationCodeModel } from '../api/models/input/registration-confirmation-code.model';
 import { RegistrationEmailResendingModel } from '../api/models/input/registration-email-resending.model';
 import { PasswordRecoveryInputModel } from '../api/models/input/password-recovery-input.model';

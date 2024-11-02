@@ -1,4 +1,4 @@
-import { TrimIsString } from '../../../../../common/decorators/validate/trim-is-string';
+import { TrimIsString } from '../../../../../core/decorators/validate/trim-is-string';
 import { IsEmail, Matches } from 'class-validator';
 
 export class PasswordRecoveryInputModel {

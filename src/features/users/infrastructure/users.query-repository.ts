@@ -5,7 +5,7 @@ import {
   QueryUserFilterType,
   UserViewModel,
 } from '../api/models/view/user.view.model';
-import { Paginator } from '../../../base/pagination.base.model';
+import { Paginator } from '../../../core/models/pagination.base.model';
 import { MeViewModel } from '../../auth/api/models/view/me.view.model';
 
 @Injectable()

@@ -3,7 +3,7 @@ import {
   INestApplication,
   ValidationPipe,
 } from '@nestjs/common';
-import { HttpExceptionFilter } from '../common/exeption-filters/http-exeption-filter';
+import { HttpExceptionFilter } from '../core/exeption-filters/http-exeption-filter';
 
 const APP_PREFIX = '/';
 

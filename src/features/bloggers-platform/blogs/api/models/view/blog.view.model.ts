@@ -1,5 +1,5 @@
-import { SortQueryFilterType } from '../../../../../../base/pagination.base.model';
-import { SearchNameTermFilterType } from '../../../../../../base/pagination.base.model';
+import { SortQueryFilterType } from '../../../../../../core/models/pagination.base.model';
+import { SearchNameTermFilterType } from '../../../../../../core/models/pagination.base.model';
 
 export class BlogViewModel {
   id: string;

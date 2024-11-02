@@ -1,5 +1,5 @@
 import { IsEmail, Length, Matches } from 'class-validator';
-import { TrimIsString } from '../../../../../common/decorators/validate/trim-is-string';
+import { TrimIsString } from '../../../../../core/decorators/validate/trim-is-string';
 
 export class UserCreateModel {
   @TrimIsString()

@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import {
   Paginator,
   SortQueryFilterType,
-} from '../../../../base/pagination.base.model';
+} from '../../../../core/models/pagination.base.model';
 import { Post, PostDocument, PostModelType } from '../domain/post.entity';
 import { PostViewModel } from '../api/models/view/post.view.model';
 import {

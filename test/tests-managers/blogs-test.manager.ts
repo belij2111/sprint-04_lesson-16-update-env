@@ -4,7 +4,7 @@ import { BlogViewModel } from '../../src/features/bloggers-platform/blogs/api/mo
 import request from 'supertest';
 import { paginationParams } from '../models/base/pagination.model';
 import { createValidBlogModel } from '../models/blogs/blog.input.model';
-import { Paginator } from '../../src/base/pagination.base.model';
+import { Paginator } from '../../src/core/models/pagination.base.model';
 
 export class BlogsTestManager {
   constructor(protected readonly app: INestApplication) {}

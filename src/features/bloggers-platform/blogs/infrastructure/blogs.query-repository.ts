@@ -5,7 +5,7 @@ import {
   BlogViewModel,
   QueryBlogFilterType,
 } from '../api/models/view/blog.view.model';
-import { Paginator } from '../../../../base/pagination.base.model';
+import { Paginator } from '../../../../core/models/pagination.base.model';
 
 @Injectable()
 export class BlogsQueryRepository {

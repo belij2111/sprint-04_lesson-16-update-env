@@ -5,8 +5,8 @@ import { UsersRepository } from './infrastructure/users.repository';
 import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from './domain/user.entity';
 import { UsersQueryRepository } from './infrastructure/users.query-repository';
-import { CryptoModule } from '../../base/crypto/crypto.module';
-import { UuidProvider } from '../../base/helpers/uuid.provider';
+import { CryptoModule } from '../../core/crypto/crypto.module';
+import { UuidProvider } from '../../core/helpers/uuid.provider';
 
 @Module({
   imports: [

@@ -21,14 +21,14 @@ import {
   searchNameTermUtil,
   SortQueryFieldsType,
   sortQueryFieldsUtil,
-} from '../../../../base/pagination.base.model';
+} from '../../../../core/models/pagination.base.model';
 import { BlogsQueryRepository } from '../infrastructure/blogs.query-repository';
 import { BlogCreateModel } from './models/input/create-blog.input.model';
 import { PostCreateModel } from '../../posts/api/models/input/create-post.input.model';
 import { PostViewModel } from '../../posts/api/models/view/post.view.model';
 import { PostsService } from '../../posts/application/posts.service';
 import { PostsQueryRepository } from '../../posts/infrastructure/posts.query-repository';
-import { BasicAuthGuard } from '../../../../common/guards/basic-auth.guard';
+import { BasicAuthGuard } from '../../../../core/guards/basic-auth.guard';
 import { ApiBasicAuth } from '@nestjs/swagger';
 
 @Controller('/blogs')

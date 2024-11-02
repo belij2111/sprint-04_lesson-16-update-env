@@ -21,10 +21,10 @@ import {
   searchLoginTermUtil,
   SortQueryFieldsType,
   sortQueryFieldsUtil,
-} from '../../../base/pagination.base.model';
+} from '../../../core/models/pagination.base.model';
 import { UserViewModel } from './models/view/user.view.model';
 import { UserCreateModel } from './models/input/create-user.input.model';
-import { BasicAuthGuard } from '../../../common/guards/basic-auth.guard';
+import { BasicAuthGuard } from '../../../core/guards/basic-auth.guard';
 import { ApiBasicAuth } from '@nestjs/swagger';
 
 @Controller('/users')
