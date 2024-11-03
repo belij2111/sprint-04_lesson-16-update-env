@@ -13,19 +13,14 @@ import {
 } from '@nestjs/common';
 import { UsersService } from '../application/users.service';
 import { UsersQueryRepository } from '../infrastructure/users.query-repository';
-import {
-  Paginator,
-  SearchEmailTermFieldsType,
-  searchEmailTermUtil,
-  SearchLoginTermFieldsType,
-  searchLoginTermUtil,
-  SortQueryFieldsType,
-  sortQueryFieldsUtil,
-} from '../../../core/models/pagination.base.model';
 import { UserViewModel } from './models/view/user.view.model';
-import { UserCreateModel } from './models/input/create-user.input.model';
+import {
+  GetUsersQueryParams,
+  UserCreateModel,
+} from './models/input/create-user.input.model';
 import { BasicAuthGuard } from '../../../core/guards/basic-auth.guard';
 import { ApiBasicAuth } from '@nestjs/swagger';
+import { PaginatedViewModel } from '../../../core/models/base.paginated.view.model';
 
 @Controller('/users')
 @UseGuards(BasicAuthGuard)
@@ -47,17 +42,9 @@ export class UsersController {
   @HttpCode(HttpStatus.OK)
   async get(
     @Query()
-    query: SortQueryFieldsType &
-      SearchLoginTermFieldsType &
-      SearchEmailTermFieldsType,
-  ): Promise<Paginator<UserViewModel[]>> {
-    const inputQuery = {
-      ...sortQueryFieldsUtil(query),
-      ...searchLoginTermUtil(query),
-      ...searchEmailTermUtil(query),
-    };
-
-    return await this.usersQueryRepository.getUsers(inputQuery);
+    query: GetUsersQueryParams,
+  ): Promise<PaginatedViewModel<UserViewModel[]>> {
+    return await this.usersQueryRepository.getUsers(query);
   }
 
   @Delete(':id')

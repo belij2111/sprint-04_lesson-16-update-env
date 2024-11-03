@@ -1,12 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { User, UserDocument, UserModelType } from '../domain/user.entity';
-import {
-  QueryUserFilterType,
-  UserViewModel,
-} from '../api/models/view/user.view.model';
-import { Paginator } from '../../../core/models/pagination.base.model';
+import { User, UserModelType } from '../domain/user.entity';
+import { UserViewModel } from '../api/models/view/user.view.model';
 import { MeViewModel } from '../../auth/api/models/view/me.view.model';
+import { GetUsersQueryParams } from '../api/models/input/create-user.input.model';
+import { PaginatedViewModel } from '../../../core/models/base.paginated.view.model';
 
 @Injectable()
 export class UsersQueryRepository {
@@ -15,65 +13,38 @@ export class UsersQueryRepository {
   ) {}
 
   async getUsers(
-    inputQuery: QueryUserFilterType,
-  ): Promise<Paginator<UserViewModel[]>> {
+    inputQuery: GetUsersQueryParams,
+  ): Promise<PaginatedViewModel<UserViewModel[]>> {
     const filter = {
       $or: [
-        {
-          login: {
-            $regex: inputQuery.searchLoginTerm,
-            $options: 'i',
-          },
-        },
-        {
-          email: {
-            $regex: inputQuery.searchEmailTerm,
-            $options: 'i',
-          },
-        },
+        { login: { $regex: inputQuery.searchLoginTerm || '', $options: 'i' } },
+        { email: { $regex: inputQuery.searchEmailTerm || '', $options: 'i' } },
       ],
     };
-    const items = await this.UserModel.find(filter)
+    const foundUsers = await this.UserModel.find(filter)
       .sort({ [inputQuery.sortBy]: inputQuery.sortDirection })
-      .skip((inputQuery.pageNumber - 1) * inputQuery.pageSize)
+      .skip(inputQuery.calculateSkip())
       .limit(inputQuery.pageSize)
       .exec();
     const totalCount = await this.UserModel.countDocuments(filter);
-    return {
-      pagesCount: Math.ceil(totalCount / inputQuery.pageSize),
-      page: inputQuery.pageNumber,
+    const items = foundUsers.map(UserViewModel.mapToView);
+    return PaginatedViewModel.mapToView({
+      pageNumber: inputQuery.pageNumber,
       pageSize: inputQuery.pageSize,
       totalCount,
-      items: items.map(this.userMapToOutput),
-    };
+      items,
+    });
   }
 
   async getById(id: string): Promise<UserViewModel | null> {
     const foundUser = await this.UserModel.findById(id);
     if (!foundUser) return null;
-    return this.userMapToOutput(foundUser);
+    return UserViewModel.mapToView(foundUser);
   }
 
   async getAuthUserById(id: string): Promise<MeViewModel | null> {
     const foundUser = await this.UserModel.findById(id);
     if (!foundUser) return null;
-    return this.authUserMapToOutput(foundUser);
-  }
-
-  private userMapToOutput(user: UserDocument): UserViewModel {
-    return {
-      id: user._id.toString(),
-      login: user.login,
-      email: user.email,
-      createdAt: user.createdAt.toISOString(),
-    };
-  }
-
-  private authUserMapToOutput(user: UserDocument): MeViewModel {
-    return {
-      email: user.email,
-      login: user.login,
-      userId: user._id.toString(),
-    };
+    return MeViewModel.mapToView(foundUser);
   }
 }

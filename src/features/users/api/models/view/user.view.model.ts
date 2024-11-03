@@ -1,15 +1,17 @@
-import { SortQueryFilterType } from '../../../../../core/models/pagination.base.model';
-import { SearchLoginTermFilterType } from '../../../../../core/models/pagination.base.model';
-import { SearchEmailTermFilterType } from '../../../../../core/models/pagination.base.model';
+import { UserDocument } from '../../../domain/user.entity';
 
 export class UserViewModel {
   id: string;
   login: string;
   email: string;
-  createdAt: string;
-}
+  createdAt: Date;
 
-export interface QueryUserFilterType
-  extends SortQueryFilterType,
-    SearchLoginTermFilterType,
-    SearchEmailTermFilterType {}
+  static mapToView(user: UserDocument): UserViewModel {
+    const model = new UserViewModel();
+    model.id = user._id.toString();
+    model.login = user.login;
+    model.email = user.email;
+    model.createdAt = user.createdAt;
+    return model;
+  }
+}

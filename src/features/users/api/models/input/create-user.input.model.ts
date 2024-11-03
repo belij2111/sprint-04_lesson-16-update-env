@@ -1,5 +1,6 @@
-import { IsEmail, Length, Matches } from 'class-validator';
+import { IsEmail, IsEnum, IsOptional, Length, Matches } from 'class-validator';
 import { TrimIsString } from '../../../../../core/decorators/validate/trim-is-string';
+import { BaseSortablePaginationParams } from '../../../../../core/models/base.query-params.input.model';
 
 export class UserCreateModel {
   @TrimIsString()
@@ -24,4 +25,23 @@ export class UserCreateModel {
     message: 'email should follow the pattern: example@example.com',
   })
   email: string;
+}
+
+export enum UsersSortBy {
+  Login = 'login',
+  Email = 'email',
+  CreatedAt = 'createdAt',
+}
+
+export class GetUsersQueryParams extends BaseSortablePaginationParams<UsersSortBy> {
+  @IsEnum(UsersSortBy)
+  sortBy = UsersSortBy.CreatedAt;
+
+  @TrimIsString()
+  @IsOptional()
+  searchLoginTerm: string | null = null;
+
+  @TrimIsString()
+  @IsOptional()
+  searchEmailTerm: string | null = null;
 }
