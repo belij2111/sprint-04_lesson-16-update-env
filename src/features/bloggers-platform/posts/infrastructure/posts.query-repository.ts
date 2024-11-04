@@ -21,19 +21,7 @@ export class PostsQueryRepository {
     query: GetPostQueryParams,
   ): Promise<PaginatedViewModel<PostViewModel[]>> {
     const filter = {};
-    const foundPosts = await this.PostModel.find(filter)
-      .sort({ [query.sortBy]: query.sortDirection })
-      .skip(query.calculateSkip())
-      .limit(query.pageSize)
-      .exec();
-    const totalCount = await this.PostModel.countDocuments(filter);
-    const items = foundPosts.map(PostViewModel.mapToView);
-    return PaginatedViewModel.mapToView({
-      pageNumber: query.pageNumber,
-      pageSize: query.pageSize,
-      totalCount,
-      items,
-    });
+    return this.getPosts(query, filter);
   }
 
   async getById(id: string): Promise<PostViewModel | null> {
@@ -50,6 +38,25 @@ export class PostsQueryRepository {
     const filter = {
       blogId: foundBlog._id,
     };
+    return this.getPosts(query, filter);
+  }
+
+  async findById(id: string): Promise<BlogDocument | null> {
+    return this.BlogModel.findOne({ _id: id });
+  }
+
+  async findByIdOrNotFoundFail(id: string): Promise<BlogDocument> {
+    const foundBlog = await this.findById(id);
+    if (!foundBlog) {
+      throw new NotFoundException(`Blog with id ${id} not found`);
+    }
+    return foundBlog;
+  }
+
+  private async getPosts(
+    query: GetPostQueryParams,
+    filter: Record<string, any>,
+  ): Promise<PaginatedViewModel<PostViewModel[]>> {
     const foundPosts = await this.PostModel.find(filter)
       .sort({ [query.sortBy]: query.sortDirection })
       .skip(query.calculateSkip())
@@ -63,17 +70,5 @@ export class PostsQueryRepository {
       totalCount,
       items,
     });
-  }
-
-  async findById(id: string): Promise<BlogDocument | null> {
-    return this.BlogModel.findOne({ _id: id });
-  }
-
-  async findByIdOrNotFoundFail(id: string): Promise<BlogDocument> {
-    const foundBlog = await this.findById(id);
-    if (!foundBlog) {
-      throw new NotFoundException(`Blog with id ${id} not found`);
-    }
-    return foundBlog;
   }
 }
