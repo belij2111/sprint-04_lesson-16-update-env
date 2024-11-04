@@ -13,16 +13,15 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { PostsService } from '../application/posts.service';
-import {
-  Paginator,
-  SortQueryFieldsType,
-  sortQueryFieldsUtil,
-} from '../../../../core/models/pagination.base.model';
 import { PostViewModel } from './models/view/post.view.model';
 import { PostsQueryRepository } from '../infrastructure/posts.query-repository';
-import { PostCreateModel } from './models/input/create-post.input.model';
+import {
+  GetPostQueryParams,
+  PostCreateModel,
+} from './models/input/create-post.input.model';
 import { BasicAuthGuard } from '../../../../core/guards/basic-auth.guard';
 import { ApiBasicAuth } from '@nestjs/swagger';
+import { PaginatedViewModel } from '../../../../core/models/base.paginated.view.model';
 
 @Controller('/posts')
 export class PostsController {
@@ -41,12 +40,9 @@ export class PostsController {
 
   @Get()
   async getAll(
-    @Query() query: SortQueryFieldsType,
-  ): Promise<Paginator<PostViewModel[]>> {
-    const inputQuery = {
-      ...sortQueryFieldsUtil(query),
-    };
-    return await this.postsQueryRepository.getAll(inputQuery);
+    @Query() query: GetPostQueryParams,
+  ): Promise<PaginatedViewModel<PostViewModel[]>> {
+    return await this.postsQueryRepository.getAll(query);
   }
 
   @Get(':id')

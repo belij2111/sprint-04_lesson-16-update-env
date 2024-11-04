@@ -15,17 +15,15 @@ import {
 
 import { BlogsService } from '../application/blogs.service';
 import { BlogViewModel } from './models/view/blog.view.model';
-import {
-  Paginator,
-  SortQueryFieldsType,
-  sortQueryFieldsUtil,
-} from '../../../../core/models/pagination.base.model';
 import { BlogsQueryRepository } from '../infrastructure/blogs.query-repository';
 import {
   BlogCreateModel,
   GetBlogsQueryParams,
 } from './models/input/create-blog.input.model';
-import { PostCreateModel } from '../../posts/api/models/input/create-post.input.model';
+import {
+  GetPostQueryParams,
+  PostCreateModel,
+} from '../../posts/api/models/input/create-post.input.model';
 import { PostViewModel } from '../../posts/api/models/view/post.view.model';
 import { PostsService } from '../../posts/application/posts.service';
 import { PostsQueryRepository } from '../../posts/infrastructure/posts.query-repository';
@@ -104,11 +102,8 @@ export class BlogsController {
   @Get(':blogId/posts')
   async getPostsByBlogId(
     @Param('blogId') blogId: string,
-    @Query() query: SortQueryFieldsType,
-  ): Promise<Paginator<PostViewModel[]>> {
-    const inputQuery = {
-      ...sortQueryFieldsUtil(query),
-    };
-    return await this.postsQueryRepository.getPostsByBlogId(blogId, inputQuery);
+    @Query() query: GetPostQueryParams,
+  ): Promise<PaginatedViewModel<PostViewModel[]>> {
+    return await this.postsQueryRepository.getPostsByBlogId(blogId, query);
   }
 }

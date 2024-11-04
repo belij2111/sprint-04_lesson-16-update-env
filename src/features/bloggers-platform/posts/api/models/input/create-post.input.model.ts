@@ -1,5 +1,6 @@
 import { TrimIsString } from '../../../../../../core/decorators/validate/trim-is-string';
-import { Length } from 'class-validator';
+import { IsEnum, Length } from 'class-validator';
+import { BaseSortablePaginationParams } from '../../../../../../core/models/base.query-params.input.model';
 
 export class PostCreateModel {
   @TrimIsString()
@@ -22,4 +23,17 @@ export class PostCreateModel {
 
   @TrimIsString()
   blogId: string;
+}
+
+export enum PostSortBy {
+  Title = 'title',
+  ShortDescription = 'shortDescription',
+  BlogId = 'blogId',
+  BlogName = 'blogName',
+  CreatedAt = 'createdAt',
+}
+
+export class GetPostQueryParams extends BaseSortablePaginationParams<PostSortBy> {
+  @IsEnum(PostSortBy)
+  sortBy = PostSortBy.CreatedAt;
 }

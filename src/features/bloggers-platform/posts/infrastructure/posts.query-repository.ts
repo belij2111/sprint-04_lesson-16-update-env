@@ -1,17 +1,14 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import {
-  Paginator,
-  SortQueryFilterType,
-} from '../../../../core/models/pagination.base.model';
-import { Post, PostDocument, PostModelType } from '../domain/post.entity';
+import { Post, PostModelType } from '../domain/post.entity';
 import { PostViewModel } from '../api/models/view/post.view.model';
 import {
   Blog,
   BlogDocument,
   BlogModelType,
 } from '../../blogs/domain/blog.entity';
-import { ObjectId } from 'mongodb';
+import { GetPostQueryParams } from '../api/models/input/create-post.input.model';
+import { PaginatedViewModel } from '../../../../core/models/base.paginated.view.model';
 
 @Injectable()
 export class PostsQueryRepository {
@@ -21,51 +18,51 @@ export class PostsQueryRepository {
   ) {}
 
   async getAll(
-    inputQuery: SortQueryFilterType,
-  ): Promise<Paginator<PostViewModel[]>> {
+    query: GetPostQueryParams,
+  ): Promise<PaginatedViewModel<PostViewModel[]>> {
     const filter = {};
-    const items = await this.PostModel.find(filter)
-      .sort({ [inputQuery.sortBy]: inputQuery.sortDirection })
-      .skip((inputQuery.pageNumber - 1) * inputQuery.pageSize)
-      .limit(inputQuery.pageSize)
+    const foundPosts = await this.PostModel.find(filter)
+      .sort({ [query.sortBy]: query.sortDirection })
+      .skip(query.calculateSkip())
+      .limit(query.pageSize)
       .exec();
     const totalCount = await this.PostModel.countDocuments(filter);
-    return {
-      pagesCount: Math.ceil(totalCount / inputQuery.pageSize),
-      page: inputQuery.pageNumber,
-      pageSize: inputQuery.pageSize,
+    const items = foundPosts.map(PostViewModel.mapToView);
+    return PaginatedViewModel.mapToView({
+      pageNumber: query.pageNumber,
+      pageSize: query.pageSize,
       totalCount,
-      items: items.map(this.postMapToOutput),
-    };
+      items,
+    });
   }
 
   async getById(id: string): Promise<PostViewModel | null> {
     const foundPost = await this.PostModel.findById(id);
     if (!foundPost) return null;
-    return this.postMapToOutput(foundPost);
+    return PostViewModel.mapToView(foundPost);
   }
 
   async getPostsByBlogId(
     blogId: string,
-    inputQuery: SortQueryFilterType,
-  ): Promise<Paginator<PostViewModel[]>> {
-    await this.findByIdOrNotFoundFail(blogId);
+    query: GetPostQueryParams,
+  ): Promise<PaginatedViewModel<PostViewModel[]>> {
+    const foundBlog = await this.findByIdOrNotFoundFail(blogId);
     const filter = {
-      blogId: new ObjectId(blogId),
+      blogId: foundBlog._id,
     };
-    const items = await this.PostModel.find(filter)
-      .sort({ [inputQuery.sortBy]: inputQuery.sortDirection })
-      .skip((inputQuery.pageNumber - 1) * inputQuery.pageSize)
-      .limit(inputQuery.pageSize)
+    const foundPosts = await this.PostModel.find(filter)
+      .sort({ [query.sortBy]: query.sortDirection })
+      .skip(query.calculateSkip())
+      .limit(query.pageSize)
       .exec();
     const totalCount = await this.PostModel.countDocuments(filter);
-    return {
-      pagesCount: Math.ceil(totalCount / inputQuery.pageSize),
-      page: inputQuery.pageNumber,
-      pageSize: inputQuery.pageSize,
+    const items = foundPosts.map(PostViewModel.mapToView);
+    return PaginatedViewModel.mapToView({
+      pageNumber: query.pageNumber,
+      pageSize: query.pageSize,
       totalCount,
-      items: items.map(this.postMapToOutput),
-    };
+      items,
+    });
   }
 
   async findById(id: string): Promise<BlogDocument | null> {
@@ -78,28 +75,5 @@ export class PostsQueryRepository {
       throw new NotFoundException(`Blog with id ${id} not found`);
     }
     return foundBlog;
-  }
-
-  private postMapToOutput(post: PostDocument): PostViewModel {
-    const newestLikes = post.extendedLikesInfo.newestLikes.map((el) => ({
-      addedAt: el.addedAt,
-      userId: el.userId,
-      login: el.login,
-    }));
-    return {
-      id: post._id.toString(),
-      title: post.title,
-      shortDescription: post.shortDescription,
-      content: post.content,
-      blogId: post.blogId.toString(),
-      blogName: post.blogName,
-      createdAt: post.createdAt,
-      extendedLikesInfo: {
-        likesCount: post.extendedLikesInfo.likesCount,
-        dislikesCount: post.extendedLikesInfo.dislikesCount,
-        myStatus: post.extendedLikesInfo.myStatus,
-        newestLikes: newestLikes,
-      },
-    };
   }
 }
