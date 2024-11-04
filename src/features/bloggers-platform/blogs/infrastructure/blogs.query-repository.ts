@@ -1,11 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Blog, BlogDocument, BlogModelType } from '../domain/blog.entity';
-import {
-  BlogViewModel,
-  QueryBlogFilterType,
-} from '../api/models/view/blog.view.model';
-import { Paginator } from '../../../../core/models/pagination.base.model';
+import { Blog, BlogModelType } from '../domain/blog.entity';
+import { BlogViewModel } from '../api/models/view/blog.view.model';
+import { GetBlogsQueryParams } from '../api/models/input/create-blog.input.model';
+import { PaginatedViewModel } from '../../../../core/models/base.paginated.view.model';
 
 @Injectable()
 export class BlogsQueryRepository {
@@ -14,43 +12,32 @@ export class BlogsQueryRepository {
   ) {}
 
   async getAll(
-    inputQuery: QueryBlogFilterType,
-  ): Promise<Paginator<BlogViewModel[]>> {
-    const search = inputQuery.searchNameTerm
-      ? { name: { $regex: inputQuery.searchNameTerm, $options: 'i' } }
+    query: GetBlogsQueryParams,
+  ): Promise<PaginatedViewModel<BlogViewModel[]>> {
+    const search = query.searchNameTerm
+      ? { name: { $regex: query.searchNameTerm || '', $options: 'i' } }
       : {};
     const filter = {
       ...search,
     };
-    const items = await this.BlogModel.find(filter)
-      .sort({ [inputQuery.sortBy]: inputQuery.sortDirection })
-      .skip((inputQuery.pageNumber - 1) * inputQuery.pageSize)
-      .limit(inputQuery.pageSize)
+    const foundBlogs = await this.BlogModel.find(filter)
+      .sort({ [query.sortBy]: query.sortDirection })
+      .skip(query.calculateSkip())
+      .limit(query.pageSize)
       .exec();
     const totalCount = await this.BlogModel.countDocuments(filter);
-    return {
-      pagesCount: Math.ceil(totalCount / inputQuery.pageSize),
-      page: inputQuery.pageNumber,
-      pageSize: inputQuery.pageSize,
+    const items = foundBlogs.map(BlogViewModel.mapToView);
+    return PaginatedViewModel.mapToView({
+      pageNumber: query.pageNumber,
+      pageSize: query.pageSize,
       totalCount,
-      items: items.map(this.blogMapToOutput),
-    };
+      items,
+    });
   }
 
   async getById(id: string): Promise<BlogViewModel | null> {
     const foundBlog = await this.BlogModel.findById(id);
     if (!foundBlog) return null;
-    return this.blogMapToOutput(foundBlog);
-  }
-
-  private blogMapToOutput(blog: BlogDocument): BlogViewModel {
-    return {
-      id: blog._id.toString(),
-      name: blog.name,
-      description: blog.description,
-      websiteUrl: blog.websiteUrl,
-      createdAt: blog.createdAt,
-      isMembership: blog.isMembership,
-    };
+    return BlogViewModel.mapToView(foundBlog);
   }
 }

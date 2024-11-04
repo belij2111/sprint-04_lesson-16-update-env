@@ -17,19 +17,21 @@ import { BlogsService } from '../application/blogs.service';
 import { BlogViewModel } from './models/view/blog.view.model';
 import {
   Paginator,
-  SearchNameTermFieldsType,
-  searchNameTermUtil,
   SortQueryFieldsType,
   sortQueryFieldsUtil,
 } from '../../../../core/models/pagination.base.model';
 import { BlogsQueryRepository } from '../infrastructure/blogs.query-repository';
-import { BlogCreateModel } from './models/input/create-blog.input.model';
+import {
+  BlogCreateModel,
+  GetBlogsQueryParams,
+} from './models/input/create-blog.input.model';
 import { PostCreateModel } from '../../posts/api/models/input/create-post.input.model';
 import { PostViewModel } from '../../posts/api/models/view/post.view.model';
 import { PostsService } from '../../posts/application/posts.service';
 import { PostsQueryRepository } from '../../posts/infrastructure/posts.query-repository';
 import { BasicAuthGuard } from '../../../../core/guards/basic-auth.guard';
 import { ApiBasicAuth } from '@nestjs/swagger';
+import { PaginatedViewModel } from '../../../../core/models/base.paginated.view.model';
 
 @Controller('/blogs')
 export class BlogsController {
@@ -51,13 +53,9 @@ export class BlogsController {
   @Get()
   async getAll(
     @Query()
-    query: SortQueryFieldsType & SearchNameTermFieldsType,
-  ): Promise<Paginator<BlogViewModel[]>> {
-    const inputQuery = {
-      ...sortQueryFieldsUtil(query),
-      ...searchNameTermUtil(query),
-    };
-    return await this.blogsQueryRepository.getAll(inputQuery);
+    query: GetBlogsQueryParams,
+  ): Promise<PaginatedViewModel<BlogViewModel[]>> {
+    return await this.blogsQueryRepository.getAll(query);
   }
 
   @Get(':id')

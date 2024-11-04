@@ -1,5 +1,6 @@
-import { IsUrl, Length, Matches } from 'class-validator';
+import { IsEnum, IsOptional, IsUrl, Length, Matches } from 'class-validator';
 import { TrimIsString } from '../../../../../../core/decorators/validate/trim-is-string';
+import { BaseSortablePaginationParams } from '../../../../../../core/models/base.query-params.input.model';
 
 export class BlogCreateModel {
   @TrimIsString()
@@ -24,4 +25,20 @@ export class BlogCreateModel {
     { message: 'websiteUrl has invalid format' },
   )
   websiteUrl: string;
+}
+
+export enum BlogsSortBy {
+  Name = 'name',
+  Description = 'description',
+  WebsiteUrl = 'websiteUrl',
+  CreatedAt = 'createdAt',
+}
+
+export class GetBlogsQueryParams extends BaseSortablePaginationParams<BlogsSortBy> {
+  @IsEnum(BlogsSortBy)
+  sortBy = BlogsSortBy.CreatedAt;
+
+  @TrimIsString()
+  @IsOptional()
+  searchNameTerm: string | null = null;
 }
