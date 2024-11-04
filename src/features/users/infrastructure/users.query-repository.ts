@@ -12,7 +12,7 @@ export class UsersQueryRepository {
     @InjectModel(User.name) private readonly UserModel: UserModelType,
   ) {}
 
-  async getUsers(
+  async getAll(
     inputQuery: GetUsersQueryParams,
   ): Promise<PaginatedViewModel<UserViewModel[]>> {
     const filter = {

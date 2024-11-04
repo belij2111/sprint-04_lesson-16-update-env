@@ -40,11 +40,11 @@ export class UsersController {
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  async get(
+  async getAll(
     @Query()
     query: GetUsersQueryParams,
   ): Promise<PaginatedViewModel<UserViewModel[]>> {
-    return await this.usersQueryRepository.getUsers(query);
+    return await this.usersQueryRepository.getAll(query);
   }
 
   @Delete(':id')
