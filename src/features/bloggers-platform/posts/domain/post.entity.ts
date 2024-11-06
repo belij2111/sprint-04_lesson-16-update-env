@@ -17,7 +17,7 @@ const NewestLikesSchema = SchemaFactory.createForClass(NewestLikes);
 class ExtendedLikesInfo {
   @Prop({ type: Number, default: 0 })
   likesCount: number;
-  @Prop({ type: Number, required: true })
+  @Prop({ type: Number, default: 0 })
   dislikesCount: number;
   @Prop({ type: String, enum: ['None', 'Like', 'Dislike'], default: 'None' })
   myStatus: string;
