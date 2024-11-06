@@ -27,6 +27,7 @@ export class PostViewModel {
     model.content = post.content;
     model.blogId = post.blogId;
     model.blogName = post.blogName;
+    model.createdAt = post.createdAt;
     model.extendedLikesInfo = post.extendedLikesInfo;
 
     return model;
