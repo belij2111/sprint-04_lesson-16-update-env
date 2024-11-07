@@ -20,14 +20,21 @@ import {
   PostCreateModel,
 } from './models/input/create-post.input.model';
 import { BasicAuthGuard } from '../../../../core/guards/basic-auth.guard';
-import { ApiBasicAuth } from '@nestjs/swagger';
+import { ApiBasicAuth, ApiBearerAuth } from '@nestjs/swagger';
 import { PaginatedViewModel } from '../../../../core/models/base.paginated.view.model';
+import { CommentCreateModel } from '../../comments/api/models/input/create-comment.input.model';
+import { CommentsService } from '../../comments/application/comments.service';
+import { CurrentUserId } from '../../../../core/decorators/identification/current-user-id.param.decorator';
+import { JwtAuthGuard } from '../../../../core/guards/jwt-auth.guard';
+import { CommentsQueryRepository } from '../../comments/infrastructure/comments.query-repository';
 
 @Controller('/posts')
 export class PostsController {
   constructor(
     private readonly postsService: PostsService,
     private readonly postsQueryRepository: PostsQueryRepository,
+    private readonly commentsService: CommentsService,
+    private readonly commentsQueryRepository: CommentsQueryRepository,
   ) {}
 
   @Post()
@@ -71,5 +78,21 @@ export class PostsController {
   @HttpCode(HttpStatus.NO_CONTENT)
   async delete(@Param('id') id: string) {
     await this.postsService.delete(id);
+  }
+
+  @Post('/:postId/comments')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  async createCommentByPostId(
+    @CurrentUserId() currentUserId: string,
+    @Param('postId') postId: string,
+    @Body() commentCreateModel: CommentCreateModel,
+  ) {
+    const createdUserId = await this.commentsService.create(
+      currentUserId,
+      postId,
+      commentCreateModel,
+    );
+    return await this.commentsQueryRepository.getCommentById(createdUserId.id);
   }
 }
