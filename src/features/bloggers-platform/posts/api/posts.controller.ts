@@ -22,11 +22,15 @@ import {
 import { BasicAuthGuard } from '../../../../core/guards/basic-auth.guard';
 import { ApiBasicAuth, ApiBearerAuth } from '@nestjs/swagger';
 import { PaginatedViewModel } from '../../../../core/models/base.paginated.view.model';
-import { CommentCreateModel } from '../../comments/api/models/input/create-comment.input.model';
+import {
+  CommentCreateModel,
+  GetCommentQueryParams,
+} from '../../comments/api/models/input/create-comment.input.model';
 import { CommentsService } from '../../comments/application/comments.service';
 import { CurrentUserId } from '../../../../core/decorators/identification/current-user-id.param.decorator';
 import { JwtAuthGuard } from '../../../../core/guards/jwt-auth.guard';
 import { CommentsQueryRepository } from '../../comments/infrastructure/comments.query-repository';
+import { CommentViewModel } from '../../comments/api/models/view/comment.view.model';
 
 @Controller('/posts')
 export class PostsController {
@@ -94,5 +98,16 @@ export class PostsController {
       commentCreateModel,
     );
     return await this.commentsQueryRepository.getCommentById(createdUserId.id);
+  }
+
+  @Get('/:postId/comments')
+  async getCommentsByPostId(
+    @Param('postId') postId: string,
+    @Query() query: GetCommentQueryParams,
+  ): Promise<PaginatedViewModel<CommentViewModel[]>> {
+    return await this.commentsQueryRepository.getCommentsByPostId(
+      postId,
+      query,
+    );
   }
 }
