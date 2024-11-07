@@ -1,5 +1,5 @@
-import { Injectable } from '@nestjs/common';
-import { User, UserModelType } from '../domain/user.entity';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { User, UserDocument, UserModelType } from '../domain/user.entity';
 import { InjectModel } from '@nestjs/mongoose';
 
 @Injectable()
@@ -63,5 +63,17 @@ export class UsersRepository {
       { $set: { password: newPasswordHash } },
     );
     return result.modifiedCount !== 0;
+  }
+
+  async findById(id: string): Promise<UserDocument | null> {
+    return this.UserModel.findOne({ _id: id });
+  }
+
+  async findByIdOrNotFoundFail(id: string) {
+    const foundUser = await this.findById(id);
+    if (!foundUser) {
+      throw new UnauthorizedException(`User with id ${id} not found`);
+    }
+    return foundUser;
   }
 }
