@@ -39,6 +39,6 @@ export class PostsRepository {
       { _id: foundPost.id },
       { $set: postUpdateModel },
     );
-    return result.modifiedCount === 1;
+    return result.modifiedCount !== 0;
   }
 }

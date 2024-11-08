@@ -20,7 +20,7 @@ export class BlogsRepository {
       { _id: foundBlog.id },
       { $set: blogUpdatedModel },
     );
-    return result.modifiedCount === 1;
+    return result.modifiedCount !== 0;
   }
 
   async delete(id: string): Promise<boolean> {
