@@ -1,5 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Comment, CommentModelType } from '../domain/comment.entity';
+import {
+  Comment,
+  CommentDocument,
+  CommentModelType,
+} from '../domain/comment.entity';
 import { InjectModel } from '@nestjs/mongoose';
 import { CommentViewModel } from '../api/models/view/comment.view.model';
 import { GetCommentQueryParams } from '../api/models/input/create-comment.input.model';
@@ -17,9 +21,8 @@ export class CommentsQueryRepository {
     @InjectModel(Post.name) private readonly PostModel: PostModelType,
   ) {}
 
-  async getCommentById(id: string): Promise<CommentViewModel | null> {
-    const foundComment = await this.CommentModel.findById(id);
-    if (!foundComment) return null;
+  async getCommentById(id: string): Promise<CommentViewModel> {
+    const foundComment = await this.findCommentByIdOrNotFoundFail(id);
     return CommentViewModel.mapToView(foundComment);
   }
 
@@ -33,7 +36,7 @@ export class CommentsQueryRepository {
   }
 
   private async findPostById(postId: string): Promise<PostDocument | null> {
-    return this.PostModel.findOne({ _id: postId });
+    return this.PostModel.findById({ _id: postId });
   }
 
   private async findByIdOrNotFoundFail(postId: string): Promise<PostDocument> {
@@ -42,6 +45,20 @@ export class CommentsQueryRepository {
       throw new NotFoundException(`Post with id ${postId} not found`);
     }
     return foundPost;
+  }
+
+  private async findCommentById(id: string): Promise<CommentDocument | null> {
+    return this.CommentModel.findById({ _id: id });
+  }
+
+  private async findCommentByIdOrNotFoundFail(
+    commentId: string,
+  ): Promise<CommentDocument> {
+    const foundComment = await this.findCommentById(commentId);
+    if (!foundComment) {
+      throw new NotFoundException(`Comment with id ${commentId} not found`);
+    }
+    return foundComment;
   }
 
   private async getComments(
