@@ -54,4 +54,15 @@ export class CommentsService {
     };
     return await this.commentsRepository.update(foundComment, updateCommentDto);
   }
+
+  async delete(userId: string, commentId: string) {
+    const foundComment =
+      await this.commentsRepository.findByIdOrNotFoundFail(commentId);
+    if (foundComment.commentatorInfo.userId !== userId) {
+      throw new ForbiddenException([
+        { field: 'user', message: 'The comment is not your own' },
+      ]);
+    }
+    return await this.commentsRepository.delete(foundComment.id);
+  }
 }

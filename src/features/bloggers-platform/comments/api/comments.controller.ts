@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   HttpStatus,
@@ -42,5 +43,15 @@ export class CommentsController {
       commentId,
       commentCreateModel,
     );
+  }
+
+  @Delete('/:commentId')
+  @UseGuards(JwtAuthGuard)
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async delete(
+    @CurrentUserId() currentUserId: string,
+    @Param('commentId') commentId: string,
+  ) {
+    await this.commentsService.delete(currentUserId, commentId);
   }
 }

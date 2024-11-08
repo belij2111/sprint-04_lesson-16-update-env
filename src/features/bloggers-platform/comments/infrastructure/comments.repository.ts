@@ -42,4 +42,11 @@ export class CommentsRepository {
     );
     return result.modifiedCount !== 0;
   }
+
+  async delete(commentId: string): Promise<boolean | null> {
+    const deletionResult = await this.CommentModel.deleteOne({
+      _id: commentId,
+    });
+    return deletionResult.deletedCount === 1;
+  }
 }
