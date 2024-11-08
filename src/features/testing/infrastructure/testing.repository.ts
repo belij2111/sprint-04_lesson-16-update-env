@@ -9,6 +9,10 @@ import {
   Post,
   PostModelType,
 } from '../../bloggers-platform/posts/domain/post.entity';
+import {
+  Comment,
+  CommentModelType,
+} from '../../bloggers-platform/comments/domain/comment.entity';
 
 @Injectable()
 export class TestingRepository {
@@ -16,6 +20,7 @@ export class TestingRepository {
     @InjectModel(User.name) private UserModel: UserModelType,
     @InjectModel(Blog.name) private BlogModel: BlogModelType,
     @InjectModel(Post.name) private PostModel: PostModelType,
+    @InjectModel(Comment.name) private CommentModel: CommentModelType,
   ) {}
 
   async deleteAllData() {
@@ -23,6 +28,7 @@ export class TestingRepository {
       this.UserModel.deleteMany(),
       this.BlogModel.deleteMany(),
       this.PostModel.deleteMany(),
+      this.CommentModel.deleteMany(),
     ]);
   }
 }

@@ -12,12 +12,17 @@ import {
   Post,
   PostSchema,
 } from '../bloggers-platform/posts/domain/post.entity';
+import {
+  Comment,
+  CommentSchema,
+} from '../bloggers-platform/comments/domain/comment.entity';
 
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
     MongooseModule.forFeature([{ name: Blog.name, schema: BlogSchema }]),
     MongooseModule.forFeature([{ name: Post.name, schema: PostSchema }]),
+    MongooseModule.forFeature([{ name: Comment.name, schema: CommentSchema }]),
   ],
   controllers: [TestingController],
   providers: [TestingService, TestingRepository],
