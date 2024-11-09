@@ -19,7 +19,7 @@ export class PostsService {
       title: postCreateModel.title,
       shortDescription: postCreateModel.shortDescription,
       content: postCreateModel.content,
-      blogId: postCreateModel.blogId,
+      blogId: foundBlog.id,
       blogName: foundBlog.name,
       createdAt: new Date(),
       extendedLikesInfo: {
