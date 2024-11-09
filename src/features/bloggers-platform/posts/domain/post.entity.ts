@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Model } from 'mongoose';
 
-@Schema()
+@Schema({ _id: false })
 class NewestLikes {
   @Prop({ type: Date, required: true, default: new Date() })
   addedAt: Date;
@@ -13,7 +13,7 @@ class NewestLikes {
 
 const NewestLikesSchema = SchemaFactory.createForClass(NewestLikes);
 
-@Schema()
+@Schema({ _id: false })
 class ExtendedLikesInfo {
   @Prop({ type: Number, default: 0 })
   likesCount: number;

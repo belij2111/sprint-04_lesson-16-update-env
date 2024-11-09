@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Model } from 'mongoose';
 
-@Schema()
+@Schema({ _id: false })
 class EmailConfirmation {
   @Prop({ type: String, required: true })
   confirmationCode: string;

@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Model } from 'mongoose';
 
-@Schema()
+@Schema({ _id: false })
 class CommentatorInfo {
   @Prop({ type: String, required: true })
   userId: string;
@@ -11,7 +11,7 @@ class CommentatorInfo {
 
 const CommentatorInfoSchema = SchemaFactory.createForClass(CommentatorInfo);
 
-@Schema()
+@Schema({ _id: false })
 class LikesInfo {
   @Prop({ type: Number, default: 0 })
   likesCount: number;
