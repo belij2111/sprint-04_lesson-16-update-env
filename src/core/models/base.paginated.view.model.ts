@@ -1,5 +1,5 @@
 export abstract class PaginatedViewModel<T> {
-  pageCount: number;
+  pagesCount: number;
   page: number;
   pageSize: number;
   totalCount: number;
@@ -12,7 +12,7 @@ export abstract class PaginatedViewModel<T> {
     items: T;
   }): PaginatedViewModel<T> {
     return {
-      pageCount: Math.ceil(data.totalCount / data.pageSize),
+      pagesCount: Math.ceil(data.totalCount / data.pageSize),
       page: data.pageNumber,
       pageSize: data.pageSize,
       totalCount: data.totalCount,
