@@ -16,6 +16,10 @@ import {
   Comment,
   CommentSchema,
 } from '../bloggers-platform/comments/domain/comment.entity';
+import {
+  Like,
+  LikeSchema,
+} from '../bloggers-platform/likes/domain/like.entity';
 
 @Module({
   imports: [
@@ -23,6 +27,7 @@ import {
     MongooseModule.forFeature([{ name: Blog.name, schema: BlogSchema }]),
     MongooseModule.forFeature([{ name: Post.name, schema: PostSchema }]),
     MongooseModule.forFeature([{ name: Comment.name, schema: CommentSchema }]),
+    MongooseModule.forFeature([{ name: Like.name, schema: LikeSchema }]),
   ],
   controllers: [TestingController],
   providers: [TestingService, TestingRepository],
