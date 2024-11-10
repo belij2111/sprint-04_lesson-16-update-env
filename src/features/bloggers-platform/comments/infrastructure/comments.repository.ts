@@ -5,7 +5,6 @@ import {
   CommentModelType,
 } from '../domain/comment.entity';
 import { InjectModel } from '@nestjs/mongoose';
-import { CommentCreateModel } from '../api/models/input/create-comment.input.model';
 
 @Injectable()
 export class CommentsRepository {
@@ -32,10 +31,7 @@ export class CommentsRepository {
     return foundComment;
   }
 
-  async update(
-    foundComment: CommentDocument,
-    updateCommentDto: CommentCreateModel,
-  ) {
+  async update(foundComment: CommentDocument, updateCommentDto: object) {
     const result = await this.CommentModel.updateOne(
       { _id: foundComment._id },
       { $set: updateCommentDto },

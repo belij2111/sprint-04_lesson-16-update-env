@@ -16,6 +16,7 @@ import { ApiBearerAuth } from '@nestjs/swagger';
 import { CommentsService } from '../application/comments.service';
 import { CurrentUserId } from '../../../../core/decorators/identification/current-user-id.param.decorator';
 import { CommentCreateModel } from './models/input/create-comment.input.model';
+import { LikeInputModel } from '../../likes/api/models/input/like.input.model';
 
 @Controller('/comments')
 export class CommentsController {
@@ -53,5 +54,20 @@ export class CommentsController {
     @Param('commentId') commentId: string,
   ) {
     await this.commentsService.delete(currentUserId, commentId);
+  }
+
+  @Put('/:commentId/like-status')
+  @UseGuards(JwtAuthGuard)
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async updateLikeStatus(
+    @CurrentUserId() currentUserId: string,
+    @Param('commentId') commentId: string,
+    @Body() likeInputModel: LikeInputModel,
+  ) {
+    await this.commentsService.updateLikeStatus(
+      currentUserId,
+      commentId,
+      likeInputModel,
+    );
   }
 }
