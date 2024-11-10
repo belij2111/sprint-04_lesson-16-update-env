@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Model } from 'mongoose';
+import { LikeStatus } from '../../likes/domain/like.entity';
 
 @Schema({ _id: false })
 class CommentatorInfo {
@@ -17,7 +18,7 @@ class LikesInfo {
   likesCount: number;
   @Prop({ type: Number, default: 0 })
   dislikesCount: number;
-  @Prop({ type: String, enum: ['None', 'Like', 'Dislike'], default: 'None' })
+  @Prop({ type: String, enum: LikeStatus, default: LikeStatus.None })
   myStatus: string;
 }
 
