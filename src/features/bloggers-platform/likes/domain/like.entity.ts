@@ -18,7 +18,7 @@ export class Like {
     default: LikeStatus.None,
     required: true,
   })
-  status: string;
+  status: LikeStatus;
 
   @Prop({ type: String, required: true })
   authorId: string;
