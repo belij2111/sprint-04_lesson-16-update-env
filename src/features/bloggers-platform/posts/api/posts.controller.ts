@@ -31,6 +31,7 @@ import { CurrentUserId } from '../../../../core/decorators/identification/curren
 import { JwtAuthGuard } from '../../../../core/guards/jwt-auth.guard';
 import { CommentsQueryRepository } from '../../comments/infrastructure/comments.query-repository';
 import { CommentViewModel } from '../../comments/api/models/view/comment.view.model';
+import { LikeInputModel } from '../../likes/api/models/input/like.input.model';
 
 @Controller('/posts')
 export class PostsController {
@@ -108,6 +109,22 @@ export class PostsController {
     return await this.commentsQueryRepository.getCommentsByPostId(
       postId,
       query,
+    );
+  }
+
+  @Put('/:postId/like-status')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async updateLikeStatus(
+    @CurrentUserId() currentUserId: string,
+    @Param('postId') postId: string,
+    @Body() likeInputModel: LikeInputModel,
+  ) {
+    await this.postsService.updateLikeStatus(
+      currentUserId,
+      postId,
+      likeInputModel,
     );
   }
 }

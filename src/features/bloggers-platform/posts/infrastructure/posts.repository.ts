@@ -1,7 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Post, PostDocument, PostModelType } from '../domain/post.entity';
-import { PostCreateModel } from '../api/models/input/create-post.input.model';
 
 @Injectable()
 export class PostsRepository {
@@ -33,11 +32,11 @@ export class PostsRepository {
 
   async update(
     foundPost: PostDocument,
-    postUpdateModel: PostCreateModel,
+    updatedLikesInfoPostModel: object,
   ): Promise<boolean | null> {
     const result = await this.PostModel.updateOne(
       { _id: foundPost.id },
-      { $set: postUpdateModel },
+      { $set: updatedLikesInfoPostModel },
     );
     return result.modifiedCount !== 0;
   }
