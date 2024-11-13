@@ -9,28 +9,40 @@ import {
 } from '../../blogs/domain/blog.entity';
 import { GetPostQueryParams } from '../api/models/input/create-post.input.model';
 import { PaginatedViewModel } from '../../../../core/models/base.paginated.view.model';
+import {
+  Like,
+  LikeModelType,
+  LikeStatus,
+} from '../../likes/domain/like.entity';
 
 @Injectable()
 export class PostsQueryRepository {
   constructor(
     @InjectModel(Post.name) private readonly PostModel: PostModelType,
     @InjectModel(Blog.name) private readonly BlogModel: BlogModelType,
+    @InjectModel(Like.name) private readonly LikeModel: LikeModelType,
   ) {}
 
   async getAll(
+    currentUserId: string,
     query: GetPostQueryParams,
   ): Promise<PaginatedViewModel<PostViewModel[]>> {
     const filter = {};
-    return this.getPosts(query, filter);
+    return this.getPosts(currentUserId, query, filter);
   }
 
-  async getById(id: string): Promise<PostViewModel | null> {
+  async getById(
+    currentUserId: string,
+    id: string,
+  ): Promise<PostViewModel | null> {
     const foundPost = await this.PostModel.findById(id);
     if (!foundPost) return null;
-    return PostViewModel.mapToView(foundPost);
+    const currentStatus = await this.getStatus(foundPost.id, currentUserId);
+    return PostViewModel.mapToView(foundPost, currentStatus);
   }
 
   async getPostsByBlogId(
+    currentUserId: string,
     blogId: string,
     query: GetPostQueryParams,
   ): Promise<PaginatedViewModel<PostViewModel[]>> {
@@ -38,7 +50,7 @@ export class PostsQueryRepository {
     const filter = {
       blogId: foundBlog._id,
     };
-    return this.getPosts(query, filter);
+    return this.getPosts(currentUserId, query, filter);
   }
 
   async findById(id: string): Promise<BlogDocument | null> {
@@ -54,6 +66,7 @@ export class PostsQueryRepository {
   }
 
   private async getPosts(
+    currentUserId: string,
     query: GetPostQueryParams,
     filter: Record<string, any>,
   ): Promise<PaginatedViewModel<PostViewModel[]>> {
@@ -63,12 +76,26 @@ export class PostsQueryRepository {
       .limit(query.pageSize)
       .exec();
     const totalCount = await this.PostModel.countDocuments(filter);
-    const items = foundPosts.map(PostViewModel.mapToView);
+    const currentStatuses = await Promise.all(
+      foundPosts.map((post) => this.getStatus(post.id, currentUserId)),
+    );
+    const items = foundPosts.map((post, index) =>
+      PostViewModel.mapToView(post, currentStatuses[index]),
+    );
     return PaginatedViewModel.mapToView({
       pageNumber: query.pageNumber,
       pageSize: query.pageSize,
       totalCount,
       items,
     });
+  }
+
+  private async getStatus(postId: string, userId: string): Promise<LikeStatus> {
+    if (!userId) return LikeStatus.None;
+    const like = await this.LikeModel.findOne({
+      authorId: userId,
+      parentId: postId,
+    });
+    return like ? like.status : LikeStatus.None;
   }
 }

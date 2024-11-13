@@ -30,6 +30,8 @@ import { PostsQueryRepository } from '../../posts/infrastructure/posts.query-rep
 import { BasicAuthGuard } from '../../../../core/guards/basic-auth.guard';
 import { ApiBasicAuth } from '@nestjs/swagger';
 import { PaginatedViewModel } from '../../../../core/models/base.paginated.view.model';
+import { CurrentUserId } from '../../../../core/decorators/identification/current-user-id.param.decorator';
+import { IdentifyUser } from '../../../../core/decorators/identification/identify-user.param.decorator';
 
 @Controller('/blogs')
 export class BlogsController {
@@ -89,6 +91,7 @@ export class BlogsController {
   @ApiBasicAuth()
   @HttpCode(HttpStatus.CREATED)
   async createPostByBlogId(
+    @CurrentUserId() currentUserId: string,
     @Param('blogId') blogId: string,
     @Body() postCreateModel: PostCreateModel,
   ): Promise<PostViewModel | null> {
@@ -96,14 +99,22 @@ export class BlogsController {
       blogId,
       postCreateModel,
     );
-    return await this.postsQueryRepository.getById(createdPostId.id);
+    return await this.postsQueryRepository.getById(
+      currentUserId,
+      createdPostId.id,
+    );
   }
 
   @Get(':blogId/posts')
   async getPostsByBlogId(
+    @IdentifyUser() identifyUser: string,
     @Param('blogId') blogId: string,
     @Query() query: GetPostQueryParams,
   ): Promise<PaginatedViewModel<PostViewModel[]>> {
-    return await this.postsQueryRepository.getPostsByBlogId(blogId, query);
+    return await this.postsQueryRepository.getPostsByBlogId(
+      identifyUser,
+      blogId,
+      query,
+    );
   }
 }

@@ -32,6 +32,7 @@ import { JwtAuthGuard } from '../../../../core/guards/jwt-auth.guard';
 import { CommentsQueryRepository } from '../../comments/infrastructure/comments.query-repository';
 import { CommentViewModel } from '../../comments/api/models/view/comment.view.model';
 import { LikeInputModel } from '../../likes/api/models/input/like.input.model';
+import { IdentifyUser } from '../../../../core/decorators/identification/identify-user.param.decorator';
 
 @Controller('/posts')
 export class PostsController {
@@ -45,21 +46,31 @@ export class PostsController {
   @Post()
   @UseGuards(BasicAuthGuard)
   @ApiBasicAuth()
-  async create(@Body() postCreateModel: PostCreateModel) {
+  async create(
+    @CurrentUserId() currentUserId: string,
+    @Body() postCreateModel: PostCreateModel,
+  ) {
     const createdPostId = await this.postsService.create(postCreateModel);
-    return await this.postsQueryRepository.getById(createdPostId.id);
+    return await this.postsQueryRepository.getById(
+      currentUserId,
+      createdPostId.id,
+    );
   }
 
   @Get()
   async getAll(
+    @IdentifyUser() identifyUser: string,
     @Query() query: GetPostQueryParams,
   ): Promise<PaginatedViewModel<PostViewModel[]>> {
-    return await this.postsQueryRepository.getAll(query);
+    return await this.postsQueryRepository.getAll(identifyUser, query);
   }
 
   @Get(':id')
-  async getById(@Param('id') id: string): Promise<PostViewModel> {
-    const foundPost = await this.postsQueryRepository.getById(id);
+  async getById(
+    @IdentifyUser() identifyUser: string,
+    @Param('id') id: string,
+  ): Promise<PostViewModel> {
+    const foundPost = await this.postsQueryRepository.getById(identifyUser, id);
     if (!foundPost) {
       throw new NotFoundException(`Post with id ${id} not found`);
     }

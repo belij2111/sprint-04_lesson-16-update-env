@@ -35,7 +35,7 @@ export class PostsService {
       extendedLikesInfo: {
         likesCount: 0,
         dislikesCount: 0,
-        myStatus: 'None',
+        myStatus: LikeStatus.None,
         newestLikes: [],
       },
     };
@@ -76,7 +76,7 @@ export class PostsService {
       extendedLikesInfo: {
         likesCount: 0,
         dislikesCount: 0,
-        myStatus: 'None',
+        myStatus: LikeStatus.None,
         newestLikes: [],
       },
     };
@@ -108,10 +108,12 @@ export class PostsService {
       );
       const sortedNewestLikes = this.sortNewestLikes(updatedNewestLikes);
       const updatedLikesInfoPostModel: ExtendedLikesInfoModel = {
-        likesCount: likesInfo.likesCount,
-        dislikesCount: likesInfo.dislikesCount,
-        myStatus: likeInputModel.likeStatus,
-        newestLikes: sortedNewestLikes,
+        extendedLikesInfo: {
+          likesCount: likesInfo.likesCount,
+          dislikesCount: likesInfo.dislikesCount,
+          myStatus: likeInputModel.likeStatus,
+          newestLikes: sortedNewestLikes,
+        },
       };
       await this.likesRepository.update(foundLike, likeInputModel);
       return await this.postRepository.update(
@@ -140,10 +142,12 @@ export class PostsService {
     );
     const sortedNewestLikes = this.sortNewestLikes(updatedNewestLikes);
     const updatedLikesInfoPostModel: ExtendedLikesInfoModel = {
-      likesCount: likesInfo.likesCount,
-      dislikesCount: likesInfo.dislikesCount,
-      myStatus: likeInputModel.likeStatus,
-      newestLikes: sortedNewestLikes,
+      extendedLikesInfo: {
+        likesCount: likesInfo.likesCount,
+        dislikesCount: likesInfo.dislikesCount,
+        myStatus: likeInputModel.likeStatus,
+        newestLikes: sortedNewestLikes,
+      },
     };
     return await this.postRepository.update(
       foundPost,
@@ -151,7 +155,7 @@ export class PostsService {
     );
   }
 
-  private updateCounts(newStatus: string, likesInfoModel: any) {
+  private updateCounts(newStatus: string, likesInfoModel: LikesInfoModel) {
     let { likesCount, dislikesCount } = likesInfoModel;
     const currentStatus = likesInfoModel.currentStatus;
     if (newStatus === currentStatus) {
