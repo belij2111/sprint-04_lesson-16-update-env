@@ -19,8 +19,13 @@ export class PostViewModel {
     }[];
   };
 
-  static mapToView(post: PostDocument): PostViewModel {
+  static mapToView(post: PostDocument, currentStatus: string): PostViewModel {
     const model = new PostViewModel();
+    const newestLikes = post.extendedLikesInfo.newestLikes.map((el) => ({
+      addedAt: el.addedAt,
+      userId: el.userId,
+      login: el.login,
+    }));
     model.id = post._id.toString();
     model.title = post.title;
     model.shortDescription = post.shortDescription;
@@ -28,7 +33,12 @@ export class PostViewModel {
     model.blogId = post.blogId;
     model.blogName = post.blogName;
     model.createdAt = post.createdAt;
-    model.extendedLikesInfo = post.extendedLikesInfo;
+    model.extendedLikesInfo = {
+      likesCount: post.extendedLikesInfo.likesCount,
+      dislikesCount: post.extendedLikesInfo.dislikesCount,
+      myStatus: currentStatus,
+      newestLikes: newestLikes,
+    };
 
     return model;
   }
