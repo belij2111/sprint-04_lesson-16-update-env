@@ -1,4 +1,5 @@
 import { PostDocument } from '../../../domain/post.entity';
+import { LikeStatus } from '../../../../likes/domain/like.entity';
 
 export class PostViewModel {
   id: string;
@@ -11,7 +12,7 @@ export class PostViewModel {
   extendedLikesInfo: {
     likesCount: number;
     dislikesCount: number;
-    myStatus: string;
+    myStatus: LikeStatus;
     newestLikes: {
       addedAt: Date;
       userId: string;
@@ -19,7 +20,10 @@ export class PostViewModel {
     }[];
   };
 
-  static mapToView(post: PostDocument, currentStatus: string): PostViewModel {
+  static mapToView(
+    post: PostDocument,
+    currentStatus: LikeStatus,
+  ): PostViewModel {
     const model = new PostViewModel();
     const newestLikes = post.extendedLikesInfo.newestLikes.map((el) => ({
       addedAt: el.addedAt,
