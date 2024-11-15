@@ -116,43 +116,38 @@ export class PostsService {
         },
       };
       await this.likesRepository.update(foundLike, likeInputModel);
-      return await this.postRepository.update(
+      await this.postRepository.update(foundPost, updatedLikesInfoPostModel);
+    } else {
+      const likeModel: Like = {
+        createdAt: new Date(),
+        status: likeInputModel.likeStatus,
+        authorId: currentUserId,
+        parentId: postId,
+      };
+      await this.likesRepository.create(likeModel);
+      const likesInfoModel: LikesInfoModel = {
+        currentStatus: LikeStatus.None,
+        likesCount: foundPost.extendedLikesInfo.likesCount,
+        dislikesCount: foundPost.extendedLikesInfo.dislikesCount,
+      };
+      likesInfo = this.updateCounts(likeInputModel.likeStatus, likesInfoModel);
+      const updatedNewestLikes: LikeDetailsModel[] = this.updateNewestLikes(
         foundPost,
-        updatedLikesInfoPostModel,
+        currentUserId,
+        foundUser,
+        likeInputModel,
       );
+      const sortedNewestLikes = this.sortNewestLikes(updatedNewestLikes);
+      const updatedLikesInfoPostModel: ExtendedLikesInfoModel = {
+        extendedLikesInfo: {
+          likesCount: likesInfo.likesCount,
+          dislikesCount: likesInfo.dislikesCount,
+          myStatus: likeInputModel.likeStatus,
+          newestLikes: sortedNewestLikes,
+        },
+      };
+      await this.postRepository.update(foundPost, updatedLikesInfoPostModel);
     }
-    const likeModel: Like = {
-      createdAt: new Date(),
-      status: likeInputModel.likeStatus,
-      authorId: currentUserId,
-      parentId: postId,
-    };
-    await this.likesRepository.create(likeModel);
-    const likesInfoModel: LikesInfoModel = {
-      currentStatus: LikeStatus.None,
-      likesCount: foundPost.extendedLikesInfo.likesCount,
-      dislikesCount: foundPost.extendedLikesInfo.dislikesCount,
-    };
-    likesInfo = this.updateCounts(likeInputModel.likeStatus, likesInfoModel);
-    const updatedNewestLikes: LikeDetailsModel[] = this.updateNewestLikes(
-      foundPost,
-      currentUserId,
-      foundUser,
-      likeInputModel,
-    );
-    const sortedNewestLikes = this.sortNewestLikes(updatedNewestLikes);
-    const updatedLikesInfoPostModel: ExtendedLikesInfoModel = {
-      extendedLikesInfo: {
-        likesCount: likesInfo.likesCount,
-        dislikesCount: likesInfo.dislikesCount,
-        myStatus: likeInputModel.likeStatus,
-        newestLikes: sortedNewestLikes,
-      },
-    };
-    return await this.postRepository.update(
-      foundPost,
-      updatedLikesInfoPostModel,
-    );
   }
 
   private updateCounts(newStatus: string, likesInfoModel: LikesInfoModel) {
