@@ -9,7 +9,7 @@ export class MeViewModel {
     const model = new MeViewModel();
     model.email = user.email;
     model.login = user.login;
-    model.userId = user._id.toString();
+    model.userId = user.id;
     return model;
   }
 }

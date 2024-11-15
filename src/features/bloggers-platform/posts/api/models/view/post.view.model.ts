@@ -30,7 +30,7 @@ export class PostViewModel {
       userId: el.userId,
       login: el.login,
     }));
-    model.id = post._id.toString();
+    model.id = post.id;
     model.title = post.title;
     model.shortDescription = post.shortDescription;
     model.content = post.content;
@@ -43,7 +43,6 @@ export class PostViewModel {
       myStatus: currentStatus,
       newestLikes: newestLikes,
     };
-
     return model;
   }
 }
