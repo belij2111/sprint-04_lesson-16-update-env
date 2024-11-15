@@ -17,6 +17,7 @@ import { CommentsService } from '../application/comments.service';
 import { CurrentUserId } from '../../../../core/decorators/identification/current-user-id.param.decorator';
 import { CommentCreateModel } from './models/input/create-comment.input.model';
 import { LikeInputModel } from '../../likes/api/models/input/like.input.model';
+import { IdentifyUser } from '../../../../core/decorators/identification/identify-user.param.decorator';
 
 @Controller('/comments')
 export class CommentsController {
@@ -26,8 +27,11 @@ export class CommentsController {
   ) {}
 
   @Get('/:id')
-  async getById(@Param('id') id: string): Promise<CommentViewModel | null> {
-    return await this.commentsQueryRepository.getCommentById(id);
+  async getById(
+    @IdentifyUser() identifyUser: string,
+    @Param('id') id: string,
+  ): Promise<CommentViewModel | null> {
+    return await this.commentsQueryRepository.getCommentById(identifyUser, id);
   }
 
   @Put('/:commentId')

@@ -109,15 +109,20 @@ export class PostsController {
       postId,
       commentCreateModel,
     );
-    return await this.commentsQueryRepository.getCommentById(createdUserId.id);
+    return await this.commentsQueryRepository.getCommentById(
+      currentUserId,
+      createdUserId.id,
+    );
   }
 
   @Get('/:postId/comments')
   async getCommentsByPostId(
+    @IdentifyUser() identifyUser: string,
     @Param('postId') postId: string,
     @Query() query: GetCommentQueryParams,
   ): Promise<PaginatedViewModel<CommentViewModel[]>> {
     return await this.commentsQueryRepository.getCommentsByPostId(
+      identifyUser,
       postId,
       query,
     );
