@@ -48,7 +48,7 @@ export class PostsQueryRepository {
   ): Promise<PaginatedViewModel<PostViewModel[]>> {
     const foundBlog = await this.findByIdOrNotFoundFail(blogId);
     const filter = {
-      blogId: foundBlog._id,
+      blogId: foundBlog.id,
     };
     return this.getPosts(currentUserId, query, filter);
   }
