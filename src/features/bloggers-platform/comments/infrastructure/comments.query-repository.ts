@@ -13,26 +13,37 @@ import {
   PostDocument,
   PostModelType,
 } from '../../posts/domain/post.entity';
+import {
+  Like,
+  LikeModelType,
+  LikeStatus,
+} from '../../likes/domain/like.entity';
 
 @Injectable()
 export class CommentsQueryRepository {
   constructor(
     @InjectModel(Comment.name) private readonly CommentModel: CommentModelType,
     @InjectModel(Post.name) private readonly PostModel: PostModelType,
+    @InjectModel(Like.name) private readonly LikeModel: LikeModelType,
   ) {}
 
-  async getCommentById(id: string): Promise<CommentViewModel> {
+  async getCommentById(
+    currentUserId: string,
+    id: string,
+  ): Promise<CommentViewModel> {
     const foundComment = await this.findCommentByIdOrNotFoundFail(id);
-    return CommentViewModel.mapToView(foundComment);
+    const currentStatus = await this.getStatus(foundComment.id, currentUserId);
+    return CommentViewModel.mapToView(foundComment, currentStatus);
   }
 
   async getCommentsByPostId(
+    currentUserId: string,
     postId: string,
     query: GetCommentQueryParams,
   ): Promise<PaginatedViewModel<CommentViewModel[]>> {
     const foundPost = await this.findByIdOrNotFoundFail(postId);
     const filter = { postId: foundPost._id };
-    return this.getComments(query, filter);
+    return this.getComments(currentUserId, query, filter);
   }
 
   private async findPostById(postId: string): Promise<PostDocument | null> {
@@ -62,6 +73,7 @@ export class CommentsQueryRepository {
   }
 
   private async getComments(
+    currentUserId: string,
     query: GetCommentQueryParams,
     filter: Record<string, any>,
   ): Promise<PaginatedViewModel<CommentViewModel[]>> {
@@ -71,12 +83,29 @@ export class CommentsQueryRepository {
       .limit(query.pageSize)
       .exec();
     const totalCount = await this.CommentModel.countDocuments(filter);
-    const items = foundComments.map(CommentViewModel.mapToView);
+    const currentStatuses = await Promise.all(
+      foundComments.map((comment) => this.getStatus(comment.id, currentUserId)),
+    );
+    const items = foundComments.map((comment, index) =>
+      CommentViewModel.mapToView(comment, currentStatuses[index]),
+    );
     return PaginatedViewModel.mapToView({
       pageNumber: query.pageNumber,
       pageSize: query.pageSize,
       totalCount,
       items,
     });
+  }
+
+  private async getStatus(
+    commentId: string,
+    userId: string,
+  ): Promise<LikeStatus> {
+    if (!userId) return LikeStatus.None;
+    const like = await this.LikeModel.findOne({
+      authorId: userId,
+      parentId: commentId,
+    });
+    return like ? like.status : LikeStatus.None;
   }
 }
