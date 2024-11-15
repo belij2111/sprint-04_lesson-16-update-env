@@ -94,32 +94,30 @@ export class CommentsService {
         },
       };
       await this.likesRepository.update(foundLike, likeInputModel);
-      return await this.commentsRepository.update(
-        foundComment,
-        updateCommentDto,
+      await this.commentsRepository.update(foundComment, updateCommentDto);
+    } else {
+      const likeDto: Like = {
+        createdAt: new Date(),
+        status: likeInputModel.likeStatus,
+        authorId: currentUserId,
+        parentId: commentId,
+      };
+      await this.likesRepository.create(likeDto);
+      likesInfo = this.updateCounts(
+        likeInputModel.likeStatus,
+        LikeStatus.None,
+        foundComment.likesInfo.likesCount,
+        foundComment.likesInfo.dislikesCount,
       );
+      const updateCommentDto = {
+        likesInfo: {
+          likesCount: likesInfo.likesCount,
+          dislikesCount: likesInfo.dislikesCount,
+          myStatus: likeInputModel.likeStatus,
+        },
+      };
+      await this.commentsRepository.update(foundComment, updateCommentDto);
     }
-    const likeDto: Like = {
-      createdAt: new Date(),
-      status: likeInputModel.likeStatus,
-      authorId: currentUserId,
-      parentId: commentId,
-    };
-    await this.likesRepository.create(likeDto);
-    likesInfo = this.updateCounts(
-      likeInputModel.likeStatus,
-      LikeStatus.None,
-      foundComment.likesInfo.likesCount,
-      foundComment.likesInfo.dislikesCount,
-    );
-    const updateCommentDto = {
-      likesInfo: {
-        likesCount: likesInfo.likesCount,
-        dislikesCount: likesInfo.dislikesCount,
-        myStatus: likeInputModel.likeStatus,
-      },
-    };
-    return await this.commentsRepository.update(foundComment, updateCommentDto);
   }
 
   private updateCounts(
