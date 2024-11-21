@@ -27,12 +27,13 @@ import {
   GetCommentQueryParams,
 } from '../../comments/api/models/input/create-comment.input.model';
 import { CommentsService } from '../../comments/application/comments.service';
-import { CurrentUserId } from '../../../../core/decorators/identification/current-user-id.param.decorator';
+import { CurrentUserId } from '../../../../core/decorators/param/current-user-id.param.decorator';
 import { JwtAuthGuard } from '../../../../core/guards/jwt-auth.guard';
 import { CommentsQueryRepository } from '../../comments/infrastructure/comments.query-repository';
 import { CommentViewModel } from '../../comments/api/models/view/comment.view.model';
 import { LikeInputModel } from '../../likes/api/models/input/like.input.model';
-import { IdentifyUser } from '../../../../core/decorators/identification/identify-user.param.decorator';
+import { IdentifyUser } from '../../../../core/decorators/param/identify-user.param.decorator';
+import { JwtOptionalAuthGuard } from '../../../../core/guards/jwt-optional-auth.guard ';
 
 @Controller('/posts')
 export class PostsController {
@@ -58,6 +59,7 @@ export class PostsController {
   }
 
   @Get()
+  @UseGuards(JwtOptionalAuthGuard)
   async getAll(
     @IdentifyUser() identifyUser: string,
     @Query() query: GetPostQueryParams,
@@ -66,6 +68,7 @@ export class PostsController {
   }
 
   @Get(':id')
+  @UseGuards(JwtOptionalAuthGuard)
   async getById(
     @IdentifyUser() identifyUser: string,
     @Param('id') id: string,
@@ -116,6 +119,7 @@ export class PostsController {
   }
 
   @Get('/:postId/comments')
+  @UseGuards(JwtOptionalAuthGuard)
   async getCommentsByPostId(
     @IdentifyUser() identifyUser: string,
     @Param('postId') postId: string,

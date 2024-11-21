@@ -14,10 +14,11 @@ import { CommentsQueryRepository } from '../infrastructure/comments.query-reposi
 import { JwtAuthGuard } from '../../../../core/guards/jwt-auth.guard';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { CommentsService } from '../application/comments.service';
-import { CurrentUserId } from '../../../../core/decorators/identification/current-user-id.param.decorator';
+import { CurrentUserId } from '../../../../core/decorators/param/current-user-id.param.decorator';
 import { CommentCreateModel } from './models/input/create-comment.input.model';
 import { LikeInputModel } from '../../likes/api/models/input/like.input.model';
-import { IdentifyUser } from '../../../../core/decorators/identification/identify-user.param.decorator';
+import { IdentifyUser } from '../../../../core/decorators/param/identify-user.param.decorator';
+import { JwtOptionalAuthGuard } from '../../../../core/guards/jwt-optional-auth.guard ';
 
 @Controller('/comments')
 export class CommentsController {
@@ -27,6 +28,7 @@ export class CommentsController {
   ) {}
 
   @Get('/:id')
+  @UseGuards(JwtOptionalAuthGuard)
   async getById(
     @IdentifyUser() identifyUser: string,
     @Param('id') id: string,
