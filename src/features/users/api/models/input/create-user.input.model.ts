@@ -1,5 +1,5 @@
 import { IsEmail, IsEnum, IsOptional, Length, Matches } from 'class-validator';
-import { TrimIsString } from '../../../../../core/decorators/validate/trim-is-string';
+import { TrimIsString } from '../../../../../core/decorators/validation/trim-is-string';
 import { BaseSortablePaginationParams } from '../../../../../core/models/base.query-params.input.model';
 
 export class UserCreateModel {
