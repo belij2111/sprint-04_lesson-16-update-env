@@ -4,6 +4,8 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { HttpExceptionFilter } from '../core/exeption-filters/http-exeption-filter';
+import { useContainer } from 'class-validator';
+import { AppModule } from '../app.module';
 
 const APP_PREFIX = '/';
 
@@ -11,6 +13,7 @@ export const applyAppSetting = (app: INestApplication) => {
   setAppPrefix(app);
   setAppPipes(app);
   setAppExceptionsFilters(app);
+  setAppValidationConstrain(app);
 };
 
 const setAppPrefix = (app: INestApplication) => {
@@ -43,4 +46,8 @@ const setAppPipes = (app: INestApplication) => {
 
 const setAppExceptionsFilters = (app: INestApplication) => {
   app.useGlobalFilters(new HttpExceptionFilter());
+};
+
+const setAppValidationConstrain = (app: INestApplication) => {
+  useContainer(app.select(AppModule), { fallbackOnErrors: true });
 };
