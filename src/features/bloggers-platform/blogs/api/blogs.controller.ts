@@ -30,8 +30,10 @@ import { PostsQueryRepository } from '../../posts/infrastructure/posts.query-rep
 import { BasicAuthGuard } from '../../../../core/guards/basic-auth.guard';
 import { ApiBasicAuth } from '@nestjs/swagger';
 import { PaginatedViewModel } from '../../../../core/models/base.paginated.view.model';
-import { CurrentUserId } from '../../../../core/decorators/identification/current-user-id.param.decorator';
-import { IdentifyUser } from '../../../../core/decorators/identification/identify-user.param.decorator';
+import { CurrentUserId } from '../../../../core/decorators/param/current-user-id.param.decorator';
+import { IdentifyUser } from '../../../../core/decorators/param/identify-user.param.decorator';
+import { JwtOptionalAuthGuard } from '../../../../core/guards/jwt-optional-auth.guard ';
+import { BlogIdParamModel } from '../../posts/api/models/input/blogId-param.model';
 
 @Controller('/blogs')
 export class BlogsController {
@@ -92,9 +94,10 @@ export class BlogsController {
   @HttpCode(HttpStatus.CREATED)
   async createPostByBlogId(
     @CurrentUserId() currentUserId: string,
-    @Param('blogId') blogId: string,
+    @Param() param: BlogIdParamModel,
     @Body() postCreateModel: PostCreateModel,
   ): Promise<PostViewModel | null> {
+    const blogId = param.blogId;
     const createdPostId = await this.postsService.createPostByBlogId(
       blogId,
       postCreateModel,
@@ -106,11 +109,13 @@ export class BlogsController {
   }
 
   @Get(':blogId/posts')
+  @UseGuards(JwtOptionalAuthGuard)
   async getPostsByBlogId(
     @IdentifyUser() identifyUser: string,
-    @Param('blogId') blogId: string,
+    @Param() param: BlogIdParamModel,
     @Query() query: GetPostQueryParams,
   ): Promise<PaginatedViewModel<PostViewModel[]>> {
+    const blogId = param.blogId;
     return await this.postsQueryRepository.getPostsByBlogId(
       identifyUser,
       blogId,

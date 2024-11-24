@@ -18,6 +18,7 @@ import { CommentsRepository } from './comments/infrastructure/comments.repositor
 import { UsersModule } from '../users/users.module';
 import { Like, LikeSchema } from './likes/domain/like.entity';
 import { LikesRepository } from './likes/infrastructure/likes.repository';
+import { BlogIdIsExistConstraint } from './blogs/api/validation/blogId-is-exist.decorator';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { LikesRepository } from './likes/infrastructure/likes.repository';
     CommentsQueryRepository,
     CommentsRepository,
     LikesRepository,
+    BlogIdIsExistConstraint,
   ],
 })
 export class BloggersPlatformModule {}

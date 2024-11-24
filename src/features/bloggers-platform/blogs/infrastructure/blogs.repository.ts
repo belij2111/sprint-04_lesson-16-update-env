@@ -39,4 +39,8 @@ export class BlogsRepository {
     }
     return foundBlog;
   }
+
+  async blogIdIsExist(blogId: string): Promise<boolean> {
+    return !!(await this.BlogModel.countDocuments({ _id: blogId }));
+  }
 }
