@@ -25,4 +25,4 @@ export class SecurityDevices {
 export const SecurityDevicesSchema =
   SchemaFactory.createForClass(SecurityDevices);
 export type SecurityDevicesDocument = HydratedDocument<SecurityDevices>;
-export type SecurityDevicesModelType = Model<SecurityDevices>;
+export type SecurityDevicesModelType = Model<SecurityDevicesDocument>;
