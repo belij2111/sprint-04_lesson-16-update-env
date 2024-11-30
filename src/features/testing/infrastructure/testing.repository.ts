@@ -17,6 +17,10 @@ import {
   Like,
   LikeModelType,
 } from '../../bloggers-platform/likes/domain/like.entity';
+import {
+  SecurityDevices,
+  SecurityDevicesModelType,
+} from '../../security-devices/domain/security-devices.entity';
 
 @Injectable()
 export class TestingRepository {
@@ -26,6 +30,8 @@ export class TestingRepository {
     @InjectModel(Post.name) private PostModel: PostModelType,
     @InjectModel(Comment.name) private CommentModel: CommentModelType,
     @InjectModel(Like.name) private LikeModel: LikeModelType,
+    @InjectModel(SecurityDevices.name)
+    private SecurityDevicesModel: SecurityDevicesModelType,
   ) {}
 
   async deleteAllData() {
@@ -35,6 +41,7 @@ export class TestingRepository {
       this.PostModel.deleteMany(),
       this.CommentModel.deleteMany(),
       this.LikeModel.deleteMany(),
+      this.SecurityDevicesModel.deleteMany(),
     ]);
   }
 }
