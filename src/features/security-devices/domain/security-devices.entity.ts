@@ -15,11 +15,11 @@ export class SecurityDevices {
   @Prop({ type: String, required: true })
   deviceName: string;
 
-  @Prop({ type: Date, required: true })
-  iatDate: Date;
+  @Prop({ type: String, required: true })
+  iatDate: string;
 
-  @Prop({ type: Date, required: true })
-  expDate: Date;
+  @Prop({ type: String, required: true })
+  expDate: string;
 }
 
 export const SecurityDevicesSchema =
