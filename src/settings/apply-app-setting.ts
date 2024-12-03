@@ -14,6 +14,7 @@ export const applyAppSetting = (app: INestApplication) => {
   setAppPipes(app);
   setAppExceptionsFilters(app);
   setAppValidationConstrain(app);
+  setAppEnableCors(app);
 };
 
 const setAppPrefix = (app: INestApplication) => {
@@ -50,4 +51,8 @@ const setAppExceptionsFilters = (app: INestApplication) => {
 
 const setAppValidationConstrain = (app: INestApplication) => {
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
+};
+
+const setAppEnableCors = (app: INestApplication) => {
+  app.enableCors();
 };
