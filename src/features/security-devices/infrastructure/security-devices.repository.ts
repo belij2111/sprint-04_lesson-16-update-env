@@ -11,4 +11,13 @@ export class SecurityDevicesRepository {
     @InjectModel(SecurityDevices.name)
     private readonly SecurityDevicesModel: SecurityDevicesModelType,
   ) {}
+
+  async findById(deviceId: string) {
+    return this.SecurityDevicesModel.findOne({ deviceId: deviceId });
+  }
+
+  async create(deviceSession: SecurityDevices) {
+    const result = await this.SecurityDevicesModel.create(deviceSession);
+    return { id: result._id.toString() };
+  }
 }

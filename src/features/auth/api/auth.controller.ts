@@ -4,6 +4,7 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  NotFoundException,
   Post,
   Req,
   Res,
@@ -36,7 +37,19 @@ export class AuthController {
   @Post('/login')
   @HttpCode(HttpStatus.OK)
   async login(@Req() req: ExpressRequest, @Res() res: ExpressResponse) {
-    const result = await this.authService.login(req.user as UserInfoInputModel);
+    if (!req.ip) {
+      throw new NotFoundException('IP address is required');
+    }
+    if (!req.headers['user-agent']) {
+      throw new NotFoundException('User agent is required');
+    }
+    const ip = req.ip;
+    const deviceName = req.headers['user-agent'];
+    const result = await this.authService.login(
+      req.user as UserInfoInputModel,
+      ip,
+      deviceName,
+    );
     const { accessToken, refreshToken } = result as LoginSuccessViewModel;
     res
       .cookie('refreshToken', refreshToken, {

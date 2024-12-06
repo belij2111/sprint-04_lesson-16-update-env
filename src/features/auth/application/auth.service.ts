@@ -19,6 +19,9 @@ import { RegistrationConfirmationCodeModel } from '../api/models/input/registrat
 import { RegistrationEmailResendingModel } from '../api/models/input/registration-email-resending.model';
 import { PasswordRecoveryInputModel } from '../api/models/input/password-recovery-input.model';
 import { NewPasswordRecoveryInputModel } from '../api/models/input/new-password-recovery-input.model';
+import { randomUUID } from 'node:crypto';
+import { SecurityDevices } from '../../security-devices/domain/security-devices.entity';
+import { SecurityDevicesRepository } from '../../security-devices/infrastructure/security-devices.repository';
 
 @Injectable()
 export class AuthService {
@@ -29,6 +32,7 @@ export class AuthService {
     private readonly configService: ConfigService<ConfigurationType, true>,
     private readonly uuidProvider: UuidProvider,
     private readonly mailService: MailService,
+    private readonly securityDevicesRepository: SecurityDevicesRepository,
   ) {}
 
   async validateUser(loginInput: LoginInputModel): Promise<string | null> {
@@ -47,16 +51,36 @@ export class AuthService {
     return user._id.toString();
   }
 
-  async login(userId: UserInfoInputModel): Promise<LoginSuccessViewModel> {
-    const payload = { userId: userId };
-    const accessToken = this.jwtService.sign(payload);
+  async login(
+    userId: UserInfoInputModel,
+    ip: string,
+    deviceName: string,
+  ): Promise<LoginSuccessViewModel> {
+    const payloadForAccessToken = {
+      userId: userId,
+    };
+    const payloadForRefreshToken = {
+      userId: userId,
+      deviceId: randomUUID(),
+    };
+    const accessToken = this.jwtService.sign(payloadForAccessToken);
     const apiSettings = this.configService.get('apiSettings', {
       infer: true,
     });
-    const refreshToken = this.jwtService.sign(payload, {
+    const refreshToken = this.jwtService.sign(payloadForRefreshToken, {
       secret: apiSettings.REFRESH_TOKEN_SECRET,
       expiresIn: apiSettings.REFRESH_TOKEN_EXPIRATION,
     });
+    const decodePayload = this.jwtService.decode(refreshToken);
+    const deviceSession: SecurityDevices = {
+      userId: decodePayload.userId,
+      deviceId: decodePayload.deviceId,
+      ip: ip,
+      deviceName: deviceName,
+      iatDate: new Date(decodePayload.iat! * 1000).toString(),
+      expDate: new Date(decodePayload.exp! * 1000).toString(),
+    };
+    await this.securityDevicesRepository.create(deviceSession);
     return {
       accessToken,
       refreshToken,
