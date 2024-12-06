@@ -14,12 +14,14 @@ import { CryptoModule } from '../../core/crypto/crypto.module';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { EmailTemplateService } from '../../core/mail/email-template.service';
 import { MailService } from '../../core/mail/mail.service';
+import { SecurityDevicesModule } from '../security-devices/security-devices.module';
 
 @Module({
   imports: [
     PassportModule,
     UsersModule,
     CryptoModule,
+    SecurityDevicesModule,
     JwtModule.registerAsync({
       useFactory: (configService: ConfigService<ConfigurationType, true>) => {
         const apiSettings = configService.get('apiSettings', {
