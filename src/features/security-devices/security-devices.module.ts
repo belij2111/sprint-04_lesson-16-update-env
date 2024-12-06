@@ -8,6 +8,7 @@ import { SecurityDevicesController } from './api/security-devices.controller';
 import { SecurityDevicesService } from './application/security-devices.service';
 import { SecurityDevicesRepository } from './infrastructure/security-devices.repository';
 import { SecurityDevicesQueryRepository } from './infrastructure/security-devices.query-repository';
+import { JwtService } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -20,6 +21,8 @@ import { SecurityDevicesQueryRepository } from './infrastructure/security-device
     SecurityDevicesService,
     SecurityDevicesRepository,
     SecurityDevicesQueryRepository,
+    JwtService,
   ],
+  exports: [SecurityDevicesRepository],
 })
 export class SecurityDevicesModule {}
