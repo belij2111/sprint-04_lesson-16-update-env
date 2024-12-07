@@ -6,4 +6,14 @@ export class SecurityDevicesService {
   constructor(
     private readonly securityDevicesRepository: SecurityDevicesRepository,
   ) {}
+
+  async delete(
+    currentUserId: string,
+    currentDeviceId: string,
+  ): Promise<boolean> {
+    return this.securityDevicesRepository.delete(
+      currentUserId,
+      currentDeviceId,
+    );
+  }
 }

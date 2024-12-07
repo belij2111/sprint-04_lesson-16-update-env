@@ -28,4 +28,12 @@ export class SecurityDevicesRepository {
     );
     return result.modifiedCount !== 0;
   }
+
+  async delete(currentUserId: string, currentDeviceId: string) {
+    await this.SecurityDevicesModel.deleteMany({
+      currentUserId,
+      deviceId: { $ne: currentDeviceId },
+    });
+    return true;
+  }
 }
