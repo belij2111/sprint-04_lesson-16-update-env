@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   Injectable,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
@@ -252,6 +253,16 @@ export class AuthService {
     await this.usersRepository.updatePassword(
       existingUserByRecoveryCode.id,
       newPasswordHash,
+    );
+  }
+
+  async logout(deviceId: string) {
+    const foundDevice = await this.securityDevicesRepository.findById(deviceId);
+    if (!foundDevice) {
+      throw new NotFoundException('The device was not found');
+    }
+    return await this.securityDevicesRepository.deleteById(
+      foundDevice.deviceId,
     );
   }
 }

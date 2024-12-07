@@ -27,6 +27,7 @@ import { RegistrationEmailResendingModel } from './models/input/registration-ema
 import { PasswordRecoveryInputModel } from './models/input/password-recovery-input.model';
 import { NewPasswordRecoveryInputModel } from './models/input/new-password-recovery-input.model';
 import { RefreshTokenGuard } from '../../../core/guards/refresh-token.guard';
+import { CurrentDeviceId } from '../../../core/decorators/param/current-device-id.param.decorator';
 
 @Controller('/auth')
 export class AuthController {
@@ -127,5 +128,17 @@ export class AuthController {
     @Body() newPasswordRecoveryInputModel: NewPasswordRecoveryInputModel,
   ) {
     await this.authService.newPassword(newPasswordRecoveryInputModel);
+  }
+
+  @Post('/logout')
+  @UseGuards(RefreshTokenGuard)
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async logout(
+    @Res() res: ExpressResponse,
+    @CurrentDeviceId() deviceId: string,
+  ) {
+    await this.authService.logout(deviceId);
+    res.clearCookie('refreshToken').json({});
+    return;
   }
 }
