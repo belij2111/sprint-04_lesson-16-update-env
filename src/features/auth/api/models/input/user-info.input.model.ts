@@ -2,5 +2,8 @@ import { TrimIsString } from '../../../../../core/decorators/validation/trim-is-
 
 export class UserInfoInputModel {
   @TrimIsString()
-  userId: string;
+  user: string;
+
+  @TrimIsString()
+  deviceId: string;
 }
