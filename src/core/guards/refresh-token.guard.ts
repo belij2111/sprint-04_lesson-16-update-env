@@ -27,8 +27,13 @@ export class RefreshTokenGuard implements CanActivate {
       infer: true,
     });
     const secret = apiSettings.REFRESH_TOKEN_SECRET;
-    const payload = await this.jwtService.verifyAsync(refreshToken, { secret });
-    if (!payload) {
+    let payload: any;
+    try {
+      payload = await this.jwtService.verifyAsync(refreshToken, {
+        secret,
+      });
+    } catch (error) {
+      console.error('Token verification failed:', error);
       throw new UnauthorizedException();
     }
 
