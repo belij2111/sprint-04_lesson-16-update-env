@@ -4,6 +4,7 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  Param,
   UseGuards,
 } from '@nestjs/common';
 import { SecurityDevicesService } from '../application/security-devices.service';
@@ -34,5 +35,15 @@ export class SecurityDevicesController {
     @CurrentDeviceId() currentDeviceId: string,
   ) {
     await this.securityDevicesService.delete(currentUserId, currentDeviceId);
+  }
+
+  @Delete('/devices/:deviceId')
+  @UseGuards(RefreshTokenGuard)
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async deleteById(
+    @CurrentUserId() currentUserId: string,
+    @Param('deviceId') deviceId: string,
+  ) {
+    await this.securityDevicesService.deleteById(currentUserId, deviceId);
   }
 }

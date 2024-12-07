@@ -36,4 +36,11 @@ export class SecurityDevicesRepository {
     });
     return true;
   }
+
+  async deleteById(deviceId: string) {
+    const deletionResult = await this.SecurityDevicesModel.deleteOne({
+      deviceId,
+    });
+    return deletionResult.deletedCount === 1;
+  }
 }
