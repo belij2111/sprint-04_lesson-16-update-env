@@ -20,4 +20,12 @@ export class SecurityDevicesRepository {
     const result = await this.SecurityDevicesModel.create(deviceSession);
     return { id: result._id.toString() };
   }
+
+  async update(deviceId: string, iatDate: string): Promise<boolean> {
+    const result = await this.SecurityDevicesModel.updateOne(
+      { deviceId: deviceId },
+      { $set: { iatDate: iatDate } },
+    );
+    return result.modifiedCount !== 0;
+  }
 }

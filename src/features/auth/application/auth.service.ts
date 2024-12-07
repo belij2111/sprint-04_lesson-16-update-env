@@ -6,7 +6,6 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { BcryptService } from '../../../core/crypto/bcrypt.service';
 import { LoginInputModel } from '../api/models/input/login.input.model';
-import { UserInfoInputModel } from '../api/models/input/user-info.input.model';
 import { ConfigService } from '@nestjs/config';
 import { ConfigurationType } from '../../../settings/env/configuration';
 import { LoginSuccessViewModel } from '../api/models/view/login-success.view.model';
@@ -52,7 +51,7 @@ export class AuthService {
   }
 
   async login(
-    userId: UserInfoInputModel,
+    userId: string,
     ip: string,
     deviceName: string,
   ): Promise<LoginSuccessViewModel> {
@@ -81,6 +80,31 @@ export class AuthService {
       expDate: new Date(decodePayload.exp! * 1000).toString(),
     };
     await this.securityDevicesRepository.create(deviceSession);
+    return {
+      accessToken,
+      refreshToken,
+    };
+  }
+
+  async refreshToken(userId: string, deviceId: string) {
+    const payloadForAccessToken = {
+      userId: userId,
+    };
+    const payloadForRefreshToken = {
+      userId: userId,
+      deviceId: deviceId,
+    };
+    const accessToken = this.jwtService.sign(payloadForAccessToken);
+    const apiSettings = this.configService.get('apiSettings', {
+      infer: true,
+    });
+    const refreshToken = this.jwtService.sign(payloadForRefreshToken, {
+      secret: apiSettings.REFRESH_TOKEN_SECRET,
+      expiresIn: apiSettings.REFRESH_TOKEN_EXPIRATION,
+    });
+    const decodePayload = this.jwtService.decode(refreshToken);
+    const iatDate = new Date(decodePayload.iat! * 1000).toString();
+    await this.securityDevicesRepository.update(deviceId, iatDate);
     return {
       accessToken,
       refreshToken,

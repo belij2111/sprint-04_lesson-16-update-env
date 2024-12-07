@@ -26,6 +26,7 @@ import { RegistrationConfirmationCodeModel } from './models/input/registration-c
 import { RegistrationEmailResendingModel } from './models/input/registration-email-resending.model';
 import { PasswordRecoveryInputModel } from './models/input/password-recovery-input.model';
 import { NewPasswordRecoveryInputModel } from './models/input/new-password-recovery-input.model';
+import { RefreshTokenGuard } from '../../../core/guards/refresh-token.guard';
 
 @Controller('/auth')
 export class AuthController {
@@ -36,7 +37,11 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @Post('/login')
   @HttpCode(HttpStatus.OK)
-  async login(@Req() req: ExpressRequest, @Res() res: ExpressResponse) {
+  async login(
+    @Req() req: ExpressRequest,
+    @Res() res: ExpressResponse,
+    @Req() { user }: UserInfoInputModel,
+  ) {
     if (!req.ip) {
       throw new NotFoundException('IP address is required');
     }
@@ -45,11 +50,25 @@ export class AuthController {
     }
     const ip = req.ip;
     const deviceName = req.headers['user-agent'];
-    const result = await this.authService.login(
-      req.user as UserInfoInputModel,
-      ip,
-      deviceName,
-    );
+    const result = await this.authService.login(user, ip, deviceName);
+    const { accessToken, refreshToken } = result as LoginSuccessViewModel;
+    res
+      .cookie('refreshToken', refreshToken, {
+        httpOnly: true,
+        secure: true,
+      })
+      .json({ accessToken });
+    return;
+  }
+
+  @Post('/refresh-token')
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(RefreshTokenGuard)
+  async refreshToken(
+    @Res() res: ExpressResponse,
+    @Req() { user, deviceId }: UserInfoInputModel,
+  ) {
+    const result = await this.authService.refreshToken(user, deviceId);
     const { accessToken, refreshToken } = result as LoginSuccessViewModel;
     res
       .cookie('refreshToken', refreshToken, {
