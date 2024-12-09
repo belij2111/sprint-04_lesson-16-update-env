@@ -15,6 +15,8 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { EmailTemplateService } from '../../core/mail/email-template.service';
 import { MailService } from '../../core/mail/mail.service';
 import { SecurityDevicesModule } from '../security-devices/security-devices.module';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { APP_GUARD } from '@nestjs/core';
 
 @Module({
   imports: [
@@ -54,6 +56,12 @@ import { SecurityDevicesModule } from '../security-devices/security-devices.modu
       },
       inject: [ConfigService],
     }),
+    ThrottlerModule.forRoot([
+      {
+        ttl: 0,
+        limit: 0,
+      },
+    ]),
   ],
   controllers: [AuthController],
   providers: [
@@ -64,6 +72,10 @@ import { SecurityDevicesModule } from '../security-devices/security-devices.modu
     UuidProvider,
     MailService,
     EmailTemplateService,
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
   ],
 })
 export class AuthModule {}

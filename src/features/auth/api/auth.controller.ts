@@ -28,6 +28,7 @@ import { PasswordRecoveryInputModel } from './models/input/password-recovery-inp
 import { NewPasswordRecoveryInputModel } from './models/input/new-password-recovery-input.model';
 import { RefreshTokenGuard } from '../../../core/guards/refresh-token.guard';
 import { CurrentDeviceId } from '../../../core/decorators/param/current-device-id.param.decorator';
+import { Throttle } from '@nestjs/throttler';
 
 @Controller('/auth')
 export class AuthController {
@@ -36,6 +37,7 @@ export class AuthController {
     private readonly usersQueryRepository: UsersQueryRepository,
   ) {}
   @UseGuards(LocalAuthGuard)
+  @Throttle({ default: { limit: 5, ttl: 10000 } })
   @Post('/login')
   @HttpCode(HttpStatus.OK)
   async login(
@@ -87,12 +89,14 @@ export class AuthController {
     return this.usersQueryRepository.getAuthUserById(currentUserId);
   }
 
+  @Throttle({ default: { limit: 5, ttl: 10000 } })
   @Post('/registration')
   @HttpCode(HttpStatus.NO_CONTENT)
   async registration(@Body() userCreateModel: UserCreateModel) {
     await this.authService.registerUser(userCreateModel);
   }
 
+  @Throttle({ default: { limit: 5, ttl: 10000 } })
   @Post('/registration-confirmation')
   @HttpCode(HttpStatus.NO_CONTENT)
   async registrationConfirmation(
@@ -104,6 +108,7 @@ export class AuthController {
     );
   }
 
+  @Throttle({ default: { limit: 5, ttl: 10000 } })
   @Post('/registration-email-resending')
   @HttpCode(HttpStatus.NO_CONTENT)
   async registrationEmailResending(
@@ -114,6 +119,7 @@ export class AuthController {
     );
   }
 
+  @Throttle({ default: { limit: 5, ttl: 10000 } })
   @Post('/password-recovery')
   @HttpCode(HttpStatus.NO_CONTENT)
   async passwordRecovery(
@@ -122,6 +128,7 @@ export class AuthController {
     await this.authService.passwordRecovery(passwordRecoveryInputModel);
   }
 
+  @Throttle({ default: { limit: 5, ttl: 10000 } })
   @Post('/new-password')
   @HttpCode(HttpStatus.NO_CONTENT)
   async newPassword(
