@@ -104,7 +104,7 @@ export class AuthService {
       expiresIn: apiSettings.REFRESH_TOKEN_EXPIRATION,
     });
     const decodePayload = this.jwtService.decode(refreshToken);
-    const iatDate = new Date(decodePayload.iat! * 1000).toString();
+    const iatDate = new Date(decodePayload.iat! * 1000).toISOString();
     await this.securityDevicesRepository.update(deviceId, iatDate);
     return {
       accessToken,
