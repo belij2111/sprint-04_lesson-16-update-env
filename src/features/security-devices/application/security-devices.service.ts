@@ -15,7 +15,7 @@ export class SecurityDevicesService {
     currentUserId: string,
     currentDeviceId: string,
   ): Promise<boolean> {
-    return this.securityDevicesRepository.delete(
+    return await this.securityDevicesRepository.delete(
       currentUserId,
       currentDeviceId,
     );
