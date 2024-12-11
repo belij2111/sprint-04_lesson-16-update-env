@@ -31,7 +31,7 @@ export class SecurityDevicesRepository {
 
   async delete(currentUserId: string, currentDeviceId: string) {
     await this.SecurityDevicesModel.deleteMany({
-      currentUserId,
+      userId: currentUserId,
       deviceId: { $ne: currentDeviceId },
     });
     return true;
