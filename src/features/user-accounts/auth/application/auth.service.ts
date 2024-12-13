@@ -5,16 +5,16 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { BcryptService } from '../../../core/crypto/bcrypt.service';
+import { BcryptService } from '../../../../core/crypto/bcrypt.service';
 import { LoginInputModel } from '../api/models/input/login.input.model';
 import { ConfigService } from '@nestjs/config';
-import { ConfigurationType } from '../../../settings/env/configuration';
+import { ConfigurationType } from '../../../../settings/env/configuration';
 import { LoginSuccessViewModel } from '../api/models/view/login-success.view.model';
 import { UsersRepository } from '../../users/infrastructure/users.repository';
 import { User } from '../../users/domain/user.entity';
 import { UserCreateModel } from '../../users/api/models/input/create-user.input.model';
-import { UuidProvider } from '../../../core/helpers/uuid.provider';
-import { MailService } from '../../../core/mail/mail.service';
+import { UuidProvider } from '../../../../core/helpers/uuid.provider';
+import { MailService } from '../../../../core/mail/mail.service';
 import { RegistrationConfirmationCodeModel } from '../api/models/input/registration-confirmation-code.model';
 import { RegistrationEmailResendingModel } from '../api/models/input/registration-email-resending.model';
 import { PasswordRecoveryInputModel } from '../api/models/input/password-recovery-input.model';
@@ -63,10 +63,14 @@ export class AuthService {
       userId: userId,
       deviceId: randomUUID(),
     };
-    const accessToken = this.jwtService.sign(payloadForAccessToken);
     const apiSettings = this.configService.get('apiSettings', {
       infer: true,
     });
+    const accessToken = this.jwtService.sign(payloadForAccessToken, {
+      secret: apiSettings.ACCESS_TOKEN_SECRET,
+      expiresIn: apiSettings.ACCESS_TOKEN_EXPIRATION,
+    });
+
     const refreshToken = this.jwtService.sign(payloadForRefreshToken, {
       secret: apiSettings.REFRESH_TOKEN_SECRET,
       expiresIn: apiSettings.REFRESH_TOKEN_EXPIRATION,
@@ -95,9 +99,12 @@ export class AuthService {
       userId: userId,
       deviceId: deviceId,
     };
-    const accessToken = this.jwtService.sign(payloadForAccessToken);
     const apiSettings = this.configService.get('apiSettings', {
       infer: true,
+    });
+    const accessToken = this.jwtService.sign(payloadForAccessToken, {
+      secret: apiSettings.ACCESS_TOKEN_SECRET,
+      expiresIn: apiSettings.ACCESS_TOKEN_EXPIRATION,
     });
     const refreshToken = this.jwtService.sign(payloadForRefreshToken, {
       secret: apiSettings.REFRESH_TOKEN_SECRET,

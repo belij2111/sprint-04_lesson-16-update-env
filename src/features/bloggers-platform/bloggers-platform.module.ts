@@ -15,10 +15,10 @@ import { CommentsController } from './comments/api/comments.controller';
 import { CommentsService } from './comments/application/comments.service';
 import { CommentsQueryRepository } from './comments/infrastructure/comments.query-repository';
 import { CommentsRepository } from './comments/infrastructure/comments.repository';
-import { UsersModule } from '../users/users.module';
 import { Like, LikeSchema } from './likes/domain/like.entity';
 import { LikesRepository } from './likes/infrastructure/likes.repository';
 import { BlogIdIsExistConstraint } from './blogs/api/validation/blogId-is-exist.decorator';
+import { UserAccountsModule } from '../user-accounts/user-accounts.module';
 
 @Module({
   imports: [
@@ -26,7 +26,7 @@ import { BlogIdIsExistConstraint } from './blogs/api/validation/blogId-is-exist.
     MongooseModule.forFeature([{ name: Post.name, schema: PostSchema }]),
     MongooseModule.forFeature([{ name: Comment.name, schema: CommentSchema }]),
     MongooseModule.forFeature([{ name: Like.name, schema: LikeSchema }]),
-    UsersModule,
+    UserAccountsModule,
   ],
   controllers: [BlogsController, PostsController, CommentsController],
   providers: [

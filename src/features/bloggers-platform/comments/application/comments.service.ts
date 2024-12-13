@@ -1,7 +1,7 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { CommentCreateModel } from '../api/models/input/create-comment.input.model';
 import { PostsRepository } from '../../posts/infrastructure/posts.repository';
-import { UsersRepository } from '../../../users/infrastructure/users.repository';
+import { UsersRepository } from '../../../user-accounts/users/infrastructure/users.repository';
 import { Comment } from '../domain/comment.entity';
 import { CommentsRepository } from '../infrastructure/comments.repository';
 import { LikesRepository } from '../../likes/infrastructure/likes.repository';

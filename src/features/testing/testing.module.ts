@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { TestingController } from './api/testing.controller';
 import { TestingService } from './application/testing.service';
 import { MongooseModule } from '@nestjs/mongoose';
-import { User, UserSchema } from '../users/domain/user.entity';
+import { User, UserSchema } from '../user-accounts/users/domain/user.entity';
 import { TestingRepository } from './infrastructure/testing.repository';
 import {
   Blog,
@@ -23,7 +23,7 @@ import {
 import {
   SecurityDevices,
   SecurityDevicesSchema,
-} from '../security-devices/domain/security-devices.entity';
+} from '../user-accounts/security-devices/domain/security-devices.entity';
 
 @Module({
   imports: [

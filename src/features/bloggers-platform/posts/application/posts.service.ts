@@ -5,10 +5,10 @@ import { Post } from '../domain/post.entity';
 import { BlogsRepository } from '../../blogs/infrastructure/blogs.repository';
 import { LikeInputModel } from '../../likes/api/models/input/like.input.model';
 import { LikesRepository } from '../../likes/infrastructure/likes.repository';
-import { UsersRepository } from '../../../users/infrastructure/users.repository';
+import { UsersRepository } from '../../../user-accounts/users/infrastructure/users.repository';
 import { Like, LikeStatus } from '../../likes/domain/like.entity';
 import { LikesInfoModel } from '../../likes/api/models/input/likes.info.model';
-import { User } from '../../../users/domain/user.entity';
+import { User } from '../../../user-accounts/users/domain/user.entity';
 import { LikeDetailsModel } from '../../likes/api/models/input/like.details.model';
 import { ExtendedLikesInfoModel } from '../api/models/input/extended.likes.info.model';
 

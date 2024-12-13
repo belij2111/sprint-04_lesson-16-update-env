@@ -4,7 +4,7 @@ import { User, UserModelType } from '../domain/user.entity';
 import { UserViewModel } from '../api/models/view/user.view.model';
 import { MeViewModel } from '../../auth/api/models/view/me.view.model';
 import { GetUsersQueryParams } from '../api/models/input/create-user.input.model';
-import { PaginatedViewModel } from '../../../core/models/base.paginated.view.model';
+import { PaginatedViewModel } from '../../../../core/models/base.paginated.view.model';
 
 @Injectable()
 export class UsersQueryRepository {

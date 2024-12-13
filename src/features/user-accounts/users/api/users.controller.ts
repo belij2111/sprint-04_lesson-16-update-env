@@ -18,9 +18,9 @@ import {
   GetUsersQueryParams,
   UserCreateModel,
 } from './models/input/create-user.input.model';
-import { BasicAuthGuard } from '../../../core/guards/basic-auth.guard';
+import { BasicAuthGuard } from '../../../../core/guards/basic-auth.guard';
 import { ApiBasicAuth } from '@nestjs/swagger';
-import { PaginatedViewModel } from '../../../core/models/base.paginated.view.model';
+import { PaginatedViewModel } from '../../../../core/models/base.paginated.view.model';
 
 @Controller('/users')
 @UseGuards(BasicAuthGuard)

@@ -11,23 +11,23 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthService } from '../application/auth.service';
-import { LocalAuthGuard } from '../../../core/guards/local-auth.guard';
+import { LocalAuthGuard } from '../../../../core/guards/local-auth.guard';
 import {
   Request as ExpressRequest,
   Response as ExpressResponse,
 } from 'express';
 import { UserInfoInputModel } from './models/input/user-info.input.model';
 import { LoginSuccessViewModel } from './models/view/login-success.view.model';
-import { CurrentUserId } from '../../../core/decorators/param/current-user-id.param.decorator';
+import { CurrentUserId } from '../../../../core/decorators/param/current-user-id.param.decorator';
 import { UsersQueryRepository } from '../../users/infrastructure/users.query-repository';
-import { JwtAuthGuard } from '../../../core/guards/jwt-auth.guard';
+import { JwtAuthGuard } from '../../../../core/guards/jwt-auth.guard';
 import { UserCreateModel } from '../../users/api/models/input/create-user.input.model';
 import { RegistrationConfirmationCodeModel } from './models/input/registration-confirmation-code.model';
 import { RegistrationEmailResendingModel } from './models/input/registration-email-resending.model';
 import { PasswordRecoveryInputModel } from './models/input/password-recovery-input.model';
 import { NewPasswordRecoveryInputModel } from './models/input/new-password-recovery-input.model';
-import { RefreshTokenGuard } from '../../../core/guards/refresh-token.guard';
-import { CurrentDeviceId } from '../../../core/decorators/param/current-device-id.param.decorator';
+import { RefreshTokenGuard } from '../../../../core/guards/refresh-token.guard';
+import { CurrentDeviceId } from '../../../../core/decorators/param/current-device-id.param.decorator';
 import { Throttle } from '@nestjs/throttler';
 
 @Controller('/auth')

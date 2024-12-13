@@ -5,7 +5,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { SecurityDevicesRepository } from '../../features/security-devices/infrastructure/security-devices.repository';
+import { SecurityDevicesRepository } from '../../features/user-accounts/security-devices/infrastructure/security-devices.repository';
 import { ConfigService } from '@nestjs/config';
 import { ConfigurationType } from '../../settings/env/configuration';
 
