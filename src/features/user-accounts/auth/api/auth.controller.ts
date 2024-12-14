@@ -26,7 +26,7 @@ import { RegistrationConfirmationCodeModel } from './models/input/registration-c
 import { RegistrationEmailResendingModel } from './models/input/registration-email-resending.model';
 import { PasswordRecoveryInputModel } from './models/input/password-recovery-input.model';
 import { NewPasswordRecoveryInputModel } from './models/input/new-password-recovery-input.model';
-import { RefreshTokenGuard } from '../../../../core/guards/refresh-token.guard';
+import { RefreshTokenGuard } from '../../guards/refresh-token.guard';
 import { CurrentDeviceId } from '../../../../core/decorators/param/current-device-id.param.decorator';
 import { Throttle } from '@nestjs/throttler';
 
