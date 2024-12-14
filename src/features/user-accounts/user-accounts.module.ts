@@ -14,7 +14,7 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { AuthController } from './auth/api/auth.controller';
 import { AuthService } from './auth/application/auth.service';
 import { BasicStrategy } from '../../core/strategies/basic.strategy';
-import { LocalStrategy } from '../../core/strategies/local.strategy';
+import { LocalStrategy } from './strategies/local.strategy';
 import { JwtStrategy } from '../../core/strategies/jwt.strategy';
 import { UuidProvider } from '../../core/helpers/uuid.provider';
 import { MailService } from '../../core/mail/mail.service';
