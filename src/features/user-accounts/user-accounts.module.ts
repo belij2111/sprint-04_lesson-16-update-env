@@ -38,19 +38,6 @@ import { SecurityDevicesQueryRepository } from './security-devices/infrastructur
     ]),
     CryptoModule,
     PassportModule,
-    // JwtModule,
-    //   .registerAsync({
-    //   useFactory: (configService: ConfigService<ConfigurationType, true>) => {
-    //     const apiSettings = configService.get('apiSettings', {
-    //       infer: true,
-    //     });
-    //     return {
-    //       secret: apiSettings.ACCESS_TOKEN_SECRET,
-    //       signOptions: { expiresIn: apiSettings.ACCESS_TOKEN_EXPIRATION },
-    //     };
-    //   },
-    //   inject: [ConfigService],
-    // }),
     MailerModule.forRootAsync({
       useFactory: (configService: ConfigService<ConfigurationType, true>) => {
         const apiSettings = configService.get('apiSettings', {
