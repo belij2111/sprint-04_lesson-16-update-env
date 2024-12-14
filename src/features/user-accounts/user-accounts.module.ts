@@ -5,7 +5,6 @@ import {
   SecurityDevices,
   SecurityDevicesSchema,
 } from './security-devices/domain/security-devices.entity';
-import { CryptoModule } from '../../core/crypto/crypto.module';
 import { PassportModule } from '@nestjs/passport';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
@@ -29,6 +28,7 @@ import { UsersQueryRepository } from './users/infrastructure/users.query-reposit
 import { SecurityDevicesService } from './security-devices/application/security-devices.service';
 import { SecurityDevicesRepository } from './security-devices/infrastructure/security-devices.repository';
 import { SecurityDevicesQueryRepository } from './security-devices/infrastructure/security-devices.query-repository';
+import { CryptoService } from './crypto/crypto.service';
 
 @Module({
   imports: [
@@ -36,7 +36,6 @@ import { SecurityDevicesQueryRepository } from './security-devices/infrastructur
     MongooseModule.forFeature([
       { name: SecurityDevices.name, schema: SecurityDevicesSchema },
     ]),
-    CryptoModule,
     PassportModule,
     MailerModule.forRootAsync({
       useFactory: (configService: ConfigService<ConfigurationType, true>) => {
@@ -81,6 +80,7 @@ import { SecurityDevicesQueryRepository } from './security-devices/infrastructur
     SecurityDevicesRepository,
     SecurityDevicesQueryRepository,
     JwtService,
+    CryptoService,
     {
       provide: APP_GUARD,
       useClass: ThrottlerGuard,

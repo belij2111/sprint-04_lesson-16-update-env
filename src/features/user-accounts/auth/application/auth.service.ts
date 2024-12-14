@@ -5,7 +5,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { BcryptService } from '../../../../core/crypto/bcrypt.service';
+import { CryptoService } from '../../crypto/crypto.service';
 import { LoginInputModel } from '../api/models/input/login.input.model';
 import { ConfigService } from '@nestjs/config';
 import { ConfigurationType } from '../../../../settings/env/configuration';
@@ -27,7 +27,7 @@ import { SecurityDevicesRepository } from '../../security-devices/infrastructure
 export class AuthService {
   constructor(
     private readonly usersRepository: UsersRepository,
-    private readonly bcryptService: BcryptService,
+    private readonly bcryptService: CryptoService,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService<ConfigurationType, true>,
     private readonly uuidProvider: UuidProvider,
