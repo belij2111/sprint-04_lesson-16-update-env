@@ -11,7 +11,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthService } from '../application/auth.service';
-import { LocalAuthGuard } from '../../../../core/guards/local-auth.guard';
+import { LocalAuthGuard } from '../../guards/local-auth.guard';
 import {
   Request as ExpressRequest,
   Response as ExpressResponse,
