@@ -33,7 +33,7 @@ import { CommentsQueryRepository } from '../../comments/infrastructure/comments.
 import { CommentViewModel } from '../../comments/api/models/view/comment.view.model';
 import { LikeInputModel } from '../../likes/api/models/input/like.input.model';
 import { IdentifyUser } from '../../../../core/decorators/param/identify-user.param.decorator';
-import { JwtOptionalAuthGuard } from '../../../../core/guards/jwt-optional-auth.guard ';
+import { JwtOptionalAuthGuard } from '../../guards/jwt-optional-auth.guard';
 
 @Controller('/posts')
 export class PostsController {

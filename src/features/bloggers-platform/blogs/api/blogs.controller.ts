@@ -32,7 +32,7 @@ import { ApiBasicAuth } from '@nestjs/swagger';
 import { PaginatedViewModel } from '../../../../core/models/base.paginated.view.model';
 import { CurrentUserId } from '../../../../core/decorators/param/current-user-id.param.decorator';
 import { IdentifyUser } from '../../../../core/decorators/param/identify-user.param.decorator';
-import { JwtOptionalAuthGuard } from '../../../../core/guards/jwt-optional-auth.guard ';
+import { JwtOptionalAuthGuard } from '../../guards/jwt-optional-auth.guard';
 import { BlogIdParamModel } from '../../posts/api/models/input/blogId-param.model';
 
 @Controller('/blogs')
