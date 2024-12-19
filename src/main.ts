@@ -1,21 +1,17 @@
+import { CoreConfig } from './core/core.config';
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
-import { applyAppSetting } from './settings/apply-app-setting';
-import { ConfigService } from '@nestjs/config';
-import { ConfigurationType } from './settings/env/configuration';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import cookieParser from 'cookie-parser';
+import { initAppModule } from './init-app-module';
+
+import { appSetup } from './setup/app.setup';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const dynamicAppModule = await initAppModule();
+  const app = await NestFactory.create(dynamicAppModule);
   app.use(cookieParser());
-  applyAppSetting(app);
 
-  const configService = app.get(ConfigService<ConfigurationType, true>);
-  const apiSettings = configService.get('apiSettings', { infer: true });
-  const environmentSettings = configService.get('environmentSettings', {
-    infer: true,
-  });
+  const coreConfig = app.get<CoreConfig>(CoreConfig);
 
   const config = new DocumentBuilder()
     .setTitle('Cats example')
@@ -27,11 +23,13 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('/', app, document);
 
-  const port = apiSettings.PORT;
+  await appSetup(app, coreConfig);
+
+  const port = coreConfig.port;
 
   await app.listen(port, () => {
     console.log('App starting listen port:', port);
-    console.log('ENV:', environmentSettings.currentEnv);
+    console.log('NODE_ENV:', coreConfig.env);
   });
 }
 bootstrap();

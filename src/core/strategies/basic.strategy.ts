@@ -1,14 +1,11 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { BasicStrategy as Strategy } from 'passport-http';
-import { ConfigService } from '@nestjs/config';
-import { ConfigurationType } from '../../settings/env/configuration';
+import { CoreConfig } from '../core.config';
 
 @Injectable()
 export class BasicStrategy extends PassportStrategy(Strategy) {
-  constructor(
-    private readonly configService: ConfigService<ConfigurationType, true>,
-  ) {
+  constructor(private readonly coreConfig: CoreConfig) {
     super();
   }
 
@@ -16,10 +13,9 @@ export class BasicStrategy extends PassportStrategy(Strategy) {
     userLogin: string,
     password: string,
   ): Promise<boolean> => {
-    const apiSettings = this.configService.get('apiSettings', { infer: true });
     if (
-      apiSettings.ADMIN_LOGIN === userLogin &&
-      apiSettings.ADMIN_PASSWORD === password
+      this.coreConfig.ADMIN_LOGIN === userLogin &&
+      this.coreConfig.ADMIN_PASSWORD === password
     ) {
       return true;
     }

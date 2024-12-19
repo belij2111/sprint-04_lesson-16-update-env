@@ -7,8 +7,6 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { CryptoService } from '../../crypto/crypto.service';
 import { LoginInputModel } from '../api/models/input/login.input.model';
-import { ConfigService } from '@nestjs/config';
-import { ConfigurationType } from '../../../../settings/env/configuration';
 import { LoginSuccessViewModel } from '../api/models/view/login-success.view.model';
 import { UsersRepository } from '../../users/infrastructure/users.repository';
 import { User } from '../../users/domain/user.entity';
@@ -22,6 +20,7 @@ import { NewPasswordRecoveryInputModel } from '../api/models/input/new-password-
 import { randomUUID } from 'node:crypto';
 import { SecurityDevices } from '../../security-devices/domain/security-devices.entity';
 import { SecurityDevicesRepository } from '../../security-devices/infrastructure/security-devices.repository';
+import { UserAccountConfig } from '../../config/user-account.config';
 
 @Injectable()
 export class AuthService {
@@ -29,7 +28,7 @@ export class AuthService {
     private readonly usersRepository: UsersRepository,
     private readonly bcryptService: CryptoService,
     private readonly jwtService: JwtService,
-    private readonly configService: ConfigService<ConfigurationType, true>,
+    private readonly userAccountConfig: UserAccountConfig,
     private readonly uuidProvider: UuidProvider,
     private readonly mailService: MailService,
     private readonly securityDevicesRepository: SecurityDevicesRepository,
@@ -63,17 +62,14 @@ export class AuthService {
       userId: userId,
       deviceId: randomUUID(),
     };
-    const apiSettings = this.configService.get('apiSettings', {
-      infer: true,
-    });
     const accessToken = this.jwtService.sign(payloadForAccessToken, {
-      secret: apiSettings.ACCESS_TOKEN_SECRET,
-      expiresIn: apiSettings.ACCESS_TOKEN_EXPIRATION,
+      secret: this.userAccountConfig.ACCESS_TOKEN_SECRET,
+      expiresIn: this.userAccountConfig.ACCESS_TOKEN_EXPIRATION,
     });
 
     const refreshToken = this.jwtService.sign(payloadForRefreshToken, {
-      secret: apiSettings.REFRESH_TOKEN_SECRET,
-      expiresIn: apiSettings.REFRESH_TOKEN_EXPIRATION,
+      secret: this.userAccountConfig.REFRESH_TOKEN_SECRET,
+      expiresIn: this.userAccountConfig.REFRESH_TOKEN_EXPIRATION,
     });
     const decodePayload = this.jwtService.decode(refreshToken);
     const deviceSession: SecurityDevices = {
@@ -99,16 +95,13 @@ export class AuthService {
       userId: userId,
       deviceId: deviceId,
     };
-    const apiSettings = this.configService.get('apiSettings', {
-      infer: true,
-    });
     const accessToken = this.jwtService.sign(payloadForAccessToken, {
-      secret: apiSettings.ACCESS_TOKEN_SECRET,
-      expiresIn: apiSettings.ACCESS_TOKEN_EXPIRATION,
+      secret: this.userAccountConfig.ACCESS_TOKEN_SECRET,
+      expiresIn: this.userAccountConfig.ACCESS_TOKEN_EXPIRATION,
     });
     const refreshToken = this.jwtService.sign(payloadForRefreshToken, {
-      secret: apiSettings.REFRESH_TOKEN_SECRET,
-      expiresIn: apiSettings.REFRESH_TOKEN_EXPIRATION,
+      secret: this.userAccountConfig.REFRESH_TOKEN_SECRET,
+      expiresIn: this.userAccountConfig.REFRESH_TOKEN_EXPIRATION,
     });
     const decodePayload = this.jwtService.decode(refreshToken);
     const iatDate = new Date(decodePayload.iat! * 1000).toISOString();
@@ -139,12 +132,7 @@ export class AuthService {
     const passHash = await this.bcryptService.generateHash(
       userCreateModel.password,
     );
-    const expirationTime = this.configService.get(
-      'apiSettings.CONFIRMATION_CODE_EXPIRATION',
-      {
-        infer: true,
-      },
-    );
+    const expirationTime = this.userAccountConfig.CONFIRMATION_CODE_EXPIRATION;
     const newUser: User = {
       login: userCreateModel.login,
       password: passHash,
@@ -201,12 +189,7 @@ export class AuthService {
         },
       ]);
     }
-    const expirationTime = this.configService.get(
-      'apiSettings.CONFIRMATION_CODE_EXPIRATION',
-      {
-        infer: true,
-      },
-    );
+    const expirationTime = this.userAccountConfig.CONFIRMATION_CODE_EXPIRATION;
     const newConfirmationCode = this.uuidProvider.generate();
     const newExpirationDate = new Date(new Date().getTime() + expirationTime);
 
@@ -227,12 +210,7 @@ export class AuthService {
       inputEmail.email,
     );
     if (!existingUserByEmail) return;
-    const expirationTime = this.configService.get(
-      'apiSettings.CONFIRMATION_CODE_EXPIRATION',
-      {
-        infer: true,
-      },
-    );
+    const expirationTime = this.userAccountConfig.CONFIRMATION_CODE_EXPIRATION;
     const recoveryCode = this.uuidProvider.generate();
     const newExpirationDate = new Date(new Date().getTime() + expirationTime);
     await this.usersRepository.updateRegistrationConfirmation(

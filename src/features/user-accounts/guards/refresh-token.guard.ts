@@ -6,15 +6,14 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { SecurityDevicesRepository } from '../security-devices/infrastructure/security-devices.repository';
-import { ConfigService } from '@nestjs/config';
-import { ConfigurationType } from '../../../settings/env/configuration';
+import { UserAccountConfig } from '../config/user-account.config';
 
 @Injectable()
 export class RefreshTokenGuard implements CanActivate {
   constructor(
     private readonly jwtService: JwtService,
     private readonly securityDevicesRepository: SecurityDevicesRepository,
-    private readonly configService: ConfigService<ConfigurationType, true>,
+    private readonly userAccountConfig: UserAccountConfig,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -23,10 +22,7 @@ export class RefreshTokenGuard implements CanActivate {
     if (!refreshToken) {
       throw new UnauthorizedException();
     }
-    const apiSettings = this.configService.get('apiSettings', {
-      infer: true,
-    });
-    const secret = apiSettings.REFRESH_TOKEN_SECRET;
+    const secret = this.userAccountConfig.REFRESH_TOKEN_SECRET;
     let payload: any;
     try {
       payload = await this.jwtService.verifyAsync(refreshToken, {

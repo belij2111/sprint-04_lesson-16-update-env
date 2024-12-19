@@ -4,8 +4,7 @@ import { UserCreateModel } from '../api/models/input/create-user.input.model';
 import { CryptoService } from '../../crypto/crypto.service';
 import { User } from '../domain/user.entity';
 import { UuidProvider } from '../../../../core/helpers/uuid.provider';
-import { ConfigService } from '@nestjs/config';
-import { ConfigurationType } from '../../../../settings/env/configuration';
+import { UserAccountConfig } from '../../config/user-account.config';
 
 @Injectable()
 export class UsersService {
@@ -13,7 +12,7 @@ export class UsersService {
     private readonly usersRepository: UsersRepository,
     private readonly bcryptService: CryptoService,
     private readonly uuidProvider: UuidProvider,
-    private readonly configService: ConfigService<ConfigurationType, true>,
+    private readonly userAccountConfig: UserAccountConfig,
   ) {}
 
   async create(userCreateModel: UserCreateModel): Promise<{ id: string }> {
@@ -36,12 +35,7 @@ export class UsersService {
     const passHash = await this.bcryptService.generateHash(
       userCreateModel.password,
     );
-    const expirationTime = this.configService.get(
-      'apiSettings.CONFIRMATION_CODE_EXPIRATION',
-      {
-        infer: true,
-      },
-    );
+    const expirationTime = this.userAccountConfig.CONFIRMATION_CODE_EXPIRATION;
     const newUser: User = {
       login: userCreateModel.login,
       password: passHash,

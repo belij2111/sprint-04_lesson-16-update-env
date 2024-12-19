@@ -1,3 +1,4 @@
+import { UserAccountConfig } from './config/user-account.config';
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from './users/domain/user.entity';
@@ -7,8 +8,6 @@ import {
 } from './security-devices/domain/security-devices.entity';
 import { PassportModule } from '@nestjs/passport';
 import { JwtService } from '@nestjs/jwt';
-import { ConfigService } from '@nestjs/config';
-import { ConfigurationType } from '../../settings/env/configuration';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { AuthController } from './auth/api/auth.controller';
@@ -29,6 +28,7 @@ import { SecurityDevicesService } from './security-devices/application/security-
 import { SecurityDevicesRepository } from './security-devices/infrastructure/security-devices.repository';
 import { SecurityDevicesQueryRepository } from './security-devices/infrastructure/security-devices.query-repository';
 import { CryptoService } from './crypto/crypto.service';
+import { CoreConfig } from '../../core/core.config';
 
 @Module({
   imports: [
@@ -38,16 +38,13 @@ import { CryptoService } from './crypto/crypto.service';
     ]),
     PassportModule,
     MailerModule.forRootAsync({
-      useFactory: (configService: ConfigService<ConfigurationType, true>) => {
-        const apiSettings = configService.get('apiSettings', {
-          infer: true,
-        });
+      useFactory: (coreConfig: CoreConfig) => {
         return {
           transport: {
-            service: apiSettings.MAIL_SERVICE,
+            service: coreConfig.MAIL_SERVICE,
             auth: {
-              user: apiSettings.MAIL_USER,
-              pass: apiSettings.MAIL_PASS,
+              user: coreConfig.MAIL_USER,
+              pass: coreConfig.MAIL_PASS,
             },
             tls: {
               rejectUnauthorized: false,
@@ -55,7 +52,7 @@ import { CryptoService } from './crypto/crypto.service';
           },
         };
       },
-      inject: [ConfigService],
+      inject: [CoreConfig],
     }),
     ThrottlerModule.forRoot([
       {
@@ -66,6 +63,7 @@ import { CryptoService } from './crypto/crypto.service';
   ],
   controllers: [UsersController, AuthController, SecurityDevicesController],
   providers: [
+    UserAccountConfig,
     UsersService,
     UsersRepository,
     UsersQueryRepository,
