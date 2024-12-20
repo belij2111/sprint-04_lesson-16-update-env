@@ -12,7 +12,7 @@ import { UsersRepository } from '../../users/infrastructure/users.repository';
 import { User } from '../../users/domain/user.entity';
 import { UserCreateModel } from '../../users/api/models/input/create-user.input.model';
 import { UuidProvider } from '../../../../core/helpers/uuid.provider';
-import { MailService } from '../../../../core/mail/mail.service';
+import { MailService } from '../../../notifications/mail.service';
 import { RegistrationConfirmationCodeModel } from '../api/models/input/registration-confirmation-code.model';
 import { RegistrationEmailResendingModel } from '../api/models/input/registration-email-resending.model';
 import { PasswordRecoveryInputModel } from '../api/models/input/password-recovery-input.model';

@@ -6,6 +6,7 @@ import { BloggersPlatformModule } from './features/bloggers-platform/bloggers-pl
 import { UserAccountsModule } from './features/user-accounts/user-accounts.module';
 import { CoreConfig } from './core/core.config';
 import { CoreModule } from './core/core.module';
+import { NotificationsModule } from './features/notifications/notifications.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { CoreModule } from './core/core.module';
     CoreModule,
     UserAccountsModule,
     BloggersPlatformModule,
+    NotificationsModule,
   ],
   controllers: [],
   providers: [],

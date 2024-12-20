@@ -8,7 +8,6 @@ import {
 } from './security-devices/domain/security-devices.entity';
 import { PassportModule } from '@nestjs/passport';
 import { JwtService } from '@nestjs/jwt';
-import { MailerModule } from '@nestjs-modules/mailer';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { AuthController } from './auth/api/auth.controller';
 import { AuthService } from './auth/application/auth.service';
@@ -16,8 +15,6 @@ import { BasicStrategy } from '../../core/strategies/basic.strategy';
 import { LocalStrategy } from './strategies/local.strategy';
 import { JwtStrategy } from '../../core/strategies/jwt.strategy';
 import { UuidProvider } from '../../core/helpers/uuid.provider';
-import { MailService } from '../../core/mail/mail.service';
-import { EmailTemplateService } from '../../core/mail/email-template.service';
 import { APP_GUARD } from '@nestjs/core';
 import { UsersController } from './users/api/users.controller';
 import { SecurityDevicesController } from './security-devices/api/security-devices.controller';
@@ -28,7 +25,7 @@ import { SecurityDevicesService } from './security-devices/application/security-
 import { SecurityDevicesRepository } from './security-devices/infrastructure/security-devices.repository';
 import { SecurityDevicesQueryRepository } from './security-devices/infrastructure/security-devices.query-repository';
 import { CryptoService } from './crypto/crypto.service';
-import { CoreConfig } from '../../core/core.config';
+import { NotificationsModule } from '../notifications/notifications.module';
 
 @Module({
   imports: [
@@ -37,23 +34,7 @@ import { CoreConfig } from '../../core/core.config';
       { name: SecurityDevices.name, schema: SecurityDevicesSchema },
     ]),
     PassportModule,
-    MailerModule.forRootAsync({
-      useFactory: (coreConfig: CoreConfig) => {
-        return {
-          transport: {
-            service: coreConfig.MAIL_SERVICE,
-            auth: {
-              user: coreConfig.MAIL_USER,
-              pass: coreConfig.MAIL_PASS,
-            },
-            tls: {
-              rejectUnauthorized: false,
-            },
-          },
-        };
-      },
-      inject: [CoreConfig],
-    }),
+    NotificationsModule,
     ThrottlerModule.forRoot([
       {
         ttl: 0,
@@ -72,8 +53,6 @@ import { CoreConfig } from '../../core/core.config';
     BasicStrategy,
     LocalStrategy,
     JwtStrategy,
-    MailService,
-    EmailTemplateService,
     SecurityDevicesService,
     SecurityDevicesRepository,
     SecurityDevicesQueryRepository,
