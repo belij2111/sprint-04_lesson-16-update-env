@@ -1,6 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { IsEnum, IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import {
+  IsBoolean,
+  IsEnum,
+  IsNotEmpty,
+  IsNumber,
+  IsString,
+} from 'class-validator';
 import { configValidationUtility } from '../setup/config-validation.utility';
 
 export enum Environments {
@@ -40,6 +46,14 @@ export class CoreConfig {
 
   includeTestingModule: boolean = configValidationUtility.convertToBoolean(
     this.configService.get('INCLUDE_TESTING_MODULE'),
+  ) as boolean;
+
+  @IsBoolean({
+    message:
+      'Set Env variable IS_SWAGGER_ENABLED to enable/disable Swagger, example: true, available values: true, false',
+  })
+  isSwaggerEnabled = configValidationUtility.convertToBoolean(
+    this.configService.get('IS_SWAGGER_ENABLED'),
   ) as boolean;
 
   constructor(private configService: ConfigService<any, true>) {

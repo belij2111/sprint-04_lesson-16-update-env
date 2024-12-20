@@ -1,6 +1,5 @@
 import { CoreConfig } from './core/core.config';
 import { NestFactory } from '@nestjs/core';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import cookieParser from 'cookie-parser';
 import { initAppModule } from './init-app-module';
 
@@ -12,16 +11,6 @@ async function bootstrap() {
   app.use(cookieParser());
 
   const coreConfig = app.get<CoreConfig>(CoreConfig);
-
-  const config = new DocumentBuilder()
-    .setTitle('Cats example')
-    .setDescription('The cats API description')
-    .setVersion('1.0')
-    .addTag('cats')
-    .addBasicAuth()
-    .build();
-  const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('/', app, document);
 
   await appSetup(app, coreConfig);
 
