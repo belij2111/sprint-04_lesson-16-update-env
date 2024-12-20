@@ -25,16 +25,28 @@ export class CoreConfig {
       'Set Env variable MONGO_URI, example: mongodb://localhost:27017/my-app-local-db',
   })
   mongoURI: string = this.configService.get('MONGO_URI');
-  @IsString()
+
+  @IsString({
+    message: 'Set Env variable ADMIN_LOGIN, dangerous for security!',
+  })
   ADMIN_LOGIN: string = this.configService.get('ADMIN_LOGIN');
-  @IsString()
+
+  @IsString({
+    message: 'Set Env variable ADMIN_PASSWORD, dangerous for security!',
+  })
   ADMIN_PASSWORD: string = this.configService.get('ADMIN_PASSWORD');
 
-  @IsString()
+  @IsString({
+    message: 'Set Env variable MAIL_SERVICE',
+  })
   MAIL_SERVICE: string = this.configService.get('MAIL_SERVICE');
-  @IsString()
+  @IsString({
+    message: 'Set Env variable MAIL_USER, dangerous for security!',
+  })
   MAIL_USER: string = this.configService.get('MAIL_USER');
-  @IsString()
+  @IsString({
+    message: 'Set Env variable MAIL_PASS, dangerous for security!',
+  })
   MAIL_PASS: string = this.configService.get('MAIL_PASS');
 
   @IsEnum(Environments, {
@@ -44,13 +56,17 @@ export class CoreConfig {
   })
   env: string = this.configService.get('NODE_ENV');
 
+  @IsBoolean({
+    message:
+      'Set Env variable INCLUDE_TESTING_MODULE to enable/disable, available values: true, false, 1, 0, dangerous for security!',
+  })
   includeTestingModule: boolean = configValidationUtility.convertToBoolean(
     this.configService.get('INCLUDE_TESTING_MODULE'),
   ) as boolean;
 
   @IsBoolean({
     message:
-      'Set Env variable IS_SWAGGER_ENABLED to enable/disable Swagger, example: true, available values: true, false',
+      'Set Env variable IS_SWAGGER_ENABLED to enable/disable, available values: true, false, 1, 0, dangerous for security!',
   })
   isSwaggerEnabled = configValidationUtility.convertToBoolean(
     this.configService.get('IS_SWAGGER_ENABLED'),
