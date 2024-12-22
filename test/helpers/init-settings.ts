@@ -4,6 +4,7 @@ import { getConnectionToken } from '@nestjs/mongoose';
 import { appSetup } from '../../src/setup/app.setup';
 import { CoreConfig } from '../../src/core/core.config';
 import { initAppModule } from '../../src/init-app-module';
+import { deleteAllData } from './delete-all-data';
 
 export const initSettings = async (
   service?: any,
@@ -29,6 +30,7 @@ export const initSettings = async (
 
   const databaseConnection = app.get<Connection>(getConnectionToken());
   const httpServer = app.getHttpServer();
+  await deleteAllData(app);
 
   return {
     app,
