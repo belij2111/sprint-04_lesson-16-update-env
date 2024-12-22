@@ -5,27 +5,32 @@ import request from 'supertest';
 import { paginationParams } from '../models/base/pagination.model';
 import { createValidBlogModel } from '../models/blogs/blog.input.model';
 import { Paginator } from '../../src/core/models/pagination.base.model';
+import { CoreConfig } from '../../src/core/core.config';
 
 export class BlogsTestManager {
-  constructor(protected readonly app: INestApplication) {}
+  constructor(
+    private readonly app: INestApplication,
+    private readonly coreConfig: CoreConfig,
+  ) {}
 
   async createBlog(
-    createModel: BlogCreateModel,
+    createdModel: BlogCreateModel,
     statusCode: number = HttpStatus.CREATED,
   ) {
     return request(this.app.getHttpServer())
       .post('/blogs')
-      .send(createModel)
+      .auth(this.coreConfig.ADMIN_LOGIN, this.coreConfig.ADMIN_PASSWORD)
+      .send(createdModel)
       .expect(statusCode);
   }
 
   expectCorrectModel(
-    createModel: BlogCreateModel,
+    createdModel: BlogCreateModel,
     responseModel: BlogViewModel,
   ) {
-    expect(createModel.name).toBe(responseModel.name);
-    expect(createModel.description).toBe(responseModel.description);
-    expect(createModel.websiteUrl).toBe(responseModel.websiteUrl);
+    expect(createdModel.name).toBe(responseModel.name);
+    expect(createdModel.description).toBe(responseModel.description);
+    expect(createdModel.websiteUrl).toBe(responseModel.websiteUrl);
   }
 
   async createBlogs(
@@ -36,6 +41,7 @@ export class BlogsTestManager {
     for (let i = 1; i <= count; i++) {
       const response = await request(this.app.getHttpServer())
         .post('/blogs')
+        .auth(this.coreConfig.ADMIN_LOGIN, this.coreConfig.ADMIN_PASSWORD)
         .send(createValidBlogModel(i))
         .expect(statusCode);
       blogs.push(response.body);
@@ -59,12 +65,12 @@ export class BlogsTestManager {
   }
 
   expectCorrectPagination(
-    createModels: BlogViewModel[],
+    createdModels: BlogViewModel[],
     responseModels: Paginator<BlogViewModel[]>,
   ) {
-    expect(responseModels.items.length).toBe(createModels.length);
-    expect(responseModels.totalCount).toBe(createModels.length);
-    expect(responseModels.items).toEqual(createModels);
+    expect(responseModels.items.length).toBe(createdModels.length);
+    expect(responseModels.totalCount).toBe(createdModels.length);
+    expect(responseModels.items).toEqual(createdModels);
     expect(responseModels.pagesCount).toBe(1);
     expect(responseModels.page).toBe(1);
     expect(responseModels.pageSize).toBe(10);
