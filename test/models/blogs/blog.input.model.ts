@@ -1,23 +1,17 @@
-class BlogInputModel {
-  constructor(
-    public name: string,
-    public description: string,
-    public websiteUrl: string,
-  ) {}
-}
+import { BlogCreateModel } from '../../../src/features/bloggers-platform/blogs/api/models/input/create-blog.input.model';
 
-export const createValidBlogModel = (count: number = 1): BlogInputModel => {
-  return new BlogInputModel(
-    `Blog${count}`,
-    `new blog${count}`,
-    `https://www.example${count}.com`,
-  );
+export const createValidBlogModel = (count: number = 1): BlogCreateModel => {
+  const blog = new BlogCreateModel();
+  blog.name = `Blog${count}`;
+  blog.description = `new blog ${count}`;
+  blog.websiteUrl = `https://www.example${count}.com`;
+  return blog;
 };
 
-export const createInValidBlogModel = (count: number = 1): BlogInputModel => {
-  return new BlogInputModel(
-    `Blog${count}`,
-    `new blog${count}`,
-    `invalid url${count}`,
-  );
+export const createInValidBlogModel = (count: number = 1): BlogCreateModel => {
+  const invalidBlog = new BlogCreateModel();
+  invalidBlog.name = `Blog${count}`;
+  invalidBlog.description = `new blog ${count}`;
+  invalidBlog.websiteUrl = `invalid url${count}`;
+  return invalidBlog;
 };
