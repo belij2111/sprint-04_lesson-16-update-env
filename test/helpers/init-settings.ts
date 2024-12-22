@@ -36,5 +36,6 @@ export const initSettings = async (
     app,
     databaseConnection,
     httpServer,
+    coreConfig,
   };
 };
