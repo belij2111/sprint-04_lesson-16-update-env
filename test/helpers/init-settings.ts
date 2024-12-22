@@ -1,18 +1,18 @@
 import { Test, TestingModuleBuilder } from '@nestjs/testing';
-import { AppModule } from '../../src/app.module';
-import { applyAppSetting } from '../../src/settings/apply-app-setting';
 import { Connection } from 'mongoose';
 import { getConnectionToken } from '@nestjs/mongoose';
-import configuration from '../../src/settings/env/configuration';
+import { appSetup } from '../../src/setup/app.setup';
+import { CoreConfig } from '../../src/core/core.config';
+import { initAppModule } from '../../src/init-app-module';
 
 export const initSettings = async (
   service?: any,
   serviceMock?: any,
   addSettingsToModuleBuilder?: (moduleBuilder: TestingModuleBuilder) => void,
 ) => {
-  console.log('in tests ENV: ', configuration().environmentSettings.currentEnv);
+  const dynamicAppModule = await initAppModule();
   const testingModuleBuilder: TestingModuleBuilder = Test.createTestingModule({
-    imports: [AppModule],
+    imports: [dynamicAppModule],
   })
     .overrideProvider(service)
     .useValue(serviceMock);
@@ -23,7 +23,8 @@ export const initSettings = async (
 
   const testingAppModule = await testingModuleBuilder.compile();
   const app = testingAppModule.createNestApplication();
-  applyAppSetting(app);
+  const coreConfig = app.get<CoreConfig>(CoreConfig);
+  await appSetup(app, coreConfig);
   await app.init();
 
   const databaseConnection = app.get<Connection>(getConnectionToken());
