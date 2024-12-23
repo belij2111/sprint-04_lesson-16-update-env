@@ -75,4 +75,15 @@ export class BlogsTestManager {
     expect(responseModels.page).toBe(1);
     expect(responseModels.pageSize).toBe(10);
   }
+
+  async createBlogIsNotAuthorized(
+    blogIsNotAuthorized: BlogCreateModel,
+    statusCode: number = HttpStatus.UNAUTHORIZED,
+  ) {
+    return request(this.app.getHttpServer())
+      .post('/blogs')
+      .auth('invalid login', 'invalid password')
+      .send(blogIsNotAuthorized)
+      .expect(statusCode);
+  }
 }
