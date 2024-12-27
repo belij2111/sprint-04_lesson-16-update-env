@@ -3,7 +3,7 @@ import { initSettings } from '../../helpers/init-settings';
 import {
   createInValidBlogModel,
   createValidBlogModel,
-} from '../../models/blogs/blog.input.model';
+} from '../../models/bloggers-platform/blog.input.model';
 import { BlogCreateModel } from '../../../src/features/bloggers-platform/blogs/api/models/input/create-blog.input.model';
 import { BlogsTestManager } from '../../tests-managers/blogs-test.manager';
 import { deleteAllData } from '../../helpers/delete-all-data';

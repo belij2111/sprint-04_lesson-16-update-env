@@ -3,7 +3,7 @@ import { BlogCreateModel } from '../../src/features/bloggers-platform/blogs/api/
 import { BlogViewModel } from '../../src/features/bloggers-platform/blogs/api/models/view/blog.view.model';
 import request from 'supertest';
 import { paginationParams } from '../models/base/pagination.model';
-import { createValidBlogModel } from '../models/blogs/blog.input.model';
+import { createValidBlogModel } from '../models/bloggers-platform/blog.input.model';
 import { Paginator } from '../../src/core/models/pagination.base.model';
 import { CoreConfig } from '../../src/core/core.config';
 
