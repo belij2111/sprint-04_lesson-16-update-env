@@ -47,7 +47,7 @@ describe('Blogs Components', () => {
       const validBlog: BlogCreateModel = createValidBlogModel();
       // console.log(validBlog);
       const createdResponse = await blogsTestManager.createBlog(validBlog);
-      blogsTestManager.expectCorrectModel(validBlog, createdResponse.body);
+      blogsTestManager.expectCorrectModel(validBlog, createdResponse);
     });
     it(`shouldn't create new blog with incorrect input data : STATUS 400`, async () => {
       const invalidBlog: BlogCreateModel = createInValidBlogModel(777);
@@ -61,6 +61,19 @@ describe('Blogs Components', () => {
         blogIsNotAuthorized,
         HttpStatus.UNAUTHORIZED,
       );
+    });
+  });
+
+  describe('GET/blogs/:id', () => {
+    it(`should return blog by ID : STATUS 200`, async () => {
+      const validBlog: BlogCreateModel = createValidBlogModel();
+      const createdBlog = await blogsTestManager.createBlog(validBlog);
+      //console.log(createdBlog);
+      await blogsTestManager.getBlogById(createdBlog.id, HttpStatus.OK);
+    });
+    it(`shouldn't return blog by ID if the blog does not exist : STATUS 404`, async () => {
+      const nonExistentId = '121212121212121212121212';
+      await blogsTestManager.getBlogById(nonExistentId, HttpStatus.NOT_FOUND);
     });
   });
 });

@@ -17,11 +17,12 @@ export class BlogsTestManager {
     createdModel: BlogCreateModel,
     statusCode: number = HttpStatus.CREATED,
   ) {
-    return request(this.app.getHttpServer())
+    const response = await request(this.app.getHttpServer())
       .post('/blogs')
       .auth(this.coreConfig.ADMIN_LOGIN, this.coreConfig.ADMIN_PASSWORD)
       .send(createdModel)
       .expect(statusCode);
+    return response.body;
   }
 
   expectCorrectModel(
@@ -85,5 +86,12 @@ export class BlogsTestManager {
       .auth('invalid login', 'invalid password')
       .send(blogIsNotAuthorized)
       .expect(statusCode);
+  }
+
+  async getBlogById(id: string, statusCode: number = HttpStatus.NOT_FOUND) {
+    const response = await request(this.app.getHttpServer())
+      .get('/blogs/' + id)
+      .expect(statusCode);
+    return response.body;
   }
 }
