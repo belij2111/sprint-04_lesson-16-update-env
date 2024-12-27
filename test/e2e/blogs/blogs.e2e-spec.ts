@@ -120,4 +120,23 @@ describe('Blogs Components', () => {
       );
     });
   });
+  describe('DELETE/blogs/:id', () => {
+    it(`should delete blog by ID : STATUS 204`, async () => {
+      const validBlog: BlogCreateModel = createValidBlogModel(1);
+      const createdBlog = await blogsTestManager.createBlog(validBlog);
+      await blogsTestManager.deleteById(createdBlog.id, HttpStatus.NO_CONTENT);
+    });
+    it(`shouldn't delete blog by ID if the request is unauthorized : STATUS 401`, async () => {
+      const validBlog: BlogCreateModel = createValidBlogModel(1);
+      const createdBlog = await blogsTestManager.createBlog(validBlog);
+      await blogsTestManager.deleteByIdIsNotAuthorized(
+        createdBlog.id,
+        HttpStatus.UNAUTHORIZED,
+      );
+    });
+    it(`shouldn't delete blog by ID if the blog does not exist : STATUS 404`, async () => {
+      const nonExistentId = '121212121212121212121212';
+      await blogsTestManager.deleteById(nonExistentId, HttpStatus.NOT_FOUND);
+    });
+  });
 });

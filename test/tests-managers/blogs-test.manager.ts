@@ -118,4 +118,21 @@ export class BlogsTestManager {
       .send(updatedBlog)
       .expect(statusCode);
   }
+
+  async deleteById(id: string, statusCode: number = HttpStatus.NO_CONTENT) {
+    return request(this.app.getHttpServer())
+      .delete('/blogs/' + id)
+      .auth(this.coreConfig.ADMIN_LOGIN, this.coreConfig.ADMIN_PASSWORD)
+      .expect(statusCode);
+  }
+
+  async deleteByIdIsNotAuthorized(
+    id: string,
+    statusCode: number = HttpStatus.UNAUTHORIZED,
+  ) {
+    return request(this.app.getHttpServer())
+      .delete('/blogs/' + id)
+      .auth('invalid login', 'invalid password')
+      .expect(statusCode);
+  }
 }
