@@ -47,6 +47,7 @@ describe('Blogs Components', () => {
       const validBlog: BlogCreateModel = createValidBlogModel();
       // console.log(validBlog);
       const createdResponse = await blogsTestManager.createBlog(validBlog);
+      //console.log(createdResponse);
       blogsTestManager.expectCorrectModel(validBlog, createdResponse);
     });
     it(`shouldn't create new blog with incorrect input data : STATUS 400`, async () => {
@@ -74,6 +75,49 @@ describe('Blogs Components', () => {
     it(`shouldn't return blog by ID if the blog does not exist : STATUS 404`, async () => {
       const nonExistentId = '121212121212121212121212';
       await blogsTestManager.getBlogById(nonExistentId, HttpStatus.NOT_FOUND);
+    });
+  });
+
+  describe('PUT/blogs/:id', () => {
+    it(`should update blog by ID : STATUS 204`, async () => {
+      const validBlog: BlogCreateModel = createValidBlogModel(1);
+      const createdBlog = await blogsTestManager.createBlog(validBlog);
+      const updatedBlog: BlogCreateModel = createValidBlogModel(555);
+      // console.log(updatedBlog);
+      await blogsTestManager.updateBlog(
+        createdBlog.id,
+        updatedBlog,
+        HttpStatus.NO_CONTENT,
+      );
+    });
+    it(`shouldn't update blog by ID with incorrect input data : STATUS 400`, async () => {
+      const validBlog: BlogCreateModel = createValidBlogModel(1);
+      const createdBlog = await blogsTestManager.createBlog(validBlog);
+      const invalidUpdatedBlog: BlogCreateModel = createInValidBlogModel(0);
+      await blogsTestManager.updateBlog(
+        createdBlog.id,
+        invalidUpdatedBlog,
+        HttpStatus.BAD_REQUEST,
+      );
+    });
+    it(`shouldn't update blog by ID if the request is unauthorized: STATUS 401`, async () => {
+      const validBlog: BlogCreateModel = createValidBlogModel(1);
+      const createdBlog = await blogsTestManager.createBlog(validBlog);
+      const updatedBlog: BlogCreateModel = createValidBlogModel(555);
+      await blogsTestManager.updateBlogIsNotAuthorized(
+        createdBlog.id,
+        updatedBlog,
+        HttpStatus.UNAUTHORIZED,
+      );
+    });
+    it(`shouldn't update blog by ID if the blog does not exist : STATUS 404`, async () => {
+      const updatedBlog: BlogCreateModel = createValidBlogModel(555);
+      const nonExistentId = '121212121212121212121212';
+      await blogsTestManager.updateBlog(
+        nonExistentId,
+        updatedBlog,
+        HttpStatus.NOT_FOUND,
+      );
     });
   });
 });

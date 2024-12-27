@@ -94,4 +94,28 @@ export class BlogsTestManager {
       .expect(statusCode);
     return response.body;
   }
+
+  async updateBlog(
+    id: string,
+    updatedBlog: BlogCreateModel,
+    statusCode: number = HttpStatus.NO_CONTENT,
+  ) {
+    return request(this.app.getHttpServer())
+      .put('/blogs/' + id)
+      .auth(this.coreConfig.ADMIN_LOGIN, this.coreConfig.ADMIN_PASSWORD)
+      .send(updatedBlog)
+      .expect(statusCode);
+  }
+
+  async updateBlogIsNotAuthorized(
+    id: string,
+    updatedBlog: BlogCreateModel,
+    statusCode: number = HttpStatus.NO_CONTENT,
+  ) {
+    return request(this.app.getHttpServer())
+      .put('/blogs/' + id)
+      .auth('invalid login', 'invalid password')
+      .send(updatedBlog)
+      .expect(statusCode);
+  }
 }
