@@ -87,4 +87,11 @@ export class PostsTestManager {
     expect(responseModels.page).toBe(1);
     expect(responseModels.pageSize).toBe(10);
   }
+
+  async getPostById(id: string, statusCode: number = HttpStatus.OK) {
+    const response = await request(this.app.getHttpServer())
+      .get('/posts/' + id)
+      .expect(statusCode);
+    return response.body;
+  }
 }

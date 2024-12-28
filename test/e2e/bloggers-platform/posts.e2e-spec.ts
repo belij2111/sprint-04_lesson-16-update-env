@@ -77,7 +77,24 @@ describe('Posts Components', () => {
         createdPosts,
         createdResponse.body,
       );
-      console.log(createdResponse.body);
+      // console.log(createdResponse.body);
+    });
+  });
+
+  describe('GET/posts/:id', () => {
+    it(`should return post by ID : STATUS 200`, async () => {
+      const validBlog: BlogCreateModel = createValidBlogModel();
+      const createdBlog = await blogsTestManager.createBlog(validBlog);
+      const validPost = createValidPostModel(createdBlog.id);
+      const createdPost = await postsTestManager.createPost(
+        validPost,
+        HttpStatus.CREATED,
+      );
+      await postsTestManager.getPostById(createdPost.id, HttpStatus.OK);
+    });
+    it(`shouldn't return blog by ID if the blog does not exist : STATUS 404`, async () => {
+      const nonExistentId = '121212121212121212121212';
+      await postsTestManager.getPostById(nonExistentId, HttpStatus.NOT_FOUND);
     });
   });
 });
