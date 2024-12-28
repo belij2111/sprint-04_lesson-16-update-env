@@ -3,6 +3,9 @@ import request from 'supertest';
 import { CoreConfig } from '../../src/core/core.config';
 import { PostCreateModel } from '../../src/features/bloggers-platform/posts/api/models/input/create-post.input.model';
 import { PostViewModel } from '../../src/features/bloggers-platform/posts/api/models/view/post.view.model';
+import { createValidPostModel } from '../models/bloggers-platform/post.input.model';
+import { paginationParams } from '../models/base/pagination.model';
+import { Paginator } from '../../src/core/models/pagination.base.model';
 
 export class PostsTestManager {
   constructor(
@@ -20,6 +23,23 @@ export class PostsTestManager {
       .send(createdModel)
       .expect(statusCode);
     return response.body;
+  }
+
+  async createPosts(
+    blogId: string,
+    count: number,
+    statusCode: number = HttpStatus.CREATED,
+  ) {
+    const posts: PostViewModel[] = [];
+    for (let i = 1; i <= count; i++) {
+      const response = await request(this.app.getHttpServer())
+        .post('/posts')
+        .auth(this.coreConfig.ADMIN_LOGIN, this.coreConfig.ADMIN_PASSWORD)
+        .send(createValidPostModel(blogId, i))
+        .expect(statusCode);
+      posts.push(response.body);
+    }
+    return posts;
   }
 
   expectCorrectModel(
@@ -41,5 +61,30 @@ export class PostsTestManager {
       .auth('invalid login', 'invalid password')
       .send(createdModel)
       .expect(statusCode);
+  }
+
+  async getPostsWithPaging(statusCode: number = HttpStatus.OK) {
+    const { pageNumber, pageSize, sortBy, sortDirection } = paginationParams;
+    return request(this.app.getHttpServer())
+      .get('/posts')
+      .query({
+        pageNumber,
+        pageSize,
+        sortBy,
+        sortDirection,
+      })
+      .expect(statusCode);
+  }
+
+  expectCorrectPagination(
+    createModels: PostViewModel[],
+    responseModels: Paginator<PostViewModel[]>,
+  ) {
+    expect(responseModels.items.length).toBe(createModels.length);
+    expect(responseModels.totalCount).toBe(createModels.length);
+    expect(responseModels.items).toEqual(createModels);
+    expect(responseModels.pagesCount).toBe(1);
+    expect(responseModels.page).toBe(1);
+    expect(responseModels.pageSize).toBe(10);
   }
 }

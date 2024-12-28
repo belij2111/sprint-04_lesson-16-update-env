@@ -61,4 +61,23 @@ describe('Posts Components', () => {
       );
     });
   });
+
+  describe('GET/posts', () => {
+    it(`should return posts with paging : STATUS 200`, async () => {
+      const validBlog: BlogCreateModel = createValidBlogModel();
+      const createdBlog = await blogsTestManager.createBlog(validBlog);
+      const createdPosts = await postsTestManager.createPosts(
+        createdBlog.id,
+        5,
+      );
+      const createdResponse = await postsTestManager.getPostsWithPaging(
+        HttpStatus.OK,
+      );
+      postsTestManager.expectCorrectPagination(
+        createdPosts,
+        createdResponse.body,
+      );
+      console.log(createdResponse.body);
+    });
+  });
 });
