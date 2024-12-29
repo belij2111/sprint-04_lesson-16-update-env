@@ -150,4 +150,28 @@ describe('Posts Components', () => {
       );
     });
   });
+
+  describe(`DELETE/posts/:id`, () => {
+    it(`should delete post by ID : STATUS 204`, async () => {
+      const validBlogModel: BlogCreateModel = createValidBlogModel();
+      const createdBlog = await blogsTestManager.createBlog(validBlogModel);
+      const validPostModel = createValidPostModel(createdBlog.id);
+      const createdPost = await postsTestManager.createPost(validPostModel);
+      await postsTestManager.deleteById(createdPost.id, HttpStatus.NO_CONTENT);
+    });
+    it(`shouldn't delete post by ID if the request is unauthorized : STATUS 401`, async () => {
+      const validBlogModel: BlogCreateModel = createValidBlogModel();
+      const createdBlog = await blogsTestManager.createBlog(validBlogModel);
+      const validPostModel = createValidPostModel(createdBlog.id);
+      const createdPost = await postsTestManager.createPost(validPostModel);
+      await postsTestManager.deleteByIdIsNotAuthorized(
+        createdPost.id,
+        HttpStatus.UNAUTHORIZED,
+      );
+    });
+    it(`shouldn't update post by ID if the post does not exist : STATUS 404`, async () => {
+      const nonExistentId = '121212121212121212121212';
+      await postsTestManager.deleteById(nonExistentId, HttpStatus.NOT_FOUND);
+    });
+  });
 });
