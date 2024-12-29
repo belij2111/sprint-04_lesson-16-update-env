@@ -97,4 +97,54 @@ describe('Posts Components', () => {
       await postsTestManager.getPostById(nonExistentId, HttpStatus.NOT_FOUND);
     });
   });
+
+  describe('PUT/posts/:id', () => {
+    it(`should update post by ID : STATUS 204`, async () => {
+      const validBlogModel: BlogCreateModel = createValidBlogModel();
+      const createdBlog = await blogsTestManager.createBlog(validBlogModel);
+      const validPostModel = createValidPostModel(createdBlog.id);
+      const createdPost = await postsTestManager.createPost(validPostModel);
+      const updatedPostModel = createValidPostModel(createdBlog.id, 555);
+      await postsTestManager.updatePost(
+        createdPost.id,
+        updatedPostModel,
+        HttpStatus.NO_CONTENT,
+      );
+    });
+    it(`shouldn't update post by ID with incorrect input data : STATUS 400`, async () => {
+      const validBlogModel: BlogCreateModel = createValidBlogModel();
+      const createdBlog = await blogsTestManager.createBlog(validBlogModel);
+      const validPostModel = createValidPostModel(createdBlog.id);
+      const createdPost = await postsTestManager.createPost(validPostModel);
+      const invalidUpdatedPostModel = createInValidPostModel(createdBlog.id, 0);
+      await postsTestManager.updatePost(
+        createdPost.id,
+        invalidUpdatedPostModel,
+        HttpStatus.BAD_REQUEST,
+      );
+    });
+    it(`shouldn't update post by ID if the request is unauthorized: STATUS 401`, async () => {
+      const validBlogModel: BlogCreateModel = createValidBlogModel();
+      const createdBlog = await blogsTestManager.createBlog(validBlogModel);
+      const validPostModel = createValidPostModel(createdBlog.id);
+      const createdPost = await postsTestManager.createPost(validPostModel);
+      const updatedPostModel = createValidPostModel(createdBlog.id, 555);
+      await postsTestManager.updatePostIsNotAuthorized(
+        createdPost.id,
+        updatedPostModel,
+        HttpStatus.UNAUTHORIZED,
+      );
+    });
+    it(`shouldn't update post by ID if the post does not exist : STATUS 404`, async () => {
+      const validBlogModel: BlogCreateModel = createValidBlogModel();
+      const createdBlog = await blogsTestManager.createBlog(validBlogModel);
+      const updatedPostModel = createValidPostModel(createdBlog.id, 555);
+      const nonExistentId = '121212121212121212121212';
+      await postsTestManager.updatePost(
+        nonExistentId,
+        updatedPostModel,
+        HttpStatus.NOT_FOUND,
+      );
+    });
+  });
 });

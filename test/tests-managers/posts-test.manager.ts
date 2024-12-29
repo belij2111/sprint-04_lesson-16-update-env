@@ -94,4 +94,28 @@ export class PostsTestManager {
       .expect(statusCode);
     return response.body;
   }
+
+  async updatePost(
+    id: string,
+    updatedPostModel: PostCreateModel,
+    statusCode: number = HttpStatus.NO_CONTENT,
+  ) {
+    return request(this.app.getHttpServer())
+      .put('/posts/' + id)
+      .auth(this.coreConfig.ADMIN_LOGIN, this.coreConfig.ADMIN_PASSWORD)
+      .send(updatedPostModel)
+      .expect(statusCode);
+  }
+
+  async updatePostIsNotAuthorized(
+    id: string,
+    updatedPostModel: PostCreateModel,
+    statusCode: number = HttpStatus.UNAUTHORIZED,
+  ) {
+    return request(this.app.getHttpServer())
+      .put('/posts/' + id)
+      .auth('invalid login', 'invalid password')
+      .send(updatedPostModel)
+      .expect(statusCode);
+  }
 }
