@@ -78,13 +78,13 @@ export class BlogsTestManager {
   }
 
   async createBlogIsNotAuthorized(
-    blogIsNotAuthorized: BlogCreateModel,
+    createdModel: BlogCreateModel,
     statusCode: number = HttpStatus.UNAUTHORIZED,
   ) {
     return request(this.app.getHttpServer())
       .post('/blogs')
       .auth('invalid login', 'invalid password')
-      .send(blogIsNotAuthorized)
+      .send(createdModel)
       .expect(statusCode);
   }
 
@@ -97,25 +97,25 @@ export class BlogsTestManager {
 
   async updateBlog(
     id: string,
-    updatedBlog: BlogCreateModel,
+    createdModel: BlogCreateModel,
     statusCode: number = HttpStatus.NO_CONTENT,
   ) {
     return request(this.app.getHttpServer())
       .put('/blogs/' + id)
       .auth(this.coreConfig.ADMIN_LOGIN, this.coreConfig.ADMIN_PASSWORD)
-      .send(updatedBlog)
+      .send(createdModel)
       .expect(statusCode);
   }
 
   async updateBlogIsNotAuthorized(
     id: string,
-    updatedBlog: BlogCreateModel,
+    createdModel: BlogCreateModel,
     statusCode: number = HttpStatus.NO_CONTENT,
   ) {
     return request(this.app.getHttpServer())
       .put('/blogs/' + id)
       .auth('invalid login', 'invalid password')
-      .send(updatedBlog)
+      .send(createdModel)
       .expect(statusCode);
   }
 

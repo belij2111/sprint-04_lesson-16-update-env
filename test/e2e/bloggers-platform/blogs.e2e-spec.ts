@@ -44,22 +44,25 @@ describe('Blogs Components', () => {
 
   describe('POST/blogs', () => {
     it(`should create new blog : STATUS 201`, async () => {
-      const validBlog: BlogCreateModel = createValidBlogModel();
-      // console.log(validBlog);
-      const createdResponse = await blogsTestManager.createBlog(validBlog);
+      const validBlogModel: BlogCreateModel = createValidBlogModel();
+      // console.log(validBlogModel);
+      const createdResponse = await blogsTestManager.createBlog(validBlogModel);
       //console.log(createdResponse);
-      blogsTestManager.expectCorrectModel(validBlog, createdResponse);
+      blogsTestManager.expectCorrectModel(validBlogModel, createdResponse);
     });
     it(`shouldn't create new blog with incorrect input data : STATUS 400`, async () => {
-      const invalidBlog: BlogCreateModel = createInValidBlogModel(777);
-      // console.log(invalidBlog);
-      await blogsTestManager.createBlog(invalidBlog, HttpStatus.BAD_REQUEST);
+      const invalidBlogModel: BlogCreateModel = createInValidBlogModel(777);
+      // console.log(invalidBlogModel);
+      await blogsTestManager.createBlog(
+        invalidBlogModel,
+        HttpStatus.BAD_REQUEST,
+      );
     });
     it(`shouldn't create new blog if the request is unauthorized : STATUS 401`, async () => {
-      const blogIsNotAuthorized: BlogCreateModel = createValidBlogModel();
-      // console.log(blogIsNotAuthorized);
+      const validBlogModel: BlogCreateModel = createValidBlogModel();
+      // console.log(validBlogModel);
       await blogsTestManager.createBlogIsNotAuthorized(
-        blogIsNotAuthorized,
+        validBlogModel,
         HttpStatus.UNAUTHORIZED,
       );
     });
@@ -67,8 +70,8 @@ describe('Blogs Components', () => {
 
   describe('GET/blogs/:id', () => {
     it(`should return blog by ID : STATUS 200`, async () => {
-      const validBlog: BlogCreateModel = createValidBlogModel();
-      const createdBlog = await blogsTestManager.createBlog(validBlog);
+      const validBlogModel: BlogCreateModel = createValidBlogModel();
+      const createdBlog = await blogsTestManager.createBlog(validBlogModel);
       //console.log(createdBlog);
       await blogsTestManager.getBlogById(createdBlog.id, HttpStatus.OK);
     });
@@ -80,55 +83,56 @@ describe('Blogs Components', () => {
 
   describe('PUT/blogs/:id', () => {
     it(`should update blog by ID : STATUS 204`, async () => {
-      const validBlog: BlogCreateModel = createValidBlogModel(1);
-      const createdBlog = await blogsTestManager.createBlog(validBlog);
-      const updatedBlog: BlogCreateModel = createValidBlogModel(555);
-      // console.log(updatedBlog);
+      const validBlogModel: BlogCreateModel = createValidBlogModel(1);
+      const createdBlog = await blogsTestManager.createBlog(validBlogModel);
+      const updatedBlogModel: BlogCreateModel = createValidBlogModel(555);
+      // console.log(updatedBlogModel);
       await blogsTestManager.updateBlog(
         createdBlog.id,
-        updatedBlog,
+        updatedBlogModel,
         HttpStatus.NO_CONTENT,
       );
     });
     it(`shouldn't update blog by ID with incorrect input data : STATUS 400`, async () => {
-      const validBlog: BlogCreateModel = createValidBlogModel(1);
-      const createdBlog = await blogsTestManager.createBlog(validBlog);
-      const invalidUpdatedBlog: BlogCreateModel = createInValidBlogModel(0);
+      const validBlogModel: BlogCreateModel = createValidBlogModel(1);
+      const createdBlog = await blogsTestManager.createBlog(validBlogModel);
+      const invalidUpdatedBlogModel: BlogCreateModel =
+        createInValidBlogModel(0);
       await blogsTestManager.updateBlog(
         createdBlog.id,
-        invalidUpdatedBlog,
+        invalidUpdatedBlogModel,
         HttpStatus.BAD_REQUEST,
       );
     });
     it(`shouldn't update blog by ID if the request is unauthorized: STATUS 401`, async () => {
-      const validBlog: BlogCreateModel = createValidBlogModel(1);
-      const createdBlog = await blogsTestManager.createBlog(validBlog);
-      const updatedBlog: BlogCreateModel = createValidBlogModel(555);
+      const validBlogModel: BlogCreateModel = createValidBlogModel(1);
+      const createdBlog = await blogsTestManager.createBlog(validBlogModel);
+      const updatedBlogModel: BlogCreateModel = createValidBlogModel(555);
       await blogsTestManager.updateBlogIsNotAuthorized(
         createdBlog.id,
-        updatedBlog,
+        updatedBlogModel,
         HttpStatus.UNAUTHORIZED,
       );
     });
     it(`shouldn't update blog by ID if the blog does not exist : STATUS 404`, async () => {
-      const updatedBlog: BlogCreateModel = createValidBlogModel(555);
+      const updatedBlogModel: BlogCreateModel = createValidBlogModel(555);
       const nonExistentId = '121212121212121212121212';
       await blogsTestManager.updateBlog(
         nonExistentId,
-        updatedBlog,
+        updatedBlogModel,
         HttpStatus.NOT_FOUND,
       );
     });
   });
   describe('DELETE/blogs/:id', () => {
     it(`should delete blog by ID : STATUS 204`, async () => {
-      const validBlog: BlogCreateModel = createValidBlogModel(1);
-      const createdBlog = await blogsTestManager.createBlog(validBlog);
+      const validBlogModel: BlogCreateModel = createValidBlogModel(1);
+      const createdBlog = await blogsTestManager.createBlog(validBlogModel);
       await blogsTestManager.deleteById(createdBlog.id, HttpStatus.NO_CONTENT);
     });
     it(`shouldn't delete blog by ID if the request is unauthorized : STATUS 401`, async () => {
-      const validBlog: BlogCreateModel = createValidBlogModel(1);
-      const createdBlog = await blogsTestManager.createBlog(validBlog);
+      const validBlogModel: BlogCreateModel = createValidBlogModel(1);
+      const createdBlog = await blogsTestManager.createBlog(validBlogModel);
       await blogsTestManager.deleteByIdIsNotAuthorized(
         createdBlog.id,
         HttpStatus.UNAUTHORIZED,
