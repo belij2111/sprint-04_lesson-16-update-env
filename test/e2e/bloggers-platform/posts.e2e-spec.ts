@@ -10,7 +10,7 @@ import {
   createValidPostModel,
 } from '../../models/bloggers-platform/post.input.model';
 
-describe('Posts Components', () => {
+describe('e2e-Posts', () => {
   let app: INestApplication;
   let blogsTestManager: BlogsTestManager;
   let postsTestManager: PostsTestManager;
