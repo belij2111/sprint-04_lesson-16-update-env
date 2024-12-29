@@ -8,7 +8,7 @@ import { BlogCreateModel } from '../../../src/features/bloggers-platform/blogs/a
 import { BlogsTestManager } from '../../tests-managers/blogs-test.manager';
 import { deleteAllData } from '../../helpers/delete-all-data';
 
-describe('Blogs Components', () => {
+describe('e2e-Blogs', () => {
   let app: INestApplication;
   let blogsTestManager: BlogsTestManager;
 
