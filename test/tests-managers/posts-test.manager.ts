@@ -97,25 +97,25 @@ export class PostsTestManager {
 
   async updatePost(
     id: string,
-    updatedPostModel: PostCreateModel,
+    createdModel: PostCreateModel,
     statusCode: number = HttpStatus.NO_CONTENT,
   ) {
     return request(this.app.getHttpServer())
       .put('/posts/' + id)
       .auth(this.coreConfig.ADMIN_LOGIN, this.coreConfig.ADMIN_PASSWORD)
-      .send(updatedPostModel)
+      .send(createdModel)
       .expect(statusCode);
   }
 
   async updatePostIsNotAuthorized(
     id: string,
-    updatedPostModel: PostCreateModel,
+    createdModel: PostCreateModel,
     statusCode: number = HttpStatus.UNAUTHORIZED,
   ) {
     return request(this.app.getHttpServer())
       .put('/posts/' + id)
       .auth('invalid login', 'invalid password')
-      .send(updatedPostModel)
+      .send(createdModel)
       .expect(statusCode);
   }
 }

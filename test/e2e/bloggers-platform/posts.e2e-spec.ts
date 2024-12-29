@@ -34,29 +34,32 @@ describe('Posts Components', () => {
 
   describe('POST/post', () => {
     it(`should create new post : STATUS 201`, async () => {
-      const validBlog: BlogCreateModel = createValidBlogModel();
-      const createdBlog = await blogsTestManager.createBlog(validBlog);
-      const validPost = createValidPostModel(createdBlog.id);
+      const validBlogModel: BlogCreateModel = createValidBlogModel();
+      const createdBlog = await blogsTestManager.createBlog(validBlogModel);
+      const validPostModel = createValidPostModel(createdBlog.id);
       const createdResponse = await postsTestManager.createPost(
-        validPost,
+        validPostModel,
         HttpStatus.CREATED,
       );
       // console.log(createdResponse);
-      postsTestManager.expectCorrectModel(validPost, createdResponse);
+      postsTestManager.expectCorrectModel(validPostModel, createdResponse);
     });
     it(`shouldn't create new post with incorrect input data : STATUS 400`, async () => {
-      const validBlog: BlogCreateModel = createValidBlogModel();
-      const createdBlog = await blogsTestManager.createBlog(validBlog);
-      const inValidPost = createInValidPostModel(createdBlog.id);
+      const validBlogModel: BlogCreateModel = createValidBlogModel();
+      const createdBlog = await blogsTestManager.createBlog(validBlogModel);
+      const inValidPostModel = createInValidPostModel(createdBlog.id);
       // console.log(inValidPost);
-      await postsTestManager.createPost(inValidPost, HttpStatus.BAD_REQUEST);
+      await postsTestManager.createPost(
+        inValidPostModel,
+        HttpStatus.BAD_REQUEST,
+      );
     });
     it(`shouldn't create new post if the request is unauthorized : STATUS 401`, async () => {
-      const validBlog: BlogCreateModel = createValidBlogModel();
-      const createdBlog = await blogsTestManager.createBlog(validBlog);
-      const validPost = createValidPostModel(createdBlog.id);
+      const validBlogModel: BlogCreateModel = createValidBlogModel();
+      const createdBlog = await blogsTestManager.createBlog(validBlogModel);
+      const validPostModel = createValidPostModel(createdBlog.id);
       await postsTestManager.createPostIsNotAuthorized(
-        validPost,
+        validPostModel,
         HttpStatus.UNAUTHORIZED,
       );
     });
@@ -64,8 +67,8 @@ describe('Posts Components', () => {
 
   describe('GET/posts', () => {
     it(`should return posts with paging : STATUS 200`, async () => {
-      const validBlog: BlogCreateModel = createValidBlogModel();
-      const createdBlog = await blogsTestManager.createBlog(validBlog);
+      const validBlogModel: BlogCreateModel = createValidBlogModel();
+      const createdBlog = await blogsTestManager.createBlog(validBlogModel);
       const createdPosts = await postsTestManager.createPosts(
         createdBlog.id,
         5,
@@ -83,11 +86,11 @@ describe('Posts Components', () => {
 
   describe('GET/posts/:id', () => {
     it(`should return post by ID : STATUS 200`, async () => {
-      const validBlog: BlogCreateModel = createValidBlogModel();
-      const createdBlog = await blogsTestManager.createBlog(validBlog);
-      const validPost = createValidPostModel(createdBlog.id);
+      const validBlogModel: BlogCreateModel = createValidBlogModel();
+      const createdBlog = await blogsTestManager.createBlog(validBlogModel);
+      const validPostModel = createValidPostModel(createdBlog.id);
       const createdPost = await postsTestManager.createPost(
-        validPost,
+        validPostModel,
         HttpStatus.CREATED,
       );
       await postsTestManager.getPostById(createdPost.id, HttpStatus.OK);

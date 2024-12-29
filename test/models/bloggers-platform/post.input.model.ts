@@ -4,22 +4,22 @@ export const createValidPostModel = (
   blogId: string,
   count: number = 1,
 ): PostCreateModel => {
-  const post = new PostCreateModel();
-  post.title = `Post${count}`;
-  post.shortDescription = `new post${count}`;
-  post.content = `new content of post${count}`;
-  post.blogId = blogId;
-  return post;
+  const postModel = new PostCreateModel();
+  postModel.title = `Post${count}`;
+  postModel.shortDescription = `new post${count}`;
+  postModel.content = `new content of post${count}`;
+  postModel.blogId = blogId;
+  return postModel;
 };
 
 export const createInValidPostModel = (
   blogId: string,
   count: number = 1,
 ): PostCreateModel => {
-  const invalidPost = new PostCreateModel();
-  invalidPost.title = `33333333333333333333333333333333333333333333333333Post${count}`;
-  invalidPost.shortDescription = `new post${count}`;
-  invalidPost.content = `new content of post${count}`;
-  invalidPost.blogId = blogId;
-  return invalidPost;
+  const invalidPostModel = new PostCreateModel();
+  invalidPostModel.title = `33333333333333333333333333333333333333333333333333Post${count}`;
+  invalidPostModel.shortDescription = `new post${count}`;
+  invalidPostModel.content = `new content of post${count}`;
+  invalidPostModel.blogId = blogId;
+  return invalidPostModel;
 };
