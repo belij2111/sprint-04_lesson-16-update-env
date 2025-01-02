@@ -8,7 +8,7 @@ export class MailService {
     private readonly mailerService: MailerService,
     private readonly emailTemplateService: EmailTemplateService,
   ) {}
-  async sendEmail(
+  sendEmail(
     email: string,
     code: string,
     templateType: 'registration' | 'passwordRecovery',
@@ -20,7 +20,7 @@ export class MailService {
     if (templateType === 'passwordRecovery') {
       htmlContent = this.emailTemplateService.passwordRecoveryEmail(code);
     }
-    await this.mailerService.sendMail({
+    this.mailerService.sendMail({
       to: email,
       subject: 'Your code is here',
       html: htmlContent,
