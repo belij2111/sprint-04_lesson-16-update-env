@@ -62,15 +62,18 @@ export class AuthService {
       userId: userId,
       deviceId: randomUUID(),
     };
-    const accessToken = this.jwtService.sign(payloadForAccessToken, {
+    const accessToken = await this.jwtService.signAsync(payloadForAccessToken, {
       secret: this.userAccountConfig.ACCESS_TOKEN_SECRET,
       expiresIn: this.userAccountConfig.ACCESS_TOKEN_EXPIRATION,
     });
 
-    const refreshToken = this.jwtService.sign(payloadForRefreshToken, {
-      secret: this.userAccountConfig.REFRESH_TOKEN_SECRET,
-      expiresIn: this.userAccountConfig.REFRESH_TOKEN_EXPIRATION,
-    });
+    const refreshToken = await this.jwtService.signAsync(
+      payloadForRefreshToken,
+      {
+        secret: this.userAccountConfig.REFRESH_TOKEN_SECRET,
+        expiresIn: this.userAccountConfig.REFRESH_TOKEN_EXPIRATION,
+      },
+    );
     const decodePayload = this.jwtService.decode(refreshToken);
     const deviceSession: SecurityDevices = {
       userId: decodePayload.userId,
@@ -95,14 +98,17 @@ export class AuthService {
       userId: userId,
       deviceId: deviceId,
     };
-    const accessToken = this.jwtService.sign(payloadForAccessToken, {
+    const accessToken = await this.jwtService.signAsync(payloadForAccessToken, {
       secret: this.userAccountConfig.ACCESS_TOKEN_SECRET,
       expiresIn: this.userAccountConfig.ACCESS_TOKEN_EXPIRATION,
     });
-    const refreshToken = this.jwtService.sign(payloadForRefreshToken, {
-      secret: this.userAccountConfig.REFRESH_TOKEN_SECRET,
-      expiresIn: this.userAccountConfig.REFRESH_TOKEN_EXPIRATION,
-    });
+    const refreshToken = await this.jwtService.signAsync(
+      payloadForRefreshToken,
+      {
+        secret: this.userAccountConfig.REFRESH_TOKEN_SECRET,
+        expiresIn: this.userAccountConfig.REFRESH_TOKEN_EXPIRATION,
+      },
+    );
     const decodePayload = this.jwtService.decode(refreshToken);
     const iatDate = new Date(decodePayload.iat! * 1000).toISOString();
     await this.securityDevicesRepository.update(deviceId, iatDate);
@@ -145,7 +151,7 @@ export class AuthService {
       },
     };
     await this.usersRepository.create(newUser);
-    await this.mailService.sendEmail(
+    this.mailService.sendEmail(
       newUser.email,
       newUser.emailConfirmation.confirmationCode,
       'registration',
@@ -198,7 +204,7 @@ export class AuthService {
       newConfirmationCode,
       newExpirationDate,
     );
-    await this.mailService.sendEmail(
+    this.mailService.sendEmail(
       inputEmail.email,
       newConfirmationCode,
       'registration',
@@ -218,7 +224,7 @@ export class AuthService {
       recoveryCode,
       newExpirationDate,
     );
-    await this.mailService.sendEmail(
+    this.mailService.sendEmail(
       inputEmail.email,
       recoveryCode,
       'passwordRecovery',
