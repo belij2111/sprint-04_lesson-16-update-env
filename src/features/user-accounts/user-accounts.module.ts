@@ -37,8 +37,8 @@ import { NotificationsModule } from '../notifications/notifications.module';
     NotificationsModule,
     ThrottlerModule.forRoot([
       {
-        ttl: 0,
-        limit: 0,
+        ttl: 60,
+        limit: 20,
       },
     ]),
   ],
