@@ -86,4 +86,28 @@ describe('e2e-Auth', () => {
       );
     });
   });
+
+  describe('GET/auth/me', () => {
+    it(`should return users info with correct accessTokens : STATUS 200`, async () => {
+      const validUserModel: UserCreateModel = createValidUserModel();
+      const createdUser = await usersTestManager.createUser(validUserModel);
+      const loginResult = await authTestManager.loginUser(validUserModel);
+      const createdResponse = await authTestManager.me(
+        loginResult!.accessToken,
+        HttpStatus.OK,
+      );
+      // console.log(createdResponse);
+      authTestManager.expectCorrectMe(createdUser, createdResponse);
+    });
+    it(`shouldn't return users info with if accessTokens expired : STATUS 401`, async () => {
+      const validUserModel: UserCreateModel = createValidUserModel();
+      await usersTestManager.createUser(validUserModel);
+      const loginResult = await authTestManager.loginUser(validUserModel);
+      await delay(10000);
+      await authTestManager.me(
+        loginResult!.accessToken,
+        HttpStatus.UNAUTHORIZED,
+      );
+    });
+  });
 });
