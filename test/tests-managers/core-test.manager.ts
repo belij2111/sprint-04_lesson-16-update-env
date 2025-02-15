@@ -9,8 +9,8 @@ export class CoreTestManager {
     private readonly authTestManager: AuthTestManager,
   ) {}
 
-  async loginUser() {
-    const validUserModel: UserCreateModel = createValidUserModel();
+  async loginUser(count: number = 1) {
+    const validUserModel: UserCreateModel = createValidUserModel(count);
     await this.usersTestManager.createUser(validUserModel);
     return await this.authTestManager.loginUser(validUserModel);
   }
